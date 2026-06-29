@@ -1,6 +1,6 @@
 // api/src/services/email.service.js
-// Inspiré directement de Nexura backend/apps/core/email_service.py
-// Gère : confirmation acheteur + alerte vendeur (admin)
+// Notification vendeur uniquement — pas d'email au client
+// Le client contacte le vendeur directement via WhatsApp
 
 const { Resend } = require('resend')
 const config     = require('../config/env')
@@ -9,116 +9,117 @@ const resend = config.resendApiKey ? new Resend(config.resendApiKey) : null
 
 // ─── Templates ────────────────────────────────────────────────────────────────
 
-function templateConfirmationAcheteur(reservation, rabbit) {
-  // WAVE_NUMBER_NEXURA → format wa.me (strip les espaces/tirets)
-  const rawNum = config.whatsappNumber?.replace(/\D/g, '')
-  const whatsappUrl = rawNum
-    ? `https://wa.me/${rawNum}?text=${encodeURIComponent(
-        `Bonjour, j'ai réservé ${rabbit.name} (réf: ${reservation.id.slice(0, 8)}). Quand peut-on se voir ?`
-      )}`
-    : null
-
-  return {
-    subject: `Réservation confirmée — ${rabbit.name} 🐇`,
-    html: `
-<!DOCTYPE html>
-<html>
-<body style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; color: #1a1a1a;">
-  <h1 style="font-size: 24px; margin-bottom: 8px;">Votre réservation est bien reçue ✅</h1>
-  <p style="color: #555;">Merci <strong>${reservation.firstName}</strong> ! Nous avons bien enregistré votre demande.</p>
-
-  <div style="background: #f5f5f5; border-radius: 8px; padding: 16px; margin: 24px 0;">
-    <h2 style="font-size: 16px; margin: 0 0 12px;">Récapitulatif</h2>
-    <table style="width: 100%; border-collapse: collapse;">
-      <tr><td style="padding: 4px 0; color: #666;">Lapin</td><td style="font-weight: 600;">${rabbit.name} — ${rabbit.breed}</td></tr>
-      <tr><td style="padding: 4px 0; color: #666;">Prix</td><td>${rabbit.price.toLocaleString('fr-FR')} FCFA</td></tr>
-      <tr><td style="padding: 4px 0; color: #666;">Référence</td><td style="font-family: monospace; font-size: 12px;">${reservation.id}</td></tr>
-    </table>
-  </div>
-
-  <p>Le vendeur vous contactera bientôt pour confirmer le rendez-vous.</p>
-
-  ${whatsappUrl ? `
-  <a href="${whatsappUrl}"
-     style="display: inline-block; background: #25D366; color: #fff; text-decoration: none;
-            padding: 12px 24px; border-radius: 8px; font-weight: 600; margin-top: 8px;">
-    💬 Contacter via WhatsApp
-  </a>
-  ` : ''}
-
-  <p style="color: #999; font-size: 12px; margin-top: 32px;">
-    Rabbit Shop · Si vous avez une question, répondez à cet email.
-  </p>
-</body>
-</html>`,
-  }
+const DELIVERY_LABELS = {
+  abidjan:      'Abidjan',
+  azaguie:      'Azaguié et alentours',
+  pays_profond: 'Reste de la Côte d\'Ivoire',
 }
 
 function templateAlerteVendeur(reservation, rabbit) {
+  const hasDelivery = reservation.deliveryZone && reservation.deliveryFee != null
+  const total = rabbit.price + (hasDelivery ? reservation.deliveryFee : 0)
+  const waText = encodeURIComponent(
+    `Bonjour ${reservation.firstName} ! Je suis le vendeur de Lapinou 🐇. Vous avez réservé ${rabbit.name}. Quand seriez-vous disponible pour le rendez-vous ?`
+  )
+  const rawPhone = reservation.phone.replace(/\D/g, '')
+  const waLink = `https://wa.me/${rawPhone}?text=${waText}`
+
   return {
-    subject: `Nouvelle réservation — ${rabbit.name} (${reservation.firstName} ${reservation.lastName})`,
+    subject: `🐇 Nouvelle réservation — ${rabbit.name} · ${reservation.firstName} ${reservation.lastName}`,
     html: `
 <!DOCTYPE html>
-<html>
-<body style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; color: #1a1a1a;">
-  <h1 style="font-size: 20px;">🐇 Nouvelle réservation</h1>
+<html lang="fr">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f4f4f4;font-family:Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4;padding:32px 0;">
+<tr><td align="center">
+<table width="600" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08);">
 
-  <div style="background: #fff3cd; border-left: 4px solid #f59e0b; padding: 12px 16px; border-radius: 4px; margin: 16px 0;">
-    <strong>${rabbit.name}</strong> (${rabbit.breed}) est maintenant marqué comme <strong>réservé</strong>.
-  </div>
+  <!-- Header -->
+  <tr><td style="background:linear-gradient(135deg,#1a0a00,#3d1a00);padding:32px 40px;">
+    <h1 style="margin:0;color:#B8834A;font-size:22px;font-weight:700;">🐇 Lapinou — Nouvelle réservation</h1>
+    <p style="margin:8px 0 0;color:#fff8;font-size:14px;">Un client souhaite acquérir un lapin</p>
+  </td></tr>
 
-  <h2 style="font-size: 16px;">Acheteur</h2>
-  <table style="width: 100%; border-collapse: collapse;">
-    <tr><td style="padding: 4px 0; color: #666; width: 120px;">Nom</td><td>${reservation.firstName} ${reservation.lastName}</td></tr>
-    <tr><td style="padding: 4px 0; color: #666;">Email</td><td><a href="mailto:${reservation.email}">${reservation.email}</a></td></tr>
-    <tr><td style="padding: 4px 0; color: #666;">Téléphone</td><td><a href="tel:${reservation.phone}">${reservation.phone}</a></td></tr>
-    ${reservation.message ? `<tr><td style="padding: 4px 0; color: #666;">Message</td><td>${reservation.message}</td></tr>` : ''}
-  </table>
+  <!-- Rabbit info -->
+  <tr><td style="padding:32px 40px 0;">
+    <div style="background:#fff8f0;border:1px solid #B8834A33;border-radius:8px;padding:16px 20px;margin-bottom:24px;">
+      <h2 style="margin:0 0 4px;font-size:18px;color:#1a1a1a;">${rabbit.name}</h2>
+      <p style="margin:0;color:#666;font-size:14px;">${rabbit.breed} · ${rabbit.price.toLocaleString('fr-FR')} FCFA</p>
+      ${hasDelivery ? `<p style="margin:6px 0 0;font-size:13px;color:#B8834A;">Livraison : ${DELIVERY_LABELS[reservation.deliveryZone] || reservation.deliveryZone} — ${reservation.deliveryFee.toLocaleString('fr-FR')} FCFA</p>` : ''}
+      ${hasDelivery ? `<p style="margin:4px 0 0;font-size:14px;font-weight:700;color:#1a1a1a;">Total : ${total.toLocaleString('fr-FR')} FCFA</p>` : ''}
+    </div>
+  </td></tr>
 
-  <h2 style="font-size: 16px; margin-top: 24px;">Actions</h2>
-  <p>Connectez-vous au panneau admin pour confirmer ou annuler cette réservation.</p>
+  <!-- Buyer info -->
+  <tr><td style="padding:0 40px;">
+    <h3 style="font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#666;margin:0 0 12px;">Coordonnées client</h3>
+    <table width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td style="padding:8px 0;border-bottom:1px solid #f0f0f0;color:#888;font-size:13px;width:120px;">Prénom / Nom</td>
+        <td style="padding:8px 0;border-bottom:1px solid #f0f0f0;font-weight:600;font-size:14px;">${reservation.firstName} ${reservation.lastName}</td>
+      </tr>
+      <tr>
+        <td style="padding:8px 0;border-bottom:1px solid #f0f0f0;color:#888;font-size:13px;">Email</td>
+        <td style="padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:14px;"><a href="mailto:${reservation.email}" style="color:#B8834A;">${reservation.email}</a></td>
+      </tr>
+      <tr>
+        <td style="padding:8px 0;${reservation.message ? 'border-bottom:1px solid #f0f0f0;' : ''}color:#888;font-size:13px;">Téléphone</td>
+        <td style="padding:8px 0;${reservation.message ? 'border-bottom:1px solid #f0f0f0;' : ''}font-size:14px;font-weight:600;"><a href="tel:${reservation.phone}" style="color:#1a1a1a;text-decoration:none;">${reservation.phone}</a></td>
+      </tr>
+      ${reservation.message ? `<tr>
+        <td style="padding:8px 0;color:#888;font-size:13px;vertical-align:top;">Message</td>
+        <td style="padding:8px 0;font-size:14px;color:#444;font-style:italic;">${reservation.message}</td>
+      </tr>` : ''}
+    </table>
+  </td></tr>
 
-  <p style="color: #999; font-size: 12px; margin-top: 32px;">
-    Réf : ${reservation.id}
-  </p>
+  <!-- CTA WhatsApp -->
+  <tr><td style="padding:28px 40px;">
+    <a href="${waLink}"
+       style="display:inline-block;background:#25D366;color:#fff;text-decoration:none;
+              padding:14px 28px;border-radius:8px;font-weight:700;font-size:15px;width:100%;
+              box-sizing:border-box;text-align:center;">
+      💬 Contacter ${reservation.firstName} sur WhatsApp
+    </a>
+  </td></tr>
+
+  <!-- Footer -->
+  <tr><td style="background:#f9f9f9;padding:20px 40px;border-top:1px solid #eee;">
+    <p style="margin:0;font-size:12px;color:#aaa;">Réf. réservation : <code>${reservation.id}</code></p>
+    <p style="margin:4px 0 0;font-size:12px;color:#aaa;">Lapinou · Azaguié Gare, Côte d'Ivoire</p>
+  </td></tr>
+
+</table>
+</td></tr>
+</table>
 </body>
 </html>`,
   }
 }
 
 // ─── Envoi ────────────────────────────────────────────────────────────────────
+// Seul l'admin (vendeur) reçoit un email — pas de notification au client
 
 async function sendReservationEmails(reservation, rabbit) {
   if (!resend) {
-    console.warn('[email] Resend non configuré — emails non envoyés')
+    console.warn('[email] Resend non configuré — email non envoyé')
+    return
+  }
+  if (!config.adminEmail) {
+    console.warn('[email] ADMIN_EMAIL non configuré — email non envoyé')
     return
   }
 
-  const results = await Promise.allSettled([
-    // 1. Confirmation à l'acheteur
-    resend.emails.send({
+  try {
+    await resend.emails.send({
       from: config.emailFrom,
-      to:   reservation.email,
-      ...templateConfirmationAcheteur(reservation, rabbit),
-    }),
-
-    // 2. Alerte au vendeur/admin
-    config.adminEmail
-      ? resend.emails.send({
-          from: config.emailFrom,
-          to:   config.adminEmail,
-          ...templateAlerteVendeur(reservation, rabbit),
-        })
-      : Promise.resolve({ skipped: true }),
-  ])
-
-  for (const [i, result] of results.entries()) {
-    const target = i === 0 ? 'acheteur' : 'vendeur'
-    if (result.status === 'fulfilled') {
-      console.log(`[email] ✓ Envoyé (${target})`)
-    } else {
-      console.error(`[email] ✗ Échec (${target}):`, result.reason)
-    }
+      to:   config.adminEmail,
+      ...templateAlerteVendeur(reservation, rabbit),
+    })
+    console.log('[email] ✓ Notification vendeur envoyée')
+  } catch (err) {
+    console.error('[email] ✗ Échec notification vendeur:', err)
   }
 }
 

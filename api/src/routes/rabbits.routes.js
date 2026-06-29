@@ -6,8 +6,7 @@ const prisma   = require('../config/prisma')
 const adminAuth = require('../middlewares/adminAuth.middleware')
 const upload    = require('../middlewares/upload.middleware')
 const { reservationRules, validate } = require('../validations/reservation.schema')
-const path = require('path')
-const fs   = require('fs')
+const cloudinarySvc = require('../services/cloudinary.service')
 
 // ─── Public ───────────────────────────────────────────────────────────────────
 router.get('/',        ctrl.list)
@@ -34,21 +33,29 @@ router.patch('/:id',   adminAuth, ctrl.update)
 router.delete('/:id',  adminAuth, ctrl.remove)
 
 // ─── Upload photos (admin) ────────────────────────────────────────────────────
-// POST /api/rabbits/:id/images  → upload jusqu'à 8 photos
+// POST /api/rabbits/:id/images  → upload jusqu'à 8 photos vers Cloudinary
 router.post('/:id/images', adminAuth, upload.array('images', 8), async (req, res, next) => {
   try {
     if (!req.files || req.files.length === 0)
       return res.status(400).json({ error: 'Aucun fichier reçu' })
 
+    if (!cloudinarySvc.isConfigured) {
+      return res.status(503).json({ error: 'Cloudinary non configuré côté serveur (variables CLOUDINARY_* manquantes)' })
+    }
+
     // Compte les photos existantes pour calculer la position
     const existingCount = await prisma.rabbitPhoto.count({ where: { rabbitId: req.params.id } })
 
+    // Upload vers Cloudinary (en mémoire → cloud, jamais sur disque local)
+    const uploaded = await cloudinarySvc.uploadMany(req.files)
+
     const photos = await Promise.all(
-      req.files.map((file, i) =>
+      uploaded.map((u, i) =>
         prisma.rabbitPhoto.create({
           data: {
             rabbitId: req.params.id,
-            url: `/uploads/${file.filename}`,
+            url: u.url,
+            publicId: u.publicId,
             position: existingCount + i,
           },
         })
@@ -59,17 +66,15 @@ router.post('/:id/images', adminAuth, upload.array('images', 8), async (req, res
   } catch (err) { next(err) }
 })
 
-// DELETE /api/rabbits/:id/images/:photoId  → supprimer une photo
+// DELETE /api/rabbits/:id/images/:photoId  → supprimer une photo (Cloudinary + DB)
 router.delete('/:id/images/:photoId', adminAuth, async (req, res, next) => {
   try {
-    const photo = await prisma.rabbitPhoto.findUnique({ where: { id: req.params.photoId } })
+    const photo = await prisma.rabbitPhoto.findUnique({ where: { id: parseInt(req.params.photoId, 10) } })
     if (!photo) return res.status(404).json({ error: 'Photo introuvable' })
 
-    // Supprime le fichier physique
-    const UPLOADS_DIR = require('path').resolve(__dirname, '../../../uploads')
-    const filename = path.basename(photo.url)
-    const filePath = path.join(UPLOADS_DIR, filename)
-    if (fs.existsSync(filePath)) fs.unlinkSync(filePath)
+    // Supprime sur Cloudinary — utilise publicId si dispo, sinon tente de le déduire de l'URL
+    const publicId = photo.publicId || cloudinarySvc.publicIdFromUrl(photo.url)
+    await cloudinarySvc.deleteByPublicId(publicId)
 
     await prisma.rabbitPhoto.delete({ where: { id: req.params.photoId } })
     res.status(204).send()

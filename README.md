@@ -104,7 +104,7 @@ NEXT_PUBLIC_WHATSAPP=votre_numero_whatsapp
 cd api
 npm install
 
-cd ../web
+cd web
 npm install
 ```
 

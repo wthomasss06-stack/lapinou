@@ -14,15 +14,9 @@ const rabbits = [
     birthDate: new Date('2025-03-15'),
     weight: 1.2,
     description: "Noisette est une petite bélier nain très douce et câline. Elle adore être portée et s'entend très bien avec les enfants. Vaccinée et vermifugée.",
-    price: 35000,
+    price: 8000,
     priceNote: 'Vaccination incluse',
     status: 'available',
-    photos: {
-      create: [
-        { url: '/uploads/noisette-1.jpg', position: 0, isMain: true },
-        { url: '/uploads/noisette-2.jpg', position: 1, isMain: false },
-      ],
-    },
   },
   {
     slug: 'grisou-rex',
@@ -33,14 +27,9 @@ const rabbits = [
     birthDate: new Date('2025-01-20'),
     weight: 2.1,
     description: 'Grisou est un Rex au pelage incroyablement doux. Curieux et joueur, il aime explorer son environnement. Parfait pour une famille.',
-    price: 45000,
+    price: 10000,
     priceNote: null,
-    status: 'reserved', // déjà réservé → grisé dans l'UI
-    photos: {
-      create: [
-        { url: '/uploads/grisou-1.jpg', position: 0, isMain: true },
-      ],
-    },
+    status: 'reserved',
   },
   {
     slug: 'cannelle-angora',
@@ -51,16 +40,9 @@ const rabbits = [
     birthDate: new Date('2025-04-01'),
     weight: 1.8,
     description: 'Cannelle est un Angora français avec une fourrure magnifique. Elle nécessite un brossage régulier mais est très affectueuse.',
-    price: 55000,
+    price: 9000,
     priceNote: 'Kit toilettage offert',
     status: 'available',
-    photos: {
-      create: [
-        { url: '/uploads/cannelle-1.jpg', position: 0, isMain: true },
-        { url: '/uploads/cannelle-2.jpg', position: 1, isMain: false },
-        { url: '/uploads/cannelle-3.jpg', position: 2, isMain: false },
-      ],
-    },
   },
   {
     slug: 'loulou-hollandais',
@@ -71,14 +53,9 @@ const rabbits = [
     birthDate: new Date('2025-02-10'),
     weight: 1.5,
     description: "Loulou est un petit hollandais bicolore plein d'énergie. Il adore jouer avec des jouets et apprend vite les tours.",
-    price: 30000,
+    price: 8500,
     priceNote: null,
     status: 'sold',
-    photos: {
-      create: [
-        { url: '/uploads/loulou-1.jpg', position: 0, isMain: true },
-      ],
-    },
   },
 ]
 

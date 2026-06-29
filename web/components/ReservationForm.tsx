@@ -1,18 +1,27 @@
 'use client'
 // web/components/ReservationForm.tsx
-// Formulaire actif uniquement sur les lapins "available"
-// Après soumission → confirmation + lien WhatsApp
+// Flux : remplir le formulaire → cliquer le bouton WhatsApp vert
+//   → envoie la réservation à l'API (email admin) + ouvre WhatsApp avec message intelligent
+// Aucun email au client.
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { rabbitsApi } from '@/lib/api'
-import { CheckCircle2, MessageCircle } from 'lucide-react'
+import { formatPrice } from '@/lib/status'
+import { MessageCircle, Truck, MapPin, CheckCircle2, AlertCircle } from 'lucide-react'
 
-// Même clé que Nexura frontend/lib/config.js → NEXT_PUBLIC_WHATSAPP
 const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP
+
+// Zones de livraison — miroir de api/src/lib/delivery.js
+const DELIVERY_ZONES = [
+  { key: 'abidjan',      label: 'Abidjan',                    fee: 2000, color: 'text-sky-400',    bg: 'bg-sky-400/10 border-sky-400/20' },
+  { key: 'azaguie',      label: 'Azaguié & alentours',        fee: 1000, color: 'text-sage',        bg: 'bg-sage/10 border-sage/20' },
+  { key: 'pays_profond', label: 'Reste de la Côte d\'Ivoire', fee: 3000, color: 'text-caramel',     bg: 'bg-caramel/10 border-caramel/20' },
+]
 
 interface ReservationFormProps {
   slug: string
   rabbitName: string
+  rabbitPrice?: number
 }
 
 interface FormState {
@@ -23,7 +32,7 @@ interface FormState {
   message: string
 }
 
-export default function ReservationForm({ slug, rabbitName }: ReservationFormProps) {
+export default function ReservationForm({ slug, rabbitName, rabbitPrice }: ReservationFormProps) {
   const [form, setForm] = useState<FormState>({
     firstName: '',
     lastName:  '',
@@ -43,30 +52,36 @@ export default function ReservationForm({ slug, rabbitName }: ReservationFormPro
     setState('loading')
     setErrorMsg('')
 
-    // Récupère la position du client depuis le sessionStorage si disponible
+    // Coordonnées GPS si dispo
     let latitude: number | null = null
     let longitude: number | null = null
     if (typeof window !== 'undefined') {
-      const localLoc = sessionStorage.getItem('lapinou_client_location')
-      if (localLoc) {
-        try {
-          const parsed = JSON.parse(localLoc)
-          if (parsed && parsed.lat && parsed.lng) {
-            latitude = parsed.lat
-            longitude = parsed.lng
-          }
-        } catch (err) {
-          console.error('Erreur lecture coordonnées:', err)
+      try {
+        const loc = sessionStorage.getItem('lapinou_client_location')
+        if (loc) {
+          const parsed = JSON.parse(loc)
+          if (parsed?.lat && parsed?.lng) { latitude = parsed.lat; longitude = parsed.lng }
         }
-      }
+      } catch (_) {}
     }
 
     try {
-      await rabbitsApi.reserve(slug, {
-        ...form,
-        latitude,
-        longitude
-      })
+      // 1. Créer la réservation en base + envoyer l'email à l'admin
+      await rabbitsApi.reserve(slug, { ...form, latitude, longitude })
+
+      // 2. Ouvrir WhatsApp avec message pré-rempli intelligent
+      if (WHATSAPP && typeof window !== 'undefined') {
+        const waNum = WHATSAPP.replace(/\D/g, '')
+        const waText = `Bonjour ! Je viens de réserver *${rabbitName}* sur votre site Lapinou 🐇\n\n` +
+          `Voici mes coordonnées :\n` +
+          `• Prénom : ${form.firstName}\n` +
+          `• Nom : ${form.lastName}\n` +
+          `• Téléphone : ${form.phone}\n\n` +
+          `Quand seriez-vous disponible pour un rendez-vous ?`
+        const waUrl = `https://wa.me/${waNum}?text=${encodeURIComponent(waText)}`
+        window.open(waUrl, '_blank', 'noopener,noreferrer')
+      }
+
       setState('success')
       playSuccessSound()
     } catch (err: any) {
@@ -77,66 +92,44 @@ export default function ReservationForm({ slug, rabbitName }: ReservationFormPro
 
   function playSuccessSound() {
     if (typeof window === 'undefined') return
-    const consentData = localStorage.getItem('lapinou_cookie_consent')
-    if (!consentData) return
+    const AudioCtx = window.AudioContext || (window as any).webkitAudioContext
+    if (!AudioCtx) return
     try {
-      const parsed = JSON.parse(consentData)
-      if (!parsed.sound) return
-    } catch (e) {
-      return
-    }
-
-    const AudioContext = window.AudioContext || (window as any).webkitAudioContext
-    if (!AudioContext) return
-    try {
-      const ctx = new AudioContext()
+      const ctx = new AudioCtx()
       const osc = ctx.createOscillator()
       const gain = ctx.createGain()
-      
       osc.type = 'sine'
-      // Note harmonieuse cristalline (A5 à 880Hz)
       osc.frequency.setValueAtTime(880, ctx.currentTime)
-      
-      gain.gain.setValueAtTime(0.3, ctx.currentTime)
-      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.8)
-      
+      gain.gain.setValueAtTime(0.25, ctx.currentTime)
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.7)
       osc.connect(gain)
       gain.connect(ctx.destination)
-      
       osc.start()
-      osc.stop(ctx.currentTime + 0.8)
-    } catch (err) {
-      console.error('Erreur lecture son:', err)
-    }
+      osc.stop(ctx.currentTime + 0.7)
+    } catch (_) {}
   }
 
   // ── Succès ────────────────────────────────────────────────────────────────
   if (state === 'success') {
-    const waText = `Bonjour, j'ai soumis une réservation pour ${rabbitName} sur votre site. Pouvons-nous convenir d'un rendez-vous ?`
-    const waUrl  = WHATSAPP
-      ? `https://wa.me/${WHATSAPP.replace(/\D/g, '')}?text=${encodeURIComponent(waText)}`
-      : null
-
     return (
-      <div className="rounded-2xl border border-sage/30 bg-sage/10 p-6 space-y-4">
-        <div className="flex items-center gap-2">
-          <CheckCircle2 size={22} className="text-sage shrink-0" />
-          <h3 className="font-bold text-sage">Réservation envoyée !</h3>
-        </div>
-        <p className="text-sm text-white/60">
-          Un email de confirmation vous a été envoyé. Le vendeur vous contactera
-          prochainement pour confirmer votre rendez-vous.
+      <div className="rounded-2xl border border-sage/30 bg-sage/10 p-6 space-y-3 text-center">
+        <CheckCircle2 size={36} className="text-sage mx-auto" />
+        <h3 className="font-bold text-sage text-lg">Réservation envoyée !</h3>
+        <p className="text-sm text-white/60 leading-relaxed">
+          Votre demande a bien été enregistrée.<br />
+          WhatsApp s'est ouvert pour finaliser le rendez-vous.<br />
+          <span className="text-white/40 text-xs">L'annonce est maintenant grisée.</span>
         </p>
-        {waUrl && (
+        {WHATSAPP && (
           <a
-            href={waUrl}
+            href={`https://wa.me/${WHATSAPP.replace(/\D/g, '')}`}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-2 w-full py-3 px-4
                        rounded-xl bg-[#25D366] text-white font-semibold text-sm
                        hover:bg-[#1ebe5d] transition-colors"
           >
-            <MessageCircle size={16} /> Confirmer via WhatsApp
+            <MessageCircle size={16} /> Ouvrir WhatsApp à nouveau
           </a>
         )}
       </div>
@@ -146,7 +139,12 @@ export default function ReservationForm({ slug, rabbitName }: ReservationFormPro
   // ── Formulaire ────────────────────────────────────────────────────────────
   return (
     <form onSubmit={onSubmit} className="space-y-4">
-      <h2 className="font-display font-bold text-white text-lg">Réserver {rabbitName}</h2>
+      <div>
+        <h2 className="font-display font-bold text-white text-lg">Réserver {rabbitName}</h2>
+        <p className="text-xs text-white/40 mt-0.5">
+          Remplissez vos infos · WhatsApp s'ouvrira automatiquement
+        </p>
+      </div>
 
       <div className="grid grid-cols-2 gap-3">
         <Field label="Prénom" name="firstName" value={form.firstName} onChange={onChange} required />
@@ -165,27 +163,69 @@ export default function ReservationForm({ slug, rabbitName }: ReservationFormPro
           name="message"
           value={form.message}
           onChange={onChange}
-          rows={3}
+          rows={2}
           placeholder="Vos disponibilités, questions…"
           className="input-dark w-full rounded-xl px-3 py-2 text-sm resize-none"
         />
       </div>
 
+      {/* Zones de livraison */}
+      <div className="rounded-xl border border-brand-border bg-brand-darker/50 p-3 space-y-2">
+        <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-white/35 mb-1">
+          <Truck size={11} className="text-caramel" />
+          Frais de livraison selon votre zone
+        </div>
+        <div className="grid grid-cols-1 gap-1.5">
+          {DELIVERY_ZONES.map(z => (
+            <div key={z.key} className={`flex items-center justify-between rounded-lg border px-3 py-2 ${z.bg}`}>
+              <div className="flex items-center gap-1.5">
+                <MapPin size={11} className={z.color} />
+                <span className="text-xs text-white/70">{z.label}</span>
+              </div>
+              <span className={`text-xs font-bold ${z.color}`}>{formatPrice(z.fee)}</span>
+            </div>
+          ))}
+        </div>
+        <p className="text-[10px] text-white/25 leading-relaxed">
+          La zone est déterminée automatiquement selon votre position lors de la soumission.
+        </p>
+      </div>
+
       {state === 'error' && (
-        <p className="text-sm text-terracotta bg-terracotta/10 rounded-lg px-3 py-2">{errorMsg}</p>
+        <div className="flex items-start gap-2 text-sm text-terracotta bg-terracotta/10 rounded-lg px-3 py-2">
+          <AlertCircle size={15} className="mt-0.5 shrink-0" />
+          <span>{errorMsg}</span>
+        </div>
       )}
 
       <button
         type="submit"
         disabled={state === 'loading'}
-        className="btn-neon w-full py-3 px-4 rounded-xl text-sm font-bold
-                   disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="flex items-center justify-center gap-2.5 w-full py-3.5 px-4 rounded-xl
+                   bg-[#25D366] hover:bg-[#1ebe5d] active:bg-[#17a354]
+                   text-white font-bold text-sm transition-all duration-200
+                   shadow-lg shadow-[#25D366]/25
+                   disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {state === 'loading' ? 'Envoi…' : 'Envoyer ma demande de réservation'}
+        {state === 'loading' ? (
+          <>
+            <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+            </svg>
+            Envoi en cours…
+          </>
+        ) : (
+          <>
+            <MessageCircle size={17} />
+            Réserver via WhatsApp
+          </>
+        )}
       </button>
 
-      <p className="text-xs text-white/30 text-center">
-        Votre demande n'engage à rien. Le vendeur vous contactera pour confirmer.
+      <p className="text-[10px] text-white/25 text-center leading-relaxed">
+        En cliquant, votre demande est enregistrée et WhatsApp s'ouvre automatiquement
+        pour finaliser le rendez-vous avec le vendeur.
       </p>
     </form>
   )

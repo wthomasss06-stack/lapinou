@@ -5,9 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { TrendingUp, MapPin } from 'lucide-react'
 import { rabbitsApi } from '@/lib/api'
-import { formatPrice } from '@/lib/status'
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:4000'
+import { formatPrice, resolvePhotoUrl } from '@/lib/status'
 
 export default function TopCollectionSection() {
   const [rabbits, setRabbits] = useState([])
@@ -49,7 +47,7 @@ export default function TopCollectionSection() {
             const rankColors = ['text-yellow-400', 'text-slate-300', 'text-amber-600']
             const rankColor = rank <= 3 ? rankColors[rank - 1] : 'text-white/20'
             const mainPhoto = rabbit.photos?.find(p => p.isMain) || rabbit.photos?.[0]
-            const photoSrc = mainPhoto ? `${API_URL}${mainPhoto.url}` : null
+            const photoSrc = mainPhoto ? resolvePhotoUrl(mainPhoto.url) : null
 
             return (
               <motion.div

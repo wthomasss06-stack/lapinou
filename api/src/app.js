@@ -15,12 +15,9 @@ const app = express()
 
 // ─── Middlewares globaux ──────────────────────────────────────────────────────
 app.use(cors({ origin: config.frontendUrl, credentials: true }))
+app.use('/uploads', express.static(path.join(__dirname, '../../uploads')))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-
-// ─── Uploads statiques ────────────────────────────────────────────────────────
-// Photos des lapins servies depuis /uploads/xxx.jpg
-app.use('/uploads', express.static(path.join(__dirname, '../../uploads')))
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
 app.use('/api/rabbits',            rabbitsRoutes)

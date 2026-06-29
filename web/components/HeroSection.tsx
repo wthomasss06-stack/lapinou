@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { Heart, MessageCircle, ChevronRight } from 'lucide-react'
+import { analyticsApi } from '@/lib/api'
 
 const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP?.replace(/\D/g, '') || ''
 
@@ -35,6 +36,7 @@ export default function HeroSection() {
   const [fading, setFading] = useState(false)
   const [mounted, setMounted] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [stats, setStats] = useState({ totalRabbits: 120, totalBreeds: 4, totalReservations: 98 })
   const timer = useRef<ReturnType<typeof setInterval> | null>(null)
   const bgRef = useRef<HTMLDivElement>(null)
 
@@ -50,6 +52,21 @@ export default function HeroSection() {
     timer.current = setInterval(() => go((active + 1) % SLIDES.length), 6500)
     return () => { if (timer.current) clearInterval(timer.current) }
   }, [active])
+
+  // Charger les statistiques depuis l'API publique
+  useEffect(() => {
+    analyticsApi.publicStats()
+      .then(res => {
+        if (res) {
+          setStats({
+            totalRabbits: res.totalRabbits || 0,
+            totalBreeds: res.totalBreeds || 0,
+            totalReservations: res.totalReservations || 0,
+          })
+        }
+      })
+      .catch(() => {})
+  }, [])
 
   // Parallax léger au scroll
   useEffect(() => {
@@ -158,10 +175,10 @@ export default function HeroSection() {
             <div className="text-[9px] font-bold uppercase tracking-widest text-white/35 mb-2.5">Lapinou en chiffres</div>
             <div className="grid grid-cols-2 gap-1.5">
               {[
-                { n: '120+', label: 'Lapins élevés' },
-                { n: '4', label: 'Races' },
+                { n: `${stats.totalRabbits}`, label: 'Lapins' },
+                { n: `${stats.totalBreeds}`, label: 'Races' },
+                { n: `${stats.totalReservations}`, label: 'Réservations' },
                 { n: '98%', label: 'Satisfaction' },
-                { n: '24h', label: 'Réponse' },
               ].map((st, i) => (
                 <div key={i} className="bg-white/[0.04] border border-white/[0.07] rounded-lg py-2.5 px-1 text-center">
                   <div className="font-display text-lg font-extrabold text-caramel leading-none">{st.n}</div>

@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { Check, X, PackageCheck, MessageCircle, Eye, EyeOff, BarChart3, ShieldCheck, ShieldAlert, Users } from 'lucide-react'
+import { Check, X, PackageCheck, MessageCircle, Eye, EyeOff, ShieldCheck, ShieldAlert, Users, MapPin, Truck } from 'lucide-react'
 import { adminApi } from '@/lib/api'
 import { formatPrice } from '@/lib/status'
 import toast from 'react-hot-toast'
@@ -16,6 +16,7 @@ const STATUS_BADGE = {
   cancelled: 'bg-white/10 text-white/40',
 }
 const STATUS_LABEL = { pending: 'En attente', confirmed: 'Confirmée', cancelled: 'Annulée' }
+const ZONE_LABEL = { abidjan: 'Abidjan', azaguie: 'Azaguié et alentours', pays_profond: 'Pays profond' }
 
 export default function ReservationsManager() {
   const [reservations, setReservations] = useState([])
@@ -126,6 +127,16 @@ export default function ReservationsManager() {
                   <p className="text-white/40 text-xs">
                     {resv.rabbit?.name} — {resv.rabbit?.breed} · {resv.rabbit?.price ? formatPrice(resv.rabbit.price) : ''}
                   </p>
+                  {resv.deliveryZone && (
+                    <p className="text-caramel/80 text-xs mt-0.5 flex items-center gap-1">
+                      <Truck size={11} />
+                      Livraison {ZONE_LABEL[resv.deliveryZone] || resv.deliveryZone}
+                      {resv.deliveryFee != null && ` · ${formatPrice(resv.deliveryFee)}`}
+                      {resv.rabbit?.price != null && resv.deliveryFee != null && (
+                        <span className="text-white/30"> · total {formatPrice(resv.rabbit.price + resv.deliveryFee)}</span>
+                      )}
+                    </p>
+                  )}
                   <p className="text-white/30 text-xs mt-1">
                     {resv.email} · {resv.phone}
                   </p>

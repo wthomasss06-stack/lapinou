@@ -3,6 +3,7 @@
 
 const prisma  = require('../config/prisma')
 const emailSvc = require('./email.service')
+const { computeDelivery } = require('../lib/delivery')
 
 // ─── Créer une réservation ────────────────────────────────────────────────────
 // Transaction Prisma : réservation + passage lapin en "reserved" en un seul block
@@ -13,7 +14,12 @@ async function createReservation(rabbitId, data) {
     if (!rabbit)                         throw { status: 404, message: 'Lapin introuvable' }
     if (rabbit.status !== 'available')   throw { status: 409, message: 'Ce lapin n\'est plus disponible' }
 
-    // 2. Créer la réservation
+    // 2. Résoudre la zone/le frais de livraison depuis les coordonnées GPS
+    const lat = data.latitude ? parseFloat(data.latitude) : null
+    const lng = data.longitude ? parseFloat(data.longitude) : null
+    const { zone: deliveryZone, fee: deliveryFee } = computeDelivery(lat, lng)
+
+    // 3. Créer la réservation
     const reservation = await tx.reservation.create({
       data: {
         rabbitId,
@@ -23,18 +29,20 @@ async function createReservation(rabbitId, data) {
         phone:     data.phone,
         message:   data.message || null,
         status:    'pending',
-        latitude:  data.latitude ? parseFloat(data.latitude) : null,
-        longitude: data.longitude ? parseFloat(data.longitude) : null,
+        latitude:  lat,
+        longitude: lng,
+        deliveryZone,
+        deliveryFee: deliveryZone ? deliveryFee : null,
       },
     })
 
-    // 3. Passer le lapin en "reserved" — même logique que Nexura statut_reserve
+    // 4. Passer le lapin en "reserved" — même logique que Nexura statut_reserve
     await tx.rabbit.update({
       where: { id: rabbitId },
       data:  { status: 'reserved' },
     })
 
-    // 4. Emails (hors transaction — non bloquant)
+    // 5. Emails (hors transaction — non bloquant)
     emailSvc.sendReservationEmails(reservation, rabbit).catch(console.error)
 
     return { reservation, rabbit }

@@ -55,4 +55,28 @@ router.get('/stats', adminAuth, async (req, res, next) => {
   }
 })
 
+// ─── Obtenir les statistiques publiques de la plateforme (Public) ───────────────
+// GET /api/analytics/public-stats
+router.get('/public-stats', async (req, res, next) => {
+  try {
+    const totalRabbits = await prisma.rabbit.count()
+    
+    // Nombre de races de lapins uniques
+    const breedsGroup = await prisma.rabbit.groupBy({
+      by: ['breed'],
+    })
+    const totalBreeds = breedsGroup.length
+
+    const totalReservations = await prisma.reservation.count()
+
+    res.json({
+      totalRabbits,
+      totalBreeds,
+      totalReservations,
+    })
+  } catch (err) {
+    next(err)
+  }
+})
+
 module.exports = router

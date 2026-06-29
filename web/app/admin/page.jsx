@@ -1,18 +1,30 @@
 'use client'
 import { useState } from 'react'
-import { Rabbit, ClipboardList } from 'lucide-react'
+import { LayoutDashboard, Rabbit, ClipboardList } from 'lucide-react'
 import AdminGate from '@/components/admin/AdminGate'
+import DashboardOverview from '@/components/admin/DashboardOverview'
 import RabbitsManager from '@/components/admin/RabbitsManager'
 import ReservationsManager from '@/components/admin/ReservationsManager'
 
 export default function AdminPage() {
-  const [tab, setTab] = useState('rabbits') // 'rabbits' | 'reservations'
+  const [tab, setTab] = useState('dashboard') // 'dashboard' | 'rabbits' | 'reservations'
 
   return (
     <AdminGate>
       <main className="min-h-screen px-6 py-8 max-w-6xl mx-auto">
         {/* Tabs */}
         <div className="flex items-center gap-2 mb-8">
+          <button
+            onClick={() => setTab('dashboard')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
+              tab === 'dashboard'
+                ? 'bg-caramel text-espresso font-bold'
+                : 'glass text-white/60 hover:text-white border border-brand-border'
+            }`}
+          >
+            <LayoutDashboard size={16} />
+            Dashboard
+          </button>
           <button
             onClick={() => setTab('rabbits')}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
@@ -37,7 +49,9 @@ export default function AdminPage() {
           </button>
         </div>
 
-        {tab === 'rabbits' ? <RabbitsManager /> : <ReservationsManager />}
+        {tab === 'dashboard' && <DashboardOverview />}
+        {tab === 'rabbits' && <RabbitsManager />}
+        {tab === 'reservations' && <ReservationsManager />}
       </main>
     </AdminGate>
   )

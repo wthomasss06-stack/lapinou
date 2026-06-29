@@ -3,10 +3,10 @@ import { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Upload, Trash2, ImagePlus, CheckCircle2 } from 'lucide-react'
 import { rabbitsApi } from '@/lib/api'
+import { resolvePhotoUrl } from '@/lib/status'
 import toast from 'react-hot-toast'
 
 const BREEDS = ['Bélier nain', 'Rex', 'Angora français', 'Géant des Flandres', 'Hollandais', 'Autre']
-const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:4000'
 
 function slugify(str) {
   return str
@@ -124,7 +124,7 @@ function PhotoUploadPanel({ rabbit, onDone }) {
                 className="relative group rounded-xl overflow-hidden aspect-square bg-brand-card"
               >
                 <img
-                  src={`${API_URL}${photo.url}`}
+                  src={resolvePhotoUrl(photo.url)}
                   alt={`Photo ${i + 1}`}
                   className="w-full h-full object-cover"
                 />

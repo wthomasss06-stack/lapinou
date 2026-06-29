@@ -1,22 +1,11 @@
 // api/src/middlewares/upload.middleware.js
 const multer = require('multer')
-const path   = require('path')
-const fs     = require('fs')
 
-// Dossier uploads — relatif à la racine du projet
-const UPLOADS_DIR = path.resolve(__dirname, '../../../uploads')
-
-// Crée le dossier s'il n'existe pas
-if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true })
-
-const storage = multer.diskStorage({
-  destination: (_req, _file, cb) => cb(null, UPLOADS_DIR),
-  filename: (_req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase()
-    const uniqueName = `rabbit-${Date.now()}-${Math.random().toString(36).slice(2)}${ext}`
-    cb(null, uniqueName)
-  },
-})
+// Stockage en mémoire (buffer) — les fichiers sont envoyés directement à
+// Cloudinary sans jamais toucher le disque local (cf cloudinary.service.js).
+// Important sur Render/Vercel : le filesystem est éphémère, le disque local
+// ne survit pas à un redéploiement.
+const storage = multer.memoryStorage()
 
 const fileFilter = (_req, file, cb) => {
   const allowed = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif']

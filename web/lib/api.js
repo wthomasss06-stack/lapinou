@@ -95,6 +95,7 @@ export const adminApi = {
   analytics: {
     stats:   () => apiFetch('/analytics/stats'),
   },
+  dashboard: (days = 30) => apiFetch(`/admin/dashboard?days=${days}`),
 }
 
 // ─── Contact ──────────────────────────────────────────────────────────────────
@@ -102,4 +103,10 @@ export const sendContactMessage = (body) => apiFetch('/contact', {
   method: 'POST',
   body:   JSON.stringify(body),
 })
+
+// ─── Analytics Publics ────────────────────────────────────────────────────────
+export const analyticsApi = {
+  publicStats: () => apiFetch('/analytics/public-stats'),
+}
+
 

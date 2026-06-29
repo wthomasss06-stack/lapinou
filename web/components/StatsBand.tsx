@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
+import { analyticsApi } from '@/lib/api'
 
 function Counter({ target, suffix = '' }) {
   const [val, setVal] = useState(0)
@@ -26,18 +27,34 @@ function Counter({ target, suffix = '' }) {
   return <span ref={ref}>{val}{suffix}</span>
 }
 
-const ITEMS = [
-  { n: 120, suf: '+', label: 'Lapins élevés' },
-  { n: 4, suf: '', label: 'Races disponibles' },
-  { n: 98, suf: '%', label: 'Clients satisfaits' },
-  { n: 1, suf: ' min', label: 'Pour réserver' },
-]
-
 export default function StatsBand() {
+  const [stats, setStats] = useState({ totalRabbits: 120, totalBreeds: 4, totalReservations: 98 })
+
+  useEffect(() => {
+    analyticsApi.publicStats()
+      .then(res => {
+        if (res) {
+          setStats({
+            totalRabbits: res.totalRabbits || 0,
+            totalBreeds: res.totalBreeds || 0,
+            totalReservations: res.totalReservations || 0
+          })
+        }
+      })
+      .catch(() => {})
+  }, [])
+
+  const items = [
+    { n: stats.totalRabbits, suf: '+', label: 'Lapins élevés' },
+    { n: stats.totalBreeds, suf: '', label: 'Races disponibles' },
+    { n: stats.totalReservations, suf: '', label: 'Réservations passées' },
+    { n: 98, suf: '%', label: 'Clients satisfaits' },
+  ]
+
   return (
     <div className="bg-brand-card/40 border-y border-brand-border">
       <div className="max-w-6xl mx-auto grid grid-cols-2 sm:grid-cols-4 divide-x divide-y sm:divide-y-0 divide-brand-border/60">
-        {ITEMS.map((item, i) => (
+        {items.map((item, i) => (
           <div key={i} className="px-6 py-8 sm:py-10 text-center">
             <div className="font-display text-3xl sm:text-4xl font-extrabold text-caramel tracking-tight">
               <Counter target={item.n} suffix={item.suf} />
@@ -49,3 +66,4 @@ export default function StatsBand() {
     </div>
   )
 }
+

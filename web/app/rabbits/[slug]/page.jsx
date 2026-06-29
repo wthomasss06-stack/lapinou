@@ -2,24 +2,23 @@
 // Page détail — inspirée de la mise en page AnnonceDetailClient de Nexura
 // (breadcrumb, galerie+lightbox, colonne sticky CTA, partage, similaires)
 // adaptée à la vente de lapins : pas de KYC/vendeur tiers/caution/carte —
-// remplacé par le formulaire de réservation direct + contact WhatsApp.
+// fusionné avec les détails et la carte GPS interactive.
 
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { ChevronRight, Sparkles, MessageCircleHeart, ShieldCheck, Stethoscope, Lock, BadgeCheck } from 'lucide-react'
+import { ChevronRight, Sparkles, MessageCircleHeart, ShieldCheck, Stethoscope } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
-import ReservationForm from '@/components/ReservationForm'
 import RabbitGallery from '@/components/RabbitGallery'
 import SharePanel from '@/components/SharePanel'
 import SimilarRabbits from '@/components/SimilarRabbits'
-import { STATUS_LABEL, isUnavailable, formatPrice, GENDER_LABEL } from '@/lib/status'
+import ReserveButton from '@/components/ReserveButton'
+import { STATUS_LABEL, isUnavailable, formatPrice, GENDER_LABEL, resolvePhotoUrl } from '@/lib/status'
 import dynamic from 'next/dynamic'
 
 const MapView = dynamic(() => import('@/components/MapView'), { ssr: false })
 
 const API_URL  = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'
-const MEDIA    = API_URL.replace('/api', '')
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || ''
 
 // SSR — revalidation toutes les 60s pour avoir le statut frais
@@ -46,13 +45,24 @@ export default async function RabbitDetailPage({ params }) {
   if (!rabbit) notFound()
 
   const unavailable = isUnavailable(rabbit)
+  // resolvePhotoUrl gère les 2 cas :
+  //  - URL Cloudinary absolue (https://res.cloudinary.com/...) → retournée telle quelle
+  //  - Ancien chemin relatif local (/uploads/xxx.jpg) → préfixé par l'API
   const photos = [...(rabbit.photos || [])]
     .sort((a, b) => a.position - b.position)
-    .map(p => `${MEDIA}${p.url}`)
+    .map(p => resolvePhotoUrl(p.url))
+    .filter(Boolean)
 
   const specs = [
-    { label: 'Race',   value: rabbit.breed },
-    { label: 'Genre',  value: GENDER_LABEL[rabbit.gender] },
+    { label: 'Nom',       value: rabbit.name },
+    { label: 'Race',      value: rabbit.breed },
+    { label: 'Genre',     value: GENDER_LABEL[rabbit.gender] },
+    { 
+      label: 'Statut',    
+      value: unavailable ? (rabbit.status === 'reserved' ? 'Réservé' : 'Vendu') : 'Disponible',
+      isStatus: true 
+    },
+    { label: 'Localisation', value: "Azaguié Gare, Côte d'Ivoire", isFull: true },
     rabbit.color  && { label: 'Couleur',   value: rabbit.color },
     rabbit.weight && { label: 'Poids',     value: `${rabbit.weight} kg` },
     rabbit.birthDate && { label: 'Naissance', value: new Date(rabbit.birthDate).toLocaleDateString('fr-FR') },
@@ -84,24 +94,6 @@ export default async function RabbitDetailPage({ params }) {
           {/* Colonne droite — Infos + CTA (sticky desktop) */}
           <div className="lg:sticky lg:top-24 flex flex-col">
 
-            {/* Badges */}
-            <div className="flex items-center gap-2 mb-3 flex-wrap">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-card border border-brand-border text-xs font-semibold text-white/55">
-                <span className="w-1.5 h-1.5 rounded-full bg-caramel" />
-                {rabbit.breed}
-              </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-card border border-brand-border text-xs font-semibold text-white/55">
-                <span className={`w-2 h-2 rounded-full ${rabbit.gender === 'male' ? 'bg-sky-400' : 'bg-pink-400'}`} />
-                {GENDER_LABEL[rabbit.gender]}
-              </span>
-              {!unavailable && (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sage/15 border border-sage/25 text-xs font-bold text-sage">
-                  <span className="w-1.5 h-1.5 rounded-full bg-sage animate-pulse" />
-                  Disponible
-                </span>
-              )}
-            </div>
-
             {/* Titre */}
             <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-white leading-tight mb-2">
               {rabbit.name}
@@ -110,18 +102,39 @@ export default async function RabbitDetailPage({ params }) {
 
             <div className="h-px bg-brand-border mb-5" />
 
-            {/* Prix */}
-            <div className="mb-5">
-              <div className="text-[10px] font-bold uppercase tracking-widest text-white/35 mb-1.5">Prix de vente</div>
-              <div className={`font-display text-3xl sm:text-4xl font-extrabold ${unavailable ? 'text-white/30' : 'text-caramel'}`}>
-                {formatPrice(rabbit.price)}
+            {/* Grille Prix & Réservation */}
+            <div className="bg-brand-card border border-brand-border rounded-2xl p-5 mb-5">
+              <div className="grid grid-cols-2 gap-4 items-center">
+                <div>
+                  <div className="text-[10px] font-bold uppercase tracking-widest text-white/35 mb-1">Prix de vente</div>
+                  <div className={`font-display text-2xl sm:text-3xl font-extrabold ${unavailable ? 'text-white/30' : 'text-caramel'}`}>
+                    {formatPrice(rabbit.price)}
+                  </div>
+                  {rabbit.priceNote && (
+                    <p className="text-white/35 text-[10px] italic mt-1">{rabbit.priceNote}</p>
+                  )}
+                </div>
+                <div>
+                  {!unavailable ? (
+                    <ReserveButton
+                      slug={rabbit.slug}
+                      rabbitName={rabbit.name}
+                      rabbitPrice={rabbit.price}
+                      breed={rabbit.breed}
+                    />
+                  ) : (
+                    <button
+                      disabled
+                      className="w-full py-3 px-4 rounded-xl bg-brand-border text-white/30 font-bold text-xs cursor-not-allowed text-center"
+                    >
+                      {rabbit.status === 'reserved' ? 'Déjà réservé' : 'Vendu'}
+                    </button>
+                  )}
+                </div>
               </div>
-              {rabbit.priceNote && (
-                <p className="text-white/35 text-xs italic mt-1.5">{rabbit.priceNote}</p>
-              )}
             </div>
 
-            {/* Garanties (équivalent simplifié du bandeau Nexura) */}
+            {/* Garanties */}
             <div className="flex gap-2 flex-wrap mb-5">
               {[
                 { icon: <Stethoscope size={12} />, txt: 'Suivi vétérinaire' },
@@ -135,33 +148,45 @@ export default async function RabbitDetailPage({ params }) {
               ))}
             </div>
 
-            {/* Zone réservation */}
-            {unavailable ? (
-              <div className="bg-brand-card border border-brand-border rounded-2xl p-6 opacity-75 select-none mb-5">
-                <p className="font-semibold text-white/50 text-center mb-4 text-sm flex items-center justify-center gap-2">
-                  {rabbit.status === 'reserved'
-                    ? <><Lock size={14} /> Ce lapin est déjà réservé</>
-                    : <><BadgeCheck size={14} /> Ce lapin a été vendu</>}
-                </p>
-                <div className="space-y-3 pointer-events-none">
-                  {['Prénom', 'Nom', 'Email', 'Téléphone'].map(f => (
-                    <div key={f}>
-                      <label className="block text-xs text-white/30 mb-1">{f}</label>
-                      <div className="h-9 rounded-lg bg-brand-darker" />
+            {/* Informations Détaillées (Fusionnées ici) */}
+            <div className="bg-brand-card border border-brand-border rounded-2xl p-6 mb-5 space-y-6">
+              <div className="flex items-center justify-between pb-3 border-b border-brand-border/55">
+                <span className="text-[11px] font-bold uppercase tracking-widest text-white/45">
+                  Informations détaillées
+                </span>
+              </div>
+              
+              {rabbit.description && (
+                <div className="space-y-2">
+                  <h2 className="font-display font-bold text-white text-sm uppercase tracking-wide flex items-center gap-2">
+                    <Sparkles size={14} className="text-caramel" /> À propos
+                  </h2>
+                  <p className="text-white/55 text-sm leading-relaxed whitespace-pre-line">{rabbit.description}</p>
+                </div>
+              )}
+
+              <div className="space-y-3">
+                <h2 className="font-display font-bold text-white text-sm uppercase tracking-wide flex items-center gap-2">
+                  <Sparkles size={14} className="text-caramel" /> Caractéristiques
+                </h2>
+                <dl className="grid grid-cols-2 gap-3">
+                  {specs.map(({ label, value, isStatus, isFull }) => (
+                    <div 
+                      key={label} 
+                      className={`bg-brand-darker/60 border border-brand-border/60 rounded-xl px-3.5 py-2.5 ${isFull ? 'col-span-2' : ''}`}
+                    >
+                      <dt className="text-[10px] text-white/35 uppercase tracking-wide mb-0.5">{label}</dt>
+                      <dd className={`text-xs font-semibold ${isStatus ? (unavailable ? 'text-terracotta' : 'text-sage') : 'text-white/85'}`}>
+                        {value}
+                      </dd>
                     </div>
                   ))}
-                  <div className="h-10 rounded-xl bg-brand-border mt-4" />
-                </div>
+                </dl>
               </div>
-            ) : (
-              <div className="bg-brand-card border border-brand-border rounded-2xl p-6 mb-5">
-                <ReservationForm slug={rabbit.slug} rabbitName={rabbit.name} />
-              </div>
-            )}
+            </div>
 
-            {/* Localisation du Coin Lapin */}
+            {/* Localisation du Coin Lapin & GPS */}
             <div className="mb-5">
-              <h3 className="text-xs font-bold text-white/50 mb-3 uppercase tracking-wider">Localisation du Coin Lapin</h3>
               <MapView />
             </div>
 
@@ -170,44 +195,9 @@ export default async function RabbitDetailPage({ params }) {
           </div>
         </div>
 
-        {/* Section bas — description / specs / similaires */}
+        {/* Section bas — similaires */}
         <div className="mt-14">
-          <div className="flex items-center gap-4 mb-10">
-            <div className="flex-1 h-px bg-gradient-to-r from-transparent to-brand-border" />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-white/35 px-4 py-1.5 rounded-full border border-brand-border bg-brand-card">
-              Informations détaillées
-            </span>
-            <div className="flex-1 h-px bg-gradient-to-l from-transparent to-brand-border" />
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-10">
-            {/* Description */}
-            {rabbit.description && (
-              <div>
-                <h2 className="font-display font-bold text-white text-sm uppercase tracking-wide mb-3 flex items-center gap-2">
-                  <Sparkles size={14} className="text-caramel" /> À propos
-                </h2>
-                <p className="text-white/55 text-sm leading-relaxed whitespace-pre-line">{rabbit.description}</p>
-              </div>
-            )}
-
-            {/* Caractéristiques */}
-            <div>
-              <h2 className="font-display font-bold text-white text-sm uppercase tracking-wide mb-3 flex items-center gap-2">
-                <Sparkles size={14} className="text-caramel" /> Caractéristiques
-              </h2>
-              <dl className="grid grid-cols-2 gap-x-4 gap-y-3">
-                {specs.map(({ label, value }) => (
-                  <div key={label} className="bg-brand-card border border-brand-border rounded-xl px-3.5 py-2.5">
-                    <dt className="text-[10px] text-white/30 uppercase tracking-wide mb-0.5">{label}</dt>
-                    <dd className="text-sm font-semibold text-white/85">{value}</dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-          </div>
-
-          {/* Lapins similaires */}
+          <div className="h-px bg-gradient-to-r from-transparent via-brand-border to-transparent mb-10" />
           <SimilarRabbits currentSlug={rabbit.slug} breed={rabbit.breed} />
         </div>
       </div>

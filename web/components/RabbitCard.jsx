@@ -6,13 +6,11 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { MapPin, PawPrint } from 'lucide-react'
-import { STATUS_LABEL, isUnavailable, formatPrice, GENDER_LABEL } from '@/lib/status'
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:4000'
+import { STATUS_LABEL, isUnavailable, formatPrice, GENDER_LABEL, resolvePhotoUrl } from '@/lib/status'
 
 function RabbitImage({ rabbit, unavailable }) {
   const mainPhoto = rabbit.photos?.find(p => p.isMain) || rabbit.photos?.[0]
-  const src = mainPhoto ? `${API_URL}${mainPhoto.url}` : null
+  const src = mainPhoto ? resolvePhotoUrl(mainPhoto.url) : null
 
   return (
     <div className="relative h-52 overflow-hidden bg-brand-darker">
@@ -67,7 +65,7 @@ export default function RabbitCard({ rabbit, index = 0, layout = 'grid' }) {
 
   if (layout === 'list') {
     const mainPhoto = rabbit.photos?.find(p => p.isMain) || rabbit.photos?.[0]
-    const src = mainPhoto ? `${API_URL}${mainPhoto.url}` : null
+    const src = mainPhoto ? resolvePhotoUrl(mainPhoto.url) : null
 
     return (
       <motion.div

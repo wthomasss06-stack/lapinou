@@ -56,7 +56,8 @@ model RabbitPhoto {
   id        Int     @id @default(autoincrement())
   rabbitId  String
   rabbit    Rabbit  @relation(fields: [rabbitId], references: [id], onDelete: Cascade)
-  url       String                              // path local ou URL Cloudinary
+  url       String                              // URL Cloudinary (secure_url)
+  publicId  String?                             // public_id Cloudinary — nécessaire pour la suppression
   position  Int     @default(0)                // ordre d'affichage
   isMain    Boolean @default(false)            // photo principale = couverture
 }
@@ -85,6 +86,11 @@ model Reservation {
   // Coordonnées GPS client
   latitude  Float?
   longitude Float?
+
+  // Livraison — zone résolue automatiquement depuis lat/lng (cf lib/delivery.js)
+  // "abidjan" -> 2000 FCFA | "azaguie" -> 1000 FCFA | "pays_profond" -> 3000 FCFA
+  deliveryZone String?
+  deliveryFee  Float?
 
   // Confirmation WhatsApp
   confirmedAt DateTime?
