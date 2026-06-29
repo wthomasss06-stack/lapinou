@@ -5,7 +5,8 @@
   "main": "src/server.js",
   "scripts": {
     "dev": "nodemon src/server.js",
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "preinstall": "node -e \"const fs = require('fs'); if (!fs.existsSync('../prisma')) { fs.mkdirSync('../prisma', { recursive: true }); } if (fs.existsSync('prisma')) { fs.readdirSync('prisma').forEach(f => fs.copyFileSync('prisma/' + f, '../prisma/' + f)); }\""
   },
   "dependencies": {
     "@prisma/client": "^5.14.0",
