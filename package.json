@@ -1,0 +1,25 @@
+{
+  "devDependencies": {
+    "prisma": "^5.22.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
+  "scripts": {
+    "db:generate":     "prisma generate",
+    "db:push":         "prisma db push",
+    "db:seed":         "prisma db seed",
+    "db:studio":       "prisma studio",
+    "db:reset":        "prisma db push --force-reset",
+
+    "db:push:prod":    "prisma db push --schema=prisma/schema.production.prisma",
+    "db:seed:prod":    "prisma db seed --schema=prisma/schema.production.prisma",
+    "db:studio:prod":  "prisma studio --schema=prisma/schema.production.prisma",
+
+    "db:setup":        "prisma generate && prisma db push && prisma db seed"
+  }
+}
+

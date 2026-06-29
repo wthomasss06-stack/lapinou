@@ -1,0 +1,110 @@
+// rabbit-shop — Prisma Schema
+// Dev  : SQLite  → fichier local prisma/dev.db  (DATABASE_URL=file:./dev.db)
+// Prod : échanger le provider en "postgresql" + pointer vers Neon
+//        ou utiliser : npm run db:prod
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../api/node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Lapin ────────────────────────────────────────────────────────────────────
+model Rabbit {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+
+  // Identité
+  name        String
+  breed       String                         // ex: "Bélier nain", "Rex"
+  color       String
+  gender      String                         // "male" | "female"
+  birthDate   DateTime?
+  weight      Float?                         // kg
+  description String?
+
+  // Prix
+  price       Float
+  priceNote   String?                        // "négociable", "incluant vaccins", etc.
+
+  // Statut — même logique que Nexura Annonce.statut
+  // available → réservable
+  // reserved  → grisé, formulaire désactivé
+  // sold      → définitivement indisponible
+  status      String   @default("available") // "available" | "reserved" | "sold"
+
+  // Médias
+  photos      RabbitPhoto[]
+
+  // Réservations
+  reservations Reservation[]
+
+  // Dates
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status])
+  @@index([slug])
+}
+
+// ─── Photos ───────────────────────────────────────────────────────────────────
+// Pattern AnnoncePhoto de Nexura : plusieurs photos ordonnées par position
+model RabbitPhoto {
+  id        Int     @id @default(autoincrement())
+  rabbitId  String
+  rabbit    Rabbit  @relation(fields: [rabbitId], references: [id], onDelete: Cascade)
+  url       String                              // path local : /uploads/xxx.jpg
+  position  Int     @default(0)                // ordre d'affichage
+  isMain    Boolean @default(false)            // photo principale = couverture
+}
+
+// ─── Réservation ──────────────────────────────────────────────────────────────
+// Pattern Transaction de Nexura (simplifié)
+model Reservation {
+  id        String   @id @default(cuid())
+
+  // Quel lapin
+  rabbitId  String
+  rabbit    Rabbit   @relation(fields: [rabbitId], references: [id])
+
+  // Acheteur
+  firstName String
+  lastName  String
+  email     String
+  phone     String
+  message   String?
+
+  // Statut de la réservation
+  // pending   → soumise, lapin passe en "reserved"
+  // confirmed → confirmée par le vendeur (WhatsApp / tel)
+  // cancelled → annulée, lapin repasse en "available"
+  status    String   @default("pending")       // "pending" | "confirmed" | "cancelled"
+
+  // Coordonnées GPS client
+  latitude  Float?
+  longitude Float?
+
+  // Confirmation WhatsApp
+  confirmedAt DateTime?
+  note        String?                          // note interne du vendeur
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([rabbitId])
+  @@index([email])
+  @@index([status])
+}
+
+// ─── Analytics ─────────────────────────────────────────────────────────────────
+model VisitStats {
+  id        String   @id @default("global")
+  accepted  Int      @default(0)
+  declined  Int      @default(0)
+  total     Int      @default(0)
+}
+
