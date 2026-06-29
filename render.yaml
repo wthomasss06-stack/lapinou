@@ -3,9 +3,8 @@ services:
     name: lapinou-api
     env: node
     plan: free
-    rootDir: api
-    buildCommand: npm install && npx prisma generate --schema=../prisma/schema.production.prisma
-    startCommand: node src/server.js
+    buildCommand: cd api && npm install && npx prisma generate --schema=../prisma/schema.production.prisma
+    startCommand: node api/src/server.js
     envVars:
       - key: NODE_ENV
         value: production
