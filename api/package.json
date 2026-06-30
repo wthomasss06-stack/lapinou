@@ -6,7 +6,17 @@
   "scripts": {
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
-    "preinstall": "node -e \"const fs = require('fs'); if (!fs.existsSync('../prisma')) { fs.mkdirSync('../prisma', { recursive: true }); } if (fs.existsSync('prisma')) { fs.readdirSync('prisma').forEach(f => fs.copyFileSync('prisma/' + f, '../prisma/' + f)); }\""
+    "postinstall": "node ./scripts/generate-prisma-client.js",
+    "db:generate": "prisma generate --schema=prisma/schema.prisma",
+    "db:push": "prisma db push --schema=prisma/schema.prisma",
+    "db:seed": "prisma db seed",
+    "db:studio": "prisma studio --schema=prisma/schema.prisma",
+    "db:reset": "prisma db push --force-reset --schema=prisma/schema.prisma",
+    "db:generate:prod": "prisma generate --schema=prisma/schema.production.prisma",
+    "db:push:prod": "prisma db push --schema=prisma/schema.production.prisma",
+    "db:seed:prod": "prisma db seed -- --schema=prisma/schema.production.prisma",
+    "db:studio:prod": "prisma studio --schema=prisma/schema.production.prisma",
+    "db:setup": "npm run db:generate && npm run db:push && npm run db:seed"
   },
   "dependencies": {
     "@prisma/client": "^5.14.0",
@@ -23,7 +33,7 @@
     "prisma": "^5.14.0"
   },
   "prisma": {
-    "schema": "../prisma/schema.prisma",
-    "seed": "node ../prisma/seed.js"
+    "seed": "node prisma/seed.js"
   }
 }
+

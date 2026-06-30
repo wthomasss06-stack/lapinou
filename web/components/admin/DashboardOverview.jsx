@@ -82,13 +82,14 @@ export default function DashboardOverview() {
       </div>
 
       {/* KPIs */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3">
         <KpiCard icon={<TrendingUp size={18} />} label="Revenu confirmé" value={formatPrice(kpis.revenueConfirmed)} accent="text-[#2ECC71]" bg="bg-[#2ECC71]/15" />
         <KpiCard icon={<Truck size={18} />} label="Revenu livraison" value={formatPrice(kpis.deliveryRevenue)} />
         <KpiCard icon={<Clock size={18} />} label="En attente" value={kpis.pendingCount} accent="text-terracotta" bg="bg-terracotta/15" />
         <KpiCard icon={<PackageCheck size={18} />} label="Confirmées" value={kpis.confirmedCount} accent="text-sage" bg="bg-sage/15" />
         <KpiCard icon={<XCircle size={18} />} label="Annulées" value={kpis.cancelledCount} accent="text-white/50" />
-        <KpiCard icon={<RabbitIcon size={18} />} label="Lapins dispo." value={`${kpis.rabbitsAvailable}/${kpis.totalRabbits}`} />
+        <KpiCard icon={<RabbitIcon size={18} />} label="Races dispo." value={`${kpis.rabbitsAvailable}/${kpis.totalRabbits}`} />
+        <KpiCard icon={<RabbitIcon size={18} />} label="Stock restant" value={kpis.stockRemaining} accent="text-caramel" bg="bg-caramel/15" />
       </div>
 
       {/* Courbe revenu + réservations */}
@@ -147,7 +148,7 @@ export default function DashboardOverview() {
 
         {/* Top races */}
         <div className="glass rounded-xl p-4">
-          <h3 className="text-sm font-bold text-white/70 mb-4">Races les plus demandées</h3>
+          <h3 className="text-sm font-bold text-white/70 mb-4">Races les plus vendues (en unités)</h3>
           {topBreeds.length === 0 ? (
             <div className="text-white/30 text-xs text-center py-12">Aucune donnée encore</div>
           ) : (
@@ -158,7 +159,7 @@ export default function DashboardOverview() {
                 <YAxis type="category" dataKey="breed" stroke="#ffffff80" fontSize={11} tickLine={false} axisLine={false} width={110} />
                 <Tooltip
                   contentStyle={{ background: '#2A2118', border: '1px solid #4A3D2C', borderRadius: 8, fontSize: 12 }}
-                  formatter={(value) => [`${value} réservation(s)`, '']}
+                  formatter={(value) => [`${value} unité(s)`, '']}
                 />
                 <Bar dataKey="count" fill="#B8834A" radius={[0, 6, 6, 0]} barSize={16} />
               </BarChart>

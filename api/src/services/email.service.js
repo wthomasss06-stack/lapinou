@@ -16,16 +16,18 @@ const DELIVERY_LABELS = {
 }
 
 function templateAlerteVendeur(reservation, rabbit) {
+  const quantity = reservation.quantity ?? 1
+  const subtotal = rabbit.price * quantity
   const hasDelivery = reservation.deliveryZone && reservation.deliveryFee != null
-  const total = rabbit.price + (hasDelivery ? reservation.deliveryFee : 0)
+  const total = subtotal + (hasDelivery ? reservation.deliveryFee : 0)
   const waText = encodeURIComponent(
-    `Bonjour ${reservation.firstName} ! Je suis le vendeur de Lapinou 🐇. Vous avez réservé ${rabbit.name}. Quand seriez-vous disponible pour le rendez-vous ?`
+    `Bonjour ${reservation.firstName} ! Je suis le vendeur de Lapinou 🐇. Vous avez réservé ${quantity} ${rabbit.name}${quantity > 1 ? 's' : ''}. Quand seriez-vous disponible pour le rendez-vous ?`
   )
   const rawPhone = reservation.phone.replace(/\D/g, '')
   const waLink = `https://wa.me/${rawPhone}?text=${waText}`
 
   return {
-    subject: `🐇 Nouvelle réservation — ${rabbit.name} · ${reservation.firstName} ${reservation.lastName}`,
+    subject: `🐇 Nouvelle réservation — ${rabbit.name} ×${quantity} · ${reservation.firstName} ${reservation.lastName}`,
     html: `
 <!DOCTYPE html>
 <html lang="fr">
@@ -38,16 +40,17 @@ function templateAlerteVendeur(reservation, rabbit) {
   <!-- Header -->
   <tr><td style="background:linear-gradient(135deg,#1a0a00,#3d1a00);padding:32px 40px;">
     <h1 style="margin:0;color:#B8834A;font-size:22px;font-weight:700;">🐇 Lapinou — Nouvelle réservation</h1>
-    <p style="margin:8px 0 0;color:#fff8;font-size:14px;">Un client souhaite acquérir un lapin</p>
+    <p style="margin:8px 0 0;color:#fff8;font-size:14px;">Un client souhaite acquérir ${quantity} lapin${quantity > 1 ? 's' : ''}</p>
   </td></tr>
 
   <!-- Rabbit info -->
   <tr><td style="padding:32px 40px 0;">
     <div style="background:#fff8f0;border:1px solid #B8834A33;border-radius:8px;padding:16px 20px;margin-bottom:24px;">
       <h2 style="margin:0 0 4px;font-size:18px;color:#1a1a1a;">${rabbit.name}</h2>
-      <p style="margin:0;color:#666;font-size:14px;">${rabbit.breed} · ${rabbit.price.toLocaleString('fr-FR')} FCFA</p>
+      <p style="margin:0;color:#666;font-size:14px;">${rabbit.breed} · ${rabbit.price.toLocaleString('fr-FR')} FCFA/unité</p>
+      <p style="margin:6px 0 0;font-size:14px;font-weight:700;color:#B8834A;">Quantité : ${quantity} → ${subtotal.toLocaleString('fr-FR')} FCFA</p>
       ${hasDelivery ? `<p style="margin:6px 0 0;font-size:13px;color:#B8834A;">Livraison : ${DELIVERY_LABELS[reservation.deliveryZone] || reservation.deliveryZone} — ${reservation.deliveryFee.toLocaleString('fr-FR')} FCFA</p>` : ''}
-      ${hasDelivery ? `<p style="margin:4px 0 0;font-size:14px;font-weight:700;color:#1a1a1a;">Total : ${total.toLocaleString('fr-FR')} FCFA</p>` : ''}
+      <p style="margin:4px 0 0;font-size:14px;font-weight:700;color:#1a1a1a;">Total : ${total.toLocaleString('fr-FR')} FCFA</p>
     </div>
   </td></tr>
 

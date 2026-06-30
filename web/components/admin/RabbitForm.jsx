@@ -168,7 +168,7 @@ export default function RabbitForm({ rabbit, onSaved, onCancel }) {
     price:       rabbit?.price || '',
     priceNote:   rabbit?.priceNote || '',
     description: rabbit?.description || '',
-    status:      rabbit?.status || 'available',
+    stock:       rabbit?.stock ?? '',
   })
   const [loading, setLoading] = useState(false)
   const [savedRabbit, setSavedRabbit] = useState(isEdit ? rabbit : null)
@@ -186,16 +186,17 @@ export default function RabbitForm({ rabbit, onSaved, onCancel }) {
         ...form,
         weight: form.weight ? parseFloat(form.weight) : null,
         price:  parseFloat(form.price),
+        stock:  form.stock === '' ? 0 : parseInt(form.stock, 10),
       }
 
       let result
       if (isEdit) {
         result = await rabbitsApi.update(rabbit.id, payload)
-        toast.success('Lapin mis à jour')
+        toast.success('Race mise à jour')
       } else {
         payload.slug = slugify(`${form.name}-${form.breed}-${Date.now().toString(36)}`)
         result = await rabbitsApi.create(payload)
-        toast.success('Lapin ajouté')
+        toast.success('Race ajoutée')
       }
       setSavedRabbit(result)
       setStep('photos')
@@ -225,7 +226,7 @@ export default function RabbitForm({ rabbit, onSaved, onCancel }) {
           <h2 className="font-display text-xl font-bold text-white">
             {step === 'photos'
               ? '📷 Ajouter des photos'
-              : isEdit ? 'Modifier le lapin' : 'Ajouter un lapin'}
+              : isEdit ? 'Modifier la race' : 'Ajouter une race'}
           </h2>
           <button onClick={step === 'photos' ? onSaved : onCancel} className="text-white/40 hover:text-white">
             <X size={20} />
@@ -250,7 +251,7 @@ export default function RabbitForm({ rabbit, onSaved, onCancel }) {
                     value={form.name}
                     onChange={e => update('name', e.target.value)}
                     className="input-dark w-full px-3 py-2.5 rounded-lg text-sm"
-                    placeholder="Caramel"
+                    placeholder="Bélier nain Fauve"
                   />
                 </div>
                 <div>
@@ -275,6 +276,7 @@ export default function RabbitForm({ rabbit, onSaved, onCancel }) {
                   >
                     <option value="male">Mâle</option>
                     <option value="female">Femelle</option>
+                    <option value="mixed">Lot mixte</option>
                   </select>
                 </div>
                 <div>
@@ -312,16 +314,16 @@ export default function RabbitForm({ rabbit, onSaved, onCancel }) {
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-white/40 uppercase tracking-widest font-mono mb-1.5 block">Statut</label>
-                  <select
-                    value={form.status}
-                    onChange={e => update('status', e.target.value)}
+                  <label className="text-xs text-white/40 uppercase tracking-widest font-mono mb-1.5 block">Stock disponible *</label>
+                  <input
+                    required
+                    type="number"
+                    min="0"
+                    value={form.stock}
+                    onChange={e => update('stock', e.target.value)}
                     className="input-dark w-full px-3 py-2.5 rounded-lg text-sm"
-                  >
-                    <option value="available">Disponible</option>
-                    <option value="reserved">Réservé</option>
-                    <option value="sold">Vendu</option>
-                  </select>
+                    placeholder="12"
+                  />
                 </div>
               </div>
 

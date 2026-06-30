@@ -34,11 +34,11 @@ router.get('/dashboard', adminAuth, async (req, res, next) => {
     // ── Toutes les réservations confirmées/vendues dans la fenêtre (revenu réel) ──
     const [allRabbits, allReservations, windowReservations] = await Promise.all([
       prisma.rabbit.findMany({
-        select: { id: true, name: true, breed: true, price: true, status: true, createdAt: true },
+        select: { id: true, name: true, breed: true, price: true, stock: true, status: true, createdAt: true },
       }),
       prisma.reservation.findMany({
         select: {
-          id: true, status: true, deliveryZone: true, deliveryFee: true,
+          id: true, status: true, quantity: true, deliveryZone: true, deliveryFee: true,
           createdAt: true, confirmedAt: true, rabbitId: true,
           rabbit: { select: { price: true, breed: true, name: true } },
         },
@@ -46,7 +46,7 @@ router.get('/dashboard', adminAuth, async (req, res, next) => {
       prisma.reservation.findMany({
         where: { createdAt: { gte: since } },
         select: {
-          id: true, status: true, deliveryFee: true, createdAt: true,
+          id: true, status: true, quantity: true, deliveryFee: true, createdAt: true,
           rabbit: { select: { price: true } },
         },
         orderBy: { createdAt: 'asc' },
@@ -54,17 +54,26 @@ router.get('/dashboard', adminAuth, async (req, res, next) => {
     ])
 
     // ── KPIs globaux ──────────────────────────────────────────────────────────
+    // IMPORTANT : le revenu doit tenir compte de la quantité réservée, pas
+    // seulement du prix unitaire (sinon une commande de 5 lapins ne compte
+    // que comme 1 dans le chiffre d'affaires).
     const revenueConfirmed = allReservations
       .filter(r => r.status === 'confirmed')
-      .reduce((sum, r) => sum + (r.rabbit?.price || 0) + (r.deliveryFee || 0), 0)
+      .reduce((sum, r) => sum + (r.rabbit?.price || 0) * (r.quantity || 1) + (r.deliveryFee || 0), 0)
 
     const pendingCount   = allReservations.filter(r => r.status === 'pending').length
     const confirmedCount = allReservations.filter(r => r.status === 'confirmed').length
     const cancelledCount = allReservations.filter(r => r.status === 'cancelled').length
 
+    // Stock : disponible = fiches encore en stock, épuisé = fiches à 0.
+    // unitsSold = somme des quantités réservées (pending+confirmed), reflète
+    // le vrai volume vendu plutôt qu'un simple compteur de fiches.
     const rabbitsAvailable = allRabbits.filter(r => r.status === 'available').length
-    const rabbitsReserved  = allRabbits.filter(r => r.status === 'reserved').length
     const rabbitsSold      = allRabbits.filter(r => r.status === 'sold').length
+    const stockRemaining   = allRabbits.reduce((sum, r) => sum + r.stock, 0)
+    const unitsSold         = allReservations
+      .filter(r => r.status !== 'cancelled')
+      .reduce((sum, r) => sum + (r.quantity || 1), 0)
 
     // ── Série temporelle : réservations + revenu par jour ─────────────────────
     const dayBuckets = {}
@@ -79,7 +88,7 @@ router.get('/dashboard', adminAuth, async (req, res, next) => {
       if (!dayBuckets[key]) continue
       dayBuckets[key].reservations += 1
       if (r.status === 'confirmed') {
-        dayBuckets[key].revenue += (r.rabbit?.price || 0) + (r.deliveryFee || 0)
+        dayBuckets[key].revenue += (r.rabbit?.price || 0) * (r.quantity || 1) + (r.deliveryFee || 0)
       }
     }
     const timeline = Object.values(dayBuckets)
@@ -100,11 +109,14 @@ router.get('/dashboard', adminAuth, async (req, res, next) => {
       count,
     }))
 
-    // ── Top races par nombre de réservations ──────────────────────────────────
+    // ── Top races par nombre d'unités vendues ───────────────────────────────────
+    // Compte les unités (quantity), pas le nombre de commandes — plus
+    // représentatif du vrai volume écoulé par race pour le suivi de stock.
     const breedCounts = {}
     for (const r of allReservations) {
+      if (r.status === 'cancelled') continue
       const breed = r.rabbit?.breed || 'Autre'
-      breedCounts[breed] = (breedCounts[breed] || 0) + 1
+      breedCounts[breed] = (breedCounts[breed] || 0) + (r.quantity || 1)
     }
     const topBreeds = Object.entries(breedCounts)
       .map(([breed, count]) => ({ breed, count }))
@@ -119,8 +131,9 @@ router.get('/dashboard', adminAuth, async (req, res, next) => {
         confirmedCount,
         cancelledCount,
         rabbitsAvailable,
-        rabbitsReserved,
         rabbitsSold,
+        stockRemaining,
+        unitsSold,
         totalRabbits: allRabbits.length,
         totalReservations: allReservations.length,
       },

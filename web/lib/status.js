@@ -3,29 +3,31 @@
 
 export const STATUS = {
   AVAILABLE: 'available',
-  RESERVED:  'reserved',
   SOLD:      'sold',
 }
 
 export const STATUS_LABEL = {
   available: 'Disponible',
-  reserved:  'Réservé',
-  sold:      'Vendu',
+  sold:      'Épuisé',
 }
 
 export const STATUS_COLOR = {
   available: 'bg-emerald-100 text-emerald-700',
-  reserved:  'bg-amber-100  text-amber-700',
   sold:      'bg-red-100    text-red-600',
 }
 
-// True si le lapin ne peut plus être réservé
+// True si la fiche n'a plus de stock disponible (grisée côté client)
 export function isUnavailable(rabbit) {
-  return rabbit.status === STATUS.RESERVED || rabbit.status === STATUS.SOLD
+  return rabbit.status === STATUS.SOLD || (rabbit.stock != null && rabbit.stock <= 0)
+}
+
+// Quantité maximum sélectionnable pour une réservation (plafonnée à 50 par sécurité)
+export function maxReservable(rabbit) {
+  return Math.max(0, Math.min(rabbit.stock ?? 0, 50))
 }
 
 // Label humain du genre
-export const GENDER_LABEL = { male: 'Mâle', female: 'Femelle' }
+export const GENDER_LABEL = { male: 'Mâle', female: 'Femelle', mixed: 'Lot mixte' }
 
 // Format prix FCFA
 export function formatPrice(price) {

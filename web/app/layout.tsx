@@ -1,8 +1,9 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Syne, Space_Grotesk, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 import { Toaster } from 'react-hot-toast'
 import CookieBanner from '@/components/CookieBanner'
+import ServiceWorkerRegister from '@/components/ServiceWorkerRegister'
 
 const syne = Syne({
   subsets: ['latin'],
@@ -23,14 +24,41 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://lapinou.vercel.app'),
   title: 'Lapinou — Vente de Lapins à Abidjan',
   description: 'Découvrez et réservez nos lapins de race élevés à Abidjan, Côte d\'Ivoire.',
   keywords: ['lapin', 'vente lapin', 'élevage', 'Abidjan', 'Côte d\'Ivoire', 'lapinou'],
+  manifest: '/manifest.json',
+  applicationName: 'Lapinou',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Lapinou',
+  },
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon-48x48.png', sizes: '48x48', type: 'image/png' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
+  },
   openGraph: {
     title: 'Lapinou — Vente de Lapins à Abidjan',
     description: 'Découvrez et réservez nos lapins de race élevés à Abidjan, Côte d\'Ivoire.',
     type: 'website',
+    images: ['/icon-512.png'],
   },
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: '#2A2118',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -50,6 +78,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         {children}
         <CookieBanner />
+        <ServiceWorkerRegister />
       </body>
     </html>
   )

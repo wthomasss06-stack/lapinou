@@ -111,12 +111,15 @@ export default function ReservationsManager() {
             <div key={resv.id} className="glass rounded-xl p-4 flex flex-col gap-4">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
+                  <div className="flex items-center gap-2 mb-1 flex-wrap">
                     <span className="text-white font-semibold text-sm">
                       {resv.firstName} {resv.lastName}
                     </span>
                     <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${STATUS_BADGE[resv.status]}`}>
                       {STATUS_LABEL[resv.status]}
+                    </span>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-caramel/15 text-caramel">
+                      ×{resv.quantity ?? 1}
                     </span>
                     {resv.latitude && resv.longitude && (
                       <span className="text-[9px] px-2 py-0.5 rounded-full font-mono bg-caramel/10 text-caramel border border-caramel/20 flex items-center gap-1">
@@ -125,7 +128,12 @@ export default function ReservationsManager() {
                     )}
                   </div>
                   <p className="text-white/40 text-xs">
-                    {resv.rabbit?.name} — {resv.rabbit?.breed} · {resv.rabbit?.price ? formatPrice(resv.rabbit.price) : ''}
+                    {resv.rabbit?.name} — {resv.rabbit?.breed}
+                    {resv.rabbit?.price != null && (
+                      <> · {formatPrice(resv.rabbit.price)}/u
+                        {(resv.quantity ?? 1) > 1 && <> · total {formatPrice(resv.rabbit.price * (resv.quantity ?? 1))}</>}
+                      </>
+                    )}
                   </p>
                   {resv.deliveryZone && (
                     <p className="text-caramel/80 text-xs mt-0.5 flex items-center gap-1">
@@ -133,7 +141,7 @@ export default function ReservationsManager() {
                       Livraison {ZONE_LABEL[resv.deliveryZone] || resv.deliveryZone}
                       {resv.deliveryFee != null && ` · ${formatPrice(resv.deliveryFee)}`}
                       {resv.rabbit?.price != null && resv.deliveryFee != null && (
-                        <span className="text-white/30"> · total {formatPrice(resv.rabbit.price + resv.deliveryFee)}</span>
+                        <span className="text-white/30"> · total {formatPrice(resv.rabbit.price * (resv.quantity ?? 1) + resv.deliveryFee)}</span>
                       )}
                     </p>
                   )}

@@ -13,7 +13,7 @@ import RabbitGallery from '@/components/RabbitGallery'
 import SharePanel from '@/components/SharePanel'
 import SimilarRabbits from '@/components/SimilarRabbits'
 import ReserveButton from '@/components/ReserveButton'
-import { STATUS_LABEL, isUnavailable, formatPrice, GENDER_LABEL, resolvePhotoUrl } from '@/lib/status'
+import { isUnavailable, formatPrice, GENDER_LABEL, resolvePhotoUrl } from '@/lib/status'
 import dynamic from 'next/dynamic'
 
 const MapView = dynamic(() => import('@/components/MapView'), { ssr: false })
@@ -57,10 +57,10 @@ export default async function RabbitDetailPage({ params }) {
     { label: 'Nom',       value: rabbit.name },
     { label: 'Race',      value: rabbit.breed },
     { label: 'Genre',     value: GENDER_LABEL[rabbit.gender] },
-    { 
-      label: 'Statut',    
-      value: unavailable ? (rabbit.status === 'reserved' ? 'Réservé' : 'Vendu') : 'Disponible',
-      isStatus: true 
+    {
+      label: 'Stock',
+      value: unavailable ? 'Épuisé' : `${rabbit.stock} disponible${rabbit.stock > 1 ? 's' : ''}`,
+      isStatus: true
     },
     { label: 'Localisation', value: "Azaguié Gare, Côte d'Ivoire", isFull: true },
     rabbit.color  && { label: 'Couleur',   value: rabbit.color },
@@ -78,7 +78,7 @@ export default async function RabbitDetailPage({ params }) {
         <div className="flex items-center gap-1.5 text-[11px] text-white/35 mb-6 flex-wrap">
           <Link href="/" className="hover:text-white/60 transition-colors">Accueil</Link>
           <ChevronRight size={12} className="text-white/20" />
-          <Link href="/rabbits" className="hover:text-white/60 transition-colors">Lapins</Link>
+          <Link href="/#lapins" className="hover:text-white/60 transition-colors">Lapins</Link>
           <ChevronRight size={12} className="text-white/20" />
           <span className="text-white/65 font-semibold truncate max-w-[160px]">{rabbit.name}</span>
         </div>
@@ -88,7 +88,7 @@ export default async function RabbitDetailPage({ params }) {
 
           {/* Colonne gauche — Galerie */}
           <div className="flex flex-col gap-2">
-            <RabbitGallery photos={photos} title={rabbit.name} unavailable={unavailable} status={rabbit.status} />
+            <RabbitGallery photos={photos} title={rabbit.name} unavailable={unavailable} stock={rabbit.stock} />
           </div>
 
           {/* Colonne droite — Infos + CTA (sticky desktop) */}
@@ -121,13 +121,14 @@ export default async function RabbitDetailPage({ params }) {
                       rabbitName={rabbit.name}
                       rabbitPrice={rabbit.price}
                       breed={rabbit.breed}
+                      stock={rabbit.stock}
                     />
                   ) : (
                     <button
                       disabled
                       className="w-full py-3 px-4 rounded-xl bg-brand-border text-white/30 font-bold text-xs cursor-not-allowed text-center"
                     >
-                      {rabbit.status === 'reserved' ? 'Déjà réservé' : 'Vendu'}
+                      Stock épuisé
                     </button>
                   )}
                 </div>

@@ -4,6 +4,10 @@
 const { body, validationResult } = require('express-validator')
 
 const reservationRules = [
+  body('quantity')
+    .optional()
+    .isInt({ min: 1, max: 50 }).withMessage('Quantité invalide (1 à 50)')
+    .toInt(),
   body('firstName').trim().notEmpty().withMessage('Prénom requis'),
   body('lastName').trim().notEmpty().withMessage('Nom requis'),
   body('email').isEmail().normalizeEmail().withMessage('Email invalide'),

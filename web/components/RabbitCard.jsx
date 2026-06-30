@@ -1,12 +1,12 @@
 // web/components/RabbitCard.jsx
-// Carte lapin — grisée (overlay + opacité) si reserved ou sold
+// Carte fiche-race — grisée (overlay + opacité) quand le stock est épuisé
 
 'use client'
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { MapPin, PawPrint } from 'lucide-react'
-import { STATUS_LABEL, isUnavailable, formatPrice, GENDER_LABEL, resolvePhotoUrl } from '@/lib/status'
+import { isUnavailable, formatPrice, GENDER_LABEL, resolvePhotoUrl } from '@/lib/status'
 
 function RabbitImage({ rabbit, unavailable }) {
   const mainPhoto = rabbit.photos?.find(p => p.isMain) || rabbit.photos?.[0]
@@ -33,19 +33,17 @@ function RabbitImage({ rabbit, unavailable }) {
       {/* Overlay gradient */}
       <div className="absolute inset-0 bg-gradient-to-t from-brand-card via-transparent to-transparent opacity-60" />
 
-      {/* Badge statut */}
+      {/* Badge stock */}
       {unavailable ? (
         <div className="absolute top-3 left-3">
-          <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider ${
-            rabbit.status === 'reserved' ? 'bg-terracotta text-white' : 'bg-white/10 backdrop-blur-sm text-white border border-white/20'
-          }`}>
-            {STATUS_LABEL[rabbit.status]}
+          <span className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider bg-white/10 backdrop-blur-sm text-white border border-white/20">
+            Stock épuisé
           </span>
         </div>
       ) : (
         <div className="absolute top-3 left-3">
           <span className="bg-sage text-espresso text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
-            Disponible
+            {rabbit.stock} en stock
           </span>
         </div>
       )}
@@ -99,11 +97,13 @@ export default function RabbitCard({ rabbit, index = 0, layout = 'grid' }) {
                 <span className="text-[9px] font-mono uppercase tracking-widest text-caramel/70 bg-caramel/10 px-2 py-0.5 rounded-full shrink-0">
                   {rabbit.breed}
                 </span>
-                {unavailable && (
-                  <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${
-                    rabbit.status === 'reserved' ? 'bg-terracotta/20 text-terracotta' : 'bg-white/10 text-white/40'
-                  }`}>
-                    {STATUS_LABEL[rabbit.status]}
+                {unavailable ? (
+                  <span className="text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider bg-white/10 text-white/40">
+                    Stock épuisé
+                  </span>
+                ) : (
+                  <span className="text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider bg-sage/20 text-sage">
+                    {rabbit.stock} en stock
                   </span>
                 )}
               </div>

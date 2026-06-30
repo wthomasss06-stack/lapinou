@@ -59,8 +59,21 @@ router.get('/stats', adminAuth, async (req, res, next) => {
 // GET /api/analytics/public-stats
 router.get('/public-stats', async (req, res, next) => {
   try {
-    const totalRabbits = await prisma.rabbit.count()
-    
+    // IMPORTANT : depuis le modèle de stock par race, une fiche Rabbit
+    // représente plusieurs lapins (pas un individu). Le compteur public
+    // "Lapins élevés" doit donc additionner les stocks réels + les unités
+    // déjà réservées/vendues, plutôt que de compter le nombre de fiches
+    // (ce qui sous-évaluerait massivement le vrai volume, ex: 4 fiches
+    // au lieu de 21 lapins réels).
+    const [stockAgg, reservedAgg] = await Promise.all([
+      prisma.rabbit.aggregate({ _sum: { stock: true } }),
+      prisma.reservation.aggregate({
+        _sum: { quantity: true },
+        where: { status: { in: ['pending', 'confirmed'] } },
+      }),
+    ])
+    const totalRabbits = (stockAgg._sum.stock || 0) + (reservedAgg._sum.quantity || 0)
+
     // Nombre de races de lapins uniques
     const breedsGroup = await prisma.rabbit.groupBy({
       by: ['breed'],

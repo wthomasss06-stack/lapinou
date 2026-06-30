@@ -10,6 +10,10 @@ const cloudinarySvc = require('../services/cloudinary.service')
 
 // ─── Public ───────────────────────────────────────────────────────────────────
 router.get('/',        ctrl.list)
+
+// IMPORTANT : déclarée AVANT /:slug pour ne pas être interceptée par la route générique
+router.get('/admin/stock-summary', adminAuth, ctrl.stockSummary)
+
 router.get('/:slug',   ctrl.detail)
 
 // POST /api/rabbits/:slug/reserve

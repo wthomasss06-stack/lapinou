@@ -9,14 +9,14 @@ const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP?.replace(/\D/g, '') || ''
 const footerLinks = {
   'Lapinou': [
     { label: 'Accueil', href: '/' },
-    { label: 'Nos Lapins', href: '/rabbits' },
-    { label: 'À Propos', href: '/about' },
-    { label: 'Contact', href: '/contact' },
+    { label: 'Nos Lapins', href: '/#lapins' },
+    { label: 'À Propos', href: '/#a-propos' },
+    { label: 'Contact', href: '/#contact' },
   ],
   'Informations': [
-    { label: 'Conditions', href: '#' },
-    { label: 'Confidentialité', href: '#' },
-    { label: 'Aide', href: '/contact' },
+    { label: 'Aide', href: '/aide' },
+    { label: 'Conditions', href: '/conditions' },
+    { label: 'Confidentialité', href: '/confidentialite' },
   ],
 }
 

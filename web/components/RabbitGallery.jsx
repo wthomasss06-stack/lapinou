@@ -2,9 +2,8 @@
 import { useState, useCallback, useRef } from 'react'
 import { ChevronLeft, ChevronRight, Maximize2, Images } from 'lucide-react'
 import Lightbox from './Lightbox'
-import { STATUS_LABEL } from '@/lib/status'
 
-export default function RabbitGallery({ photos, title, unavailable, status }) {
+export default function RabbitGallery({ photos, title, unavailable, stock }) {
   const [cur, setCur] = useState(0)
   const [lightbox, setLightbox] = useState(null)
   const total = photos.length
@@ -59,13 +58,12 @@ export default function RabbitGallery({ photos, title, unavailable, status }) {
           <Maximize2 size={12} /> Agrandir
         </div>
 
-        {/* Badge statut */}
+        {/* Badge stock */}
         <div className="absolute top-3 left-3 z-[5]">
           <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider backdrop-blur-sm ${
-            !unavailable ? 'bg-sage/85 text-espresso' :
-            status === 'reserved' ? 'bg-terracotta/85 text-white' : 'bg-white/15 text-white border border-white/20'
+            !unavailable ? 'bg-sage/85 text-espresso' : 'bg-white/15 text-white border border-white/20'
           }`}>
-            {!unavailable ? 'Disponible' : STATUS_LABEL[status]}
+            {!unavailable ? `${stock} en stock` : 'Stock épuisé'}
           </span>
         </div>
 

@@ -1,7 +1,26 @@
 // api/src/config/env.js
 // Chargé une fois au démarrage — même pattern que Nexura backend/.env
+//
+// IMPORTANT : .env et .env.production sont dans .gitignore et ne sont JAMAIS
+// déployés sur Render. En production, les variables viennent uniquement du
+// dashboard Render (Environment). dotenv.config() ne écrase jamais une variable
+// déjà présente dans process.env, donc charger un .env local ici est juste un
+// confort pour le développement — ça n'a aucun effet en prod si le fichier
+// n'existe pas (échec silencieux, sans planter le serveur).
+const path = require('path')
+const fs = require('fs')
 
-require('dotenv').config({ path: require('path').resolve(__dirname, '../../../.env') })
+const rootDir = path.resolve(__dirname, '../../../')
+const envFile = process.env.NODE_ENV === 'production' ? '.env.production' : '.env'
+const envPath = path.join(rootDir, envFile)
+
+if (fs.existsSync(envPath)) {
+  require('dotenv').config({ path: envPath })
+} else {
+  // Pas grave en prod (Render fournit les vraies variables via son dashboard).
+  // En dev, ça veut dire que le .env est manquant — on laisse le check `required`
+  // plus bas lever une erreur claire si DATABASE_URL est vide.
+}
 
 const config = {
   port: process.env.PORT || 4000,

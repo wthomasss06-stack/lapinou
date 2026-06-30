@@ -13,28 +13,32 @@ datasource db {
 }
 
 // ─── Lapin ────────────────────────────────────────────────────────────────────
+// Modèle "fiche de race en stock" — une fiche représente une race/portée avec
+// une quantité disponible (stock), pas un individu unique.
 model Rabbit {
   id          String   @id @default(cuid())
   slug        String   @unique
 
   // Identité
-  name        String
+  name        String                         // nom de la fiche/portée, ex: "Bélier nain Fauve"
   breed       String                         // ex: "Bélier nain", "Rex"
   color       String
-  gender      String                         // "male" | "female"
+  gender      String                         // "male" | "female" | "mixed" (lot mixte)
   birthDate   DateTime?
   weight      Float?                         // kg
   description String?
 
-  // Prix
+  // Prix (à l'unité)
   price       Float
   priceNote   String?                        // "négociable", "incluant vaccins", etc.
 
-  // Statut
-  // available → réservable
-  // reserved  → grisé, formulaire désactivé
-  // sold      → définitivement indisponible
-  status      String   @default("available") // "available" | "reserved" | "sold"
+  // Stock — quantité de lapins disponibles sur cette fiche
+  stock       Int      @default(0)
+
+  // Statut dérivé du stock, mais stocké pour permettre un forçage manuel admin
+  // available → stock > 0, réservable
+  // sold      → stock épuisé (0), grisé côté client
+  status      String   @default("available") // "available" | "sold"
 
   // Médias
   photos      RabbitPhoto[]
@@ -48,6 +52,7 @@ model Rabbit {
 
   @@index([status])
   @@index([slug])
+  @@index([breed])
 }
 
 // ─── Photos ───────────────────────────────────────────────────────────────────
@@ -65,9 +70,12 @@ model RabbitPhoto {
 model Reservation {
   id        String   @id @default(cuid())
 
-  // Quel lapin
+  // Quel lapin (quelle fiche de race)
   rabbitId  String
   rabbit    Rabbit   @relation(fields: [rabbitId], references: [id])
+
+  // Quantité réservée sur cette commande — décomptée du stock immédiatement
+  quantity  Int      @default(1)
 
   // Acheteur
   firstName String
@@ -77,9 +85,9 @@ model Reservation {
   message   String?
 
   // Statut de la réservation
-  // pending   → soumise, lapin passe en "reserved"
+  // pending   → soumise, stock déjà décompté
   // confirmed → confirmée par le vendeur (WhatsApp / tel)
-  // cancelled → annulée, lapin repasse en "available"
+  // cancelled → annulée, le stock réservé est restitué à la fiche
   status    String   @default("pending")       // "pending" | "confirmed" | "cancelled"
 
   // Coordonnées GPS client

@@ -8,8 +8,8 @@ import Logo from './Logo'
 const navLinks = [
   { label: 'Accueil', href: '/' },
   { label: 'Nos Lapins', href: '/#lapins' },
-  { label: 'À Propos', href: '/about' },
-  { label: 'Contact', href: '/contact' },
+  { label: 'À Propos', href: '/#a-propos' },
+  { label: 'Contact', href: '/#contact' },
 ]
 
 export default function Navbar() {

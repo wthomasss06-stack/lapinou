@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { rabbitsApi } from '@/lib/api'
 import { formatPrice } from '@/lib/status'
-import { MessageCircle, Check, AlertCircle } from 'lucide-react'
+import { MessageCircle, Check, AlertCircle, Minus, Plus } from 'lucide-react'
 
 const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP || '2250701234567'
 
@@ -12,11 +12,18 @@ interface ReserveButtonProps {
   rabbitName: string
   rabbitPrice: number
   breed: string
+  stock: number
 }
 
-export default function ReserveButton({ slug, rabbitName, rabbitPrice, breed }: ReserveButtonProps) {
+export default function ReserveButton({ slug, rabbitName, rabbitPrice, breed, stock }: ReserveButtonProps) {
   const [state, setState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState('')
+  const [quantity, setQuantity] = useState(1)
+
+  const maxQty = Math.max(1, Math.min(stock ?? 1, 50))
+
+  function decrement() { setQuantity(q => Math.max(1, q - 1)) }
+  function increment() { setQuantity(q => Math.min(maxQty, q + 1)) }
 
   async function handleReserve() {
     setState('loading')
@@ -39,13 +46,14 @@ export default function ReserveButton({ slug, rabbitName, rabbitPrice, breed }: 
     }
 
     try {
-      // 1. Appeler l'API de réservation (crée la résa + envoie le mail via Resend)
+      // 1. Appeler l'API de réservation (crée la résa + décompte le stock + envoie le mail via Resend)
       await rabbitsApi.reserve(slug, {
+        quantity,
         firstName: 'Visiteur',
         lastName: 'Lapinou',
         email: 'visiteur@lapinou.ci',
         phone: '22507000000',
-        message: `Réservation instantanée du lapin ${rabbitName} (${breed}) via le bouton Réserver.`,
+        message: `Réservation instantanée de ${quantity} lapin(s) ${rabbitName} (${breed}) via le bouton Réserver.`,
         latitude,
         longitude,
       })
@@ -53,8 +61,9 @@ export default function ReserveButton({ slug, rabbitName, rabbitPrice, breed }: 
       // 2. Ouvrir WhatsApp avec le message intelligent
       if (typeof window !== 'undefined') {
         const waNum = WHATSAPP.replace(/\D/g, '')
-        const waText = `Bonjour ! Je souhaite réserver le lapin *${rabbitName}* (${breed}) présenté à ${formatPrice(rabbitPrice)} sur votre site Lapinou 🐇\n\n` +
-          `Pouvez-vous me confirmer sa disponibilité et les modalités de livraison ?`
+        const totalPrice = rabbitPrice * quantity
+        const waText = `Bonjour ! Je souhaite réserver ${quantity} lapin${quantity > 1 ? 's' : ''} *${rabbitName}* (${breed}) à ${formatPrice(rabbitPrice)}/unité (total ${formatPrice(totalPrice)}) sur votre site Lapinou 🐇\n\n` +
+          `Pouvez-vous me confirmer la disponibilité et les modalités de livraison ?`
         const waUrl = `https://wa.me/${waNum}?text=${encodeURIComponent(waText)}`
         window.open(waUrl, '_blank', 'noopener,noreferrer')
       }
@@ -91,7 +100,7 @@ export default function ReserveButton({ slug, rabbitName, rabbitPrice, breed }: 
       <div className="flex flex-col items-center justify-center p-2 rounded-xl border border-sage/30 bg-sage/10 text-center animate-fade-in">
         <div className="flex items-center gap-1 text-sage text-xs font-bold">
           <Check size={14} />
-          Réservé avec succès !
+          {quantity} lapin{quantity > 1 ? 's' : ''} réservé{quantity > 1 ? 's' : ''} avec succès !
         </div>
       </div>
     )
@@ -99,6 +108,35 @@ export default function ReserveButton({ slug, rabbitName, rabbitPrice, breed }: 
 
   return (
     <div className="w-full">
+      {/* Sélecteur de quantité */}
+      <div className="flex items-center justify-between mb-2 bg-brand-darker/60 border border-brand-border/60 rounded-xl px-3 py-2">
+        <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">Quantité</span>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={decrement}
+            disabled={quantity <= 1 || state === 'loading'}
+            aria-label="Diminuer la quantité"
+            className="w-7 h-7 rounded-lg bg-brand-card border border-brand-border flex items-center justify-center text-white/70 hover:text-white hover:border-caramel/40 disabled:opacity-30 disabled:hover:border-brand-border transition-colors"
+          >
+            <Minus size={13} />
+          </button>
+          <span className="font-display font-bold text-white text-sm w-6 text-center">{quantity}</span>
+          <button
+            type="button"
+            onClick={increment}
+            disabled={quantity >= maxQty || state === 'loading'}
+            aria-label="Augmenter la quantité"
+            className="w-7 h-7 rounded-lg bg-brand-card border border-brand-border flex items-center justify-center text-white/70 hover:text-white hover:border-caramel/40 disabled:opacity-30 disabled:hover:border-brand-border transition-colors"
+          >
+            <Plus size={13} />
+          </button>
+        </div>
+      </div>
+      {quantity >= maxQty && (
+        <p className="text-[10px] text-white/30 mb-2 text-right">Stock max atteint ({stock})</p>
+      )}
+
       <button
         onClick={handleReserve}
         disabled={state === 'loading'}
@@ -118,7 +156,7 @@ export default function ReserveButton({ slug, rabbitName, rabbitPrice, breed }: 
         ) : (
           <>
             <MessageCircle size={16} className="shrink-0" />
-            Réserver
+            Réserver {quantity > 1 ? `(${quantity})` : ''}
           </>
         )}
       </button>

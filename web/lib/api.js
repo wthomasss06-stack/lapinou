@@ -4,6 +4,17 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'
 const TOKEN_KEY = 'lapinou_admin_token'
 
+if (typeof window !== 'undefined' && !process.env.NEXT_PUBLIC_API_URL) {
+  // Si cette variable manque en prod, toutes les requêtes API partent vers
+  // localhost et échouent silencieusement (frontend et backend ne se "parlent"
+  // plus). On le signale clairement dans la console pour éviter de chercher
+  // ailleurs la prochaine fois.
+  console.warn(
+    '[api] NEXT_PUBLIC_API_URL est manquant — repli sur', API_URL,
+    '. Vérifie les variables d\'environnement Vercel (web/vercel.json ou Dashboard > Settings > Environment Variables).'
+  )
+}
+
 // ─── Token admin (stocké côté client uniquement) ──────────────────────────────
 export function getAdminToken() {
   if (typeof window === 'undefined') return null
@@ -72,6 +83,7 @@ export const rabbitsApi = {
     return data
   },
   deleteImage: (rabbitId, photoId) => apiFetch(`/rabbits/${rabbitId}/images/${photoId}`, { method: 'DELETE' }),
+  stockSummary: () => apiFetch('/rabbits/admin/stock-summary'),
 }
 
 // ─── Admin ────────────────────────────────────────────────────────────────────

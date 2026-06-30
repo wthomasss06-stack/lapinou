@@ -44,4 +44,12 @@ async function remove(req, res, next) {
   } catch (err) { next(err) }
 }
 
-module.exports = { list, detail, create, update, remove }
+// GET /api/rabbits/admin/stock-summary  (admin)
+async function stockSummary(req, res, next) {
+  try {
+    const summary = await svc.getStockSummary()
+    res.json(summary)
+  } catch (err) { next(err) }
+}
+
+module.exports = { list, detail, create, update, remove, stockSummary }

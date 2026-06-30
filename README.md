@@ -14,6 +14,14 @@ Stack : **Express.js** (API) + **Next.js 14** (site) + **Prisma (SQLite en dev /
 ```
 rabbit-shop/
 ├─ api/              # Express — REST API
+│  ├─ prisma/
+│  │  ├─ schema.prisma             # SQLite (Développement local)
+│  │  ├─ schema.production.prisma  # PostgreSQL (Production / Neon)
+│  │  ├─ seed.js                   # 4 lapins de démo
+│  │  └─ dev.db                    # Base SQLite locale (générée, jamais commitée)
+│  ├─ scripts/
+│  │  ├─ generate-prisma-client.js # Filet de sécurité : génère le bon client selon NODE_ENV
+│  │  └─ fix-prod-photos.js        # Script ponctuel de correction de données (Neon)
 │  └─ src/
 │     ├─ config/     # env.js, prisma.js
 │     ├─ routes/     # rabbits, reservations (admin), admin (login), contact
@@ -23,22 +31,31 @@ rabbit-shop/
 │     └─ validations/
 ├─ web/              # Next.js 14 App Router
 │  ├─ app/
-│  │  ├─ page.tsx               # Accueil
-│  │  ├─ rabbits/               # Liste + détail [slug]
-│  │  ├─ about/                 # À propos
-│  │  ├─ contact/               # Formulaire + lien WhatsApp
+│  │  ├─ page.tsx               # Landing page unique : Accueil + À propos + Nos lapins + Contact (sections ancrées)
+│  │  ├─ rabbits/[slug]/        # Page détail d'une race (reste une page à part)
+│  │  ├─ rabbits/page.jsx       # redirige vers /#lapins (catalogue fusionné dans la home)
+│  │  ├─ about/page.tsx         # redirige vers /#a-propos (fusionné dans la home)
+│  │  ├─ contact/page.tsx       # redirige vers /#contact (fusionné dans la home)
+│  │  ├─ aide/                  # FAQ — page à part
+│  │  ├─ conditions/            # Conditions d'utilisation — page à part
+│  │  ├─ confidentialite/       # Politique de confidentialité — page à part
 │  │  ├─ admin/                 # Back-office (protégé par mot de passe)
 │  │  └─ .env.local
+│  ├─ public/                   # Favicon, icônes PWA, manifest.json, sw.js, logo.png
 │  └─ components/
+│     ├─ AboutSection.tsx       # Section "À propos" intégrée à la landing page
+│     ├─ ContactSection.tsx     # Section "Contact" intégrée à la landing page
 │     └─ admin/                 # AdminGate, RabbitForm, RabbitsManager, ReservationsManager
-├─ prisma/
-│  ├─ schema.prisma             # SQLite (Développement local)
-│  ├─ schema.production.prisma  # PostgreSQL (Production / Neon)
-│  └─ seed.js                   # 4 lapins de démo
 ├─ uploads/          # Dossier local dev (images locales)
 ├─ .env              # Configuration locale SQLite & dev (jamais commité)
 └─ .env.production   # Configuration production PostgreSQL Neon (jamais commité)
 ```
+
+> ℹ️ **Une seule source de vérité pour Prisma** : tous les fichiers (`schema.prisma`,
+> `schema.production.prisma`, `seed.js`, `dev.db`) vivent désormais uniquement dans
+> `api/prisma/`. L'ancienne duplication vers un dossier `prisma/` à la racine a été
+> supprimée — c'était la cause du bug `the URL must start with the protocol 'file:'`
+> en production (le client généré pouvait être désynchronisé du `DATABASE_URL` réel).
 
 ---
 
@@ -72,7 +89,7 @@ WAVE_NUMBER_NEXURA=votre_numero_whatsapp
 ADMIN_PASSWORD=votre_mot_de_passe_admin
 ```
 
-### Production : `/.env.production` (PostgreSQL Neon)
+### Production : `/.env.production` (PostgreSQL Neon) — usage local uniquement
 
 ```bash
 PORT=4000
@@ -86,7 +103,12 @@ DATABASE_URL=postgresql://votre_utilisateur:votre_mot_de_passe@votre_hote.neon.t
 # ... (Autres clés API identiques à votre configuration de production)
 ```
 
-### Next.js : `/web/.env.local` (lu par Next.js)
+> ⚠️ Ce fichier sert uniquement si vous lancez l'API en local avec `NODE_ENV=production`
+> (ex: pour tester contre Neon avant de déployer). **Il n'est jamais envoyé sur Render** —
+> il est dans `.gitignore`. Sur Render, les vraies variables viennent du dashboard
+> (Environment), pas d'un fichier.
+
+### Next.js : `/web/.env.local` (lu par Next.js en dev)
 
 ```bash
 NEXT_PUBLIC_API_URL=http://localhost:4000/api
@@ -94,26 +116,31 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3003
 NEXT_PUBLIC_WHATSAPP=votre_numero_whatsapp
 ```
 
+En production, ces mêmes variables sont définies dans `vercel.json` (racine et
+`web/vercel.json`, dupliquées par sécurité selon le Root Directory configuré sur
+Vercel) — ou directement dans Vercel Dashboard > Settings > Environment Variables.
+
 ---
 
 ## Démarrage rapide
 
 ### 1. Installer les dépendances
 ```bash
-# Dans le dossier racine du projet
 cd api
-npm install
+npm install   # génère aussi le client Prisma (SQLite) automatiquement via postinstall
 
 cd web
 npm install
 ```
 
 ### 2. Base de données de développement (SQLite locale)
-À la racine du projet, lancez :
+Depuis le dossier `api/` :
 ```bash
 npm run db:setup
 ```
-*Cette commande va automatiquement générer le client Prisma, pousser le schéma SQLite (`prisma/schema.prisma`), créer le fichier `prisma/dev.db` et charger le jeu de données de test (`prisma/seed.js`).*
+*Cette commande génère le client Prisma, pousse le schéma SQLite
+(`api/prisma/schema.prisma`), crée le fichier `api/prisma/dev.db` et charge le
+jeu de données de test (`api/prisma/seed.js`).*
 
 ### 3. Lancer les serveurs de dev
 ```bash
@@ -128,7 +155,7 @@ npm run dev
 
 ---
 
-## Commandes Prisma (DB) utiles (à la racine)
+## Commandes Prisma (DB) utiles (depuis `api/`)
 
 ### Développement (SQLite)
 * **`npm run db:generate`** : Regénérer le client Prisma.
@@ -138,6 +165,7 @@ npm run dev
 * **`npm run db:reset`** : Réinitialiser complètement la base SQLite locale.
 
 ### Production (Neon PostgreSQL)
+* **`npm run db:generate:prod`** : Regénérer le client Prisma avec le schema PostgreSQL.
 * **`npm run db:push:prod`** : Pousser les modifications de schéma sur votre base de données Neon PostgreSQL.
 * **`npm run db:seed:prod`** : Seeder les lapins de test sur la base de données Neon.
 * **`npm run db:studio:prod`** : Lancer Prisma Studio connecté à votre base Neon.
@@ -151,17 +179,27 @@ Rendez-vous sur `http://localhost:3003/admin` et entrez le mot de passe défini 
 
 ## Logique métier
 
+Depuis la migration vers le **modèle de stock par race**, une fiche `Rabbit`
+représente une race/portée disponible en plusieurs exemplaires, pas un individu
+unique. Le client choisit une quantité (1 à 50) et réserve ; le stock décompte
+**immédiatement** (comme un panier classique), sans étape de validation
+intermédiaire bloquante.
+
 | Statut      | Carte accueil          | Page détail                            |
 |-------------|-------------------------|-----------------------------------------|
-| `available` | Normale, cliquable      | Formulaire de réservation actif         |
-| `reserved`  | Grisée, non-cliquable   | Overlay "Réservé" + formulaire grisé    |
-| `sold`      | Grisée, non-cliquable   | Overlay "Vendu" + formulaire grisé      |
+| `available` | Normale, cliquable, affiche le stock restant | Sélecteur de quantité + bouton Réserver |
+| `sold`      | Grisée, "Stock épuisé"  | Bouton désactivé "Stock épuisé"         |
 
 **Cycle de vie d'une commande :**
-1. Le client soumet le formulaire de réservation → le lapin passe automatiquement en `reserved` (transaction Prisma atomique) → **email envoyé à l'admin via Resend**.
-2. L'admin consulte `/admin`, voit la réservation et clique sur le **bouton WhatsApp pré-rempli** (`wa.me`) pour finaliser les détails avec le client.
-3. L'admin confirme la réservation, puis la marque `sold` une fois la transaction physique effectuée.
-4. Si la réservation est annulée, le lapin redevient instantanément `available` dans le catalogue.
+1. Le client choisit une quantité sur la fiche (plafonnée au stock restant) et clique "Réserver" → une transaction Prisma atomique vérifie le stock disponible, crée la réservation (avec la quantité), et décompte immédiatement le stock de la fiche. Si le stock atteint 0, la fiche passe automatiquement en `sold` → **email envoyé à l'admin via Resend**, incluant la quantité et le total.
+2. WhatsApp s'ouvre automatiquement avec un message pré-rempli mentionnant la quantité et le prix total, pour finaliser les détails avec le client.
+3. L'admin consulte `/admin`, voit la réservation (avec son badge de quantité ×N) et confirme une fois le contact établi.
+4. Si une réservation est annulée par l'admin, la quantité réservée est **restituée** au stock de la fiche, qui repasse en `available` si le stock redevient positif.
+5. Le client peut réserver à nouveau plus tard sur la même fiche tant qu'il reste du stock — chaque réservation est indépendante et ne décompte que sa propre quantité.
+
+Le dashboard admin (`/admin`) affiche un suivi de stock global (stock restant /
+unités déjà réservées-vendues) ainsi qu'un classement des races les plus
+vendues en unités, via `GET /api/rabbits/admin/stock-summary`.
 
 ---
 
@@ -169,21 +207,39 @@ Rendez-vous sur `http://localhost:3003/admin` et entrez le mot de passe défini 
 
 ```
 GET  /api/rabbits                       liste publique (filtrable par ?breed=, ?status=)
-GET  /api/rabbits/:slug                 détail
-POST /api/rabbits/:slug/reserve         réservation (public)
+GET  /api/rabbits/:slug                 détail (inclut le stock restant)
+POST /api/rabbits/:slug/reserve         réservation (public) — body: { quantity, firstName, ... }
 
 POST  /api/admin/login                  vérifie ADMIN_PASSWORD, renvoie un token
-POST  /api/rabbits                      créer un lapin       (admin — Authorization: Bearer <password>)
-PATCH /api/rabbits/:id                  modifier un lapin    (admin)
-DELETE /api/rabbits/:id                 supprimer un lapin   (admin)
+POST  /api/rabbits                      créer une race       (admin — Authorization: Bearer <password>)
+PATCH /api/rabbits/:id                  modifier une race    (admin)
+DELETE /api/rabbits/:id                 supprimer une race   (admin)
+GET   /api/rabbits/admin/stock-summary  suivi du stock global et par race (admin)
 
 GET   /api/admin/reservations           liste                (admin)
 PATCH /api/admin/reservations/:id/confirm
-PATCH /api/admin/reservations/:id/cancel
+PATCH /api/admin/reservations/:id/cancel   restitue le stock réservé à la fiche
 PATCH /api/admin/reservations/:id/sold
 
-POST /api/contact                       message depuis la page Contact (public)
+POST /api/contact                       message depuis la section Contact (public)
+
+GET  /health                            health check (toujours public)
 ```
+
+---
+
+## PWA (Progressive Web App)
+
+Le site `web/` est installable sur mobile et desktop :
+* `web/public/manifest.json` — nom, icônes, couleurs, mode `standalone`.
+* `web/public/sw.js` — service worker minimal (cache le shell statique, ne cache
+  jamais `/api/*` pour éviter d'afficher des données obsolètes).
+* `web/components/ServiceWorkerRegister.tsx` — enregistre le service worker côté
+  client. Désactivé par défaut en dev (sinon le cache du SW gêne le hot-reload) ;
+  pour le tester en dev, définir `NEXT_PUBLIC_ENABLE_SW_DEV=1`.
+* Icônes générées depuis le logo Lapinou : favicon (.ico + PNG 16/32/48),
+  `apple-touch-icon.png` (180×180), `icon-192.png`, `icon-512.png` et une version
+  `icon-maskable-512.png` (fond plein, zone de sécurité 70%) pour Android.
 
 ---
 
@@ -193,16 +249,30 @@ POST /api/contact                       message depuis la page Contact (public)
 * **Render** → Dossier `api/` (Express.js)
 * **Neon** → Base de données PostgreSQL
 
-**Render — Configuration du build API :**
-* **Build Command** : `cd api && npm install && npx prisma generate --schema=../prisma/schema.production.prisma`
-* **Start Command** : `node api/src/server.js`
+**Render — Configuration du build API (`render.yaml`) :**
+* **Root Directory** : `api`
+* **Build Command** : `npm install && npx prisma generate --schema=prisma/schema.production.prisma`
+  (le `npm install` déclenche aussi `postinstall`, qui régénère le client selon `NODE_ENV`
+  comme filet de sécurité — voir `api/scripts/generate-prisma-client.js`)
+* **Start Command** : `node src/server.js`
 
 **Variables d'environnement Render (API)** :
-`DATABASE_URL`, `RESEND_API_KEY`, `FROM_EMAIL`, `ADMIN_EMAIL`, `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`, `WAVE_NUMBER_NEXURA`, `ADMIN_PASSWORD`, `FRONTEND_URL` (URL Vercel).
+`NODE_ENV=production`, `DATABASE_URL`, `RESEND_API_KEY`, `FROM_EMAIL`, `ADMIN_EMAIL`, `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`, `WAVE_NUMBER_NEXURA`, `ADMIN_PASSWORD`, `FRONTEND_URL` (URL Vercel).
 
 **Variables d'environnement Vercel (Front)** :
 `NEXT_PUBLIC_API_URL` (URL Render + `/api`), `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_WHATSAPP`.
-gère que le texte, pas encore les photos
+
+> ⚠️ Si le Root Directory du projet Vercel est `web/`, c'est `web/vercel.json` qui
+> s'applique (pas celui de la racine) — les deux fichiers contiennent maintenant les
+> mêmes variables par sécurité. Si le frontend et le backend semblent ne plus se
+> "parler" (erreurs réseau dans la console, pas dans les logs serveur), vérifiez
+> d'abord `NEXT_PUBLIC_API_URL` dans Vercel Dashboard > Settings > Environment
+> Variables — la console affichera un avertissement explicite si elle est absente.
+
+---
+
+## Roadmap / améliorations possibles
+- [ ] Édition photo dans `/admin` : ne gère que le texte, pas encore les photos
 - [ ] Remplacer le mot de passe admin partagé par un vrai système de compte
       si plusieurs personnes doivent administrer le site
-- [ ] Pagination de la liste `/rabbits` si le catalogue dépasse ~30 lapins
+- [ ] Pagination du catalogue (section `#lapins` sur la home) si le nombre de races dépasse ~30 fiches

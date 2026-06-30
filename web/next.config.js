@@ -1,38 +1,12 @@
 /** @type {import('next').NextConfig} */
-const path = require('path')
-const fs = require('fs')
-
-// Charger WAVE_NUMBER_NEXURA depuis le fichier d'environnement de la racine
-const rootDir = path.resolve(__dirname, '..')
-const envFile = process.env.NODE_ENV === 'production' && fs.existsSync(path.join(rootDir, '.env.production'))
-  ? '.env.production'
-  : '.env'
-
-const envPath = path.join(rootDir, envFile)
-let whatsappNumber = '2250701234567'
-
-if (fs.existsSync(envPath)) {
-  const content = fs.readFileSync(envPath, 'utf-8')
-  const lines = content.split('\n')
-  for (const line of lines) {
-    const trimmed = line.trim()
-    if (trimmed.startsWith('WAVE_NUMBER_NEXURA=')) {
-      const parts = trimmed.split('=')
-      if (parts.length > 1) {
-        const val = parts.slice(1).join('=').split('#')[0].trim().replace(/['"]/g, '')
-        if (val) {
-          whatsappNumber = val
-        }
-      }
-      break
-    }
-  }
-}
+// L'ancienne version lisait manuellement /.env ou /.env.production à la racine
+// du repo pour extraire WAVE_NUMBER_NEXURA. Ce fichier n'existe jamais sur Vercel
+// (il est dans .gitignore, donc jamais déployé) → le parsing échouait toujours
+// silencieusement et retombait sur un numéro hardcodé en dur, indépendamment de
+// la vraie configuration. NEXT_PUBLIC_WHATSAPP est déjà fourni par vercel.json
+// (et par web/.env.local en dev) — pas besoin de réinventer ce mécanisme.
 
 const nextConfig = {
-  env: {
-    NEXT_PUBLIC_WHATSAPP: whatsappNumber,
-  },
   images: {
     remotePatterns: [
       { protocol: 'http',  hostname: 'localhost' },

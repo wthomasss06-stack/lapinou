@@ -4,6 +4,9 @@ services:
     env: node
     plan: free
     rootDir: api
+    # npm install déclenche automatiquement postinstall (api/scripts/generate-prisma-client.js)
+    # qui génère le bon client Prisma selon NODE_ENV. On regénère une 2e fois ici en filet
+    # de sécurité explicite, au cas où le cache de build de Render saute l'étape postinstall.
     buildCommand: npm install && npx prisma generate --schema=prisma/schema.production.prisma
     startCommand: node src/server.js
     envVars:

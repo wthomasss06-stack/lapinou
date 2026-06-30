@@ -26,6 +26,9 @@ model Rabbit {
   weight      Float?                         // kg
   description String?
 
+  // Stock
+  stock       Int      @default(1)            // nombre d'individus disponibles
+
   // Prix
   price       Float
   priceNote   String?                        // "négociable", "incluant vaccins", etc.
@@ -70,6 +73,9 @@ model Reservation {
   // Quel lapin
   rabbitId  String
   rabbit    Rabbit   @relation(fields: [rabbitId], references: [id])
+
+  // Quantité réservée
+  quantity  Int      @default(1)
 
   // Acheteur
   firstName String
