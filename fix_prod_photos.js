@@ -39,8 +39,9 @@ if (!process.env.DATABASE_URL) {
   process.exit(1)
 }
 
-const { PrismaClient } = require('./api/src/generated/prisma')
+const { PrismaClient } = require('./node_modules/@prisma/client')
 const prisma = new PrismaClient()
+
 
 
 
