@@ -2,9 +2,46 @@
 // Corrige les photos en base de données Neon qui pointent vers /uploads/ local
 // Lance depuis le dossier api/ : node scripts/fix-prod-photos.js
 
-process.env.DATABASE_URL = 'postgresql://neondb_owner:npg_dLHu8xJw0Yym@ep-curly-smoke-at9x38ym.c-9.us-east-1.aws.neon.tech/neondb?sslmode=require'
+const path = require('path')
+const fs = require('fs')
+
+function loadEnvFile(filePath) {
+  if (fs.existsSync(filePath)) {
+    const content = fs.readFileSync(filePath, 'utf-8')
+    content.split(/\r?\n/).forEach(line => {
+      line = line.trim()
+      if (!line || line.startsWith('#')) return
+      const match = line.match(/^([^=]+)=(.*)$/)
+      if (match) {
+        const key = match[1].trim()
+        let val = match[2].trim()
+        if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+          val = val.substring(1, val.length - 1)
+        }
+        process.env[key] = val
+      }
+    })
+  }
+}
+
+// Charger les variables de production en priorité (depuis la racine du projet, deux niveaux au-dessus)
+const envProdPath = path.resolve(__dirname, '../../.env.production')
+const envDevPath = path.resolve(__dirname, '../../.env')
+
+if (fs.existsSync(envProdPath)) {
+  loadEnvFile(envProdPath)
+} else if (fs.existsSync(envDevPath)) {
+  loadEnvFile(envDevPath)
+}
+
+if (!process.env.DATABASE_URL) {
+  console.error("❌ Erreur : DATABASE_URL n'est pas définie. Veuillez créer un fichier .env.production ou .env à la racine.")
+  process.exit(1)
+}
+
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
+
 
 const PHOTO_FIXES = {
   'noisette-belier-nain': [
