@@ -54,8 +54,10 @@ export default function ReserveButton({ slug, rabbitName, rabbitPrice, breed, st
         email: 'visiteur@lapinou.ci',
         phone: '22507000000',
         message: `Réservation instantanée de ${quantity} lapin(s) ${rabbitName} (${breed}) via le bouton Réserver.`,
-        latitude,
-        longitude,
+        // On n'envoie lat/lng QUE si la géoloc a bien été récupérée.
+        // Envoyer null explicitement dans le JSON déclencherait une erreur de validation
+        // côté API (express-validator v7 ne skip pas null avec optional() sans { nullable: true }).
+        ...(latitude !== null && longitude !== null ? { latitude, longitude } : {}),
       })
 
       // 2. Ouvrir WhatsApp avec le message intelligent

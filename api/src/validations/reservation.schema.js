@@ -17,8 +17,11 @@ const reservationRules = [
     .matches(/^[+\d\s\-().]{7,20}$/)
     .withMessage('Numéro de téléphone invalide'),
   body('message').optional().trim().isLength({ max: 500 }),
-  body('latitude').optional().isFloat().toFloat(),
-  body('longitude').optional().isFloat().toFloat(),
+  // { nullable: true } : express-validator v7 ne skip la validation que si la valeur
+  // est undefined. Sans ça, envoyer latitude: null (cas quand le GPS n'est pas dispo)
+  // fait échouer isFloat() sur la chaîne "null" → 400 Bad Request systématique.
+  body('latitude').optional({ nullable: true }).isFloat().toFloat(),
+  body('longitude').optional({ nullable: true }).isFloat().toFloat(),
 ]
 
 function validate(req, res, next) {
