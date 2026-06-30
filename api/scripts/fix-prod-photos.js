@@ -39,8 +39,9 @@ if (!process.env.DATABASE_URL) {
   process.exit(1)
 }
 
-const { PrismaClient } = require('@prisma/client')
+const { PrismaClient } = require('../src/generated/prisma')
 const prisma = new PrismaClient()
+
 
 
 const PHOTO_FIXES = {
