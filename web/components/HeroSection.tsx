@@ -1,244 +1,186 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { Heart, MessageCircle, ChevronRight } from 'lucide-react'
-import { analyticsApi } from '@/lib/api'
+import { MessageCircle } from 'lucide-react'
 
-const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP?.replace(/\D/g, '') || ''
-
-// ─── Slides plein écran — inspiré du carrousel Hero de Nexura ────────────────
+// ── Seuls 4 webm disponibles dans /IMAGES :
+//    Snapchat-1268559920.webm   3.1 MB
+//    Snapchat-1680052335.webm   3.6 MB
+//    Snapchat-2076662897.webm   4.9 MB
+//    Snapchat-888968271.webm    2.0 MB  ← réservé pour BlobSection
 const SLIDES = [
   {
-    eyebrow: "Élevage · Côte d'Ivoire",
-    title: 'Adoptez',
-    titleItalic: 'en toute confiance.',
-    sub: "Chaque lapin est suivi par un vétérinaire avant de rejoindre votre foyer. Vous échangez directement avec l'éleveur, sans intermédiaire.",
-    img: 'https://images.unsplash.com/photo-1452857297128-d9c29adba80b?w=1800&q=80',
+    src: '/IMAGES/Snapchat-1680052335.webm',
+    eyebrow: "Abidjan · Côte d'Ivoire — Élevage artisanal",
+    h1: 'Élevage',
+    h2: 'Artisanal',
+    sub: 'Des lapins de race élevés avec soin, disponibles pour particuliers, restaurateurs & éleveurs PME.',
   },
   {
-    eyebrow: 'Bélier nain · Rex · Angora français',
-    title: 'Choisissez',
-    titleItalic: 'le compagnon idéal.',
-    sub: "Plusieurs races disponibles à Abidjan. Photos réelles, prix nets affichés, aucune surprise.",
-    img: 'https://images.unsplash.com/photo-1535241749838-299277b6305f?w=1800&q=80',
+    src: '/IMAGES/Snapchat-2076662897.webm',
+    eyebrow: 'Restaurateurs · Traiteurs · Gastronomie',
+    h1: 'Pour votre',
+    h2: 'Table',
+    sub: 'Approvisionnement régulier, qualité bouchère garantie. Livraison sur Abidjan et ses environs.',
   },
   {
-    eyebrow: 'Réservation simple · Abidjan',
-    title: 'Réservez',
-    titleItalic: 'puis on échange.',
-    sub: "Remplissez le formulaire en 1 minute. On vous contacte par email et WhatsApp pour fixer un rendez-vous.",
-    img: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=1800&q=80',
+    src: '/IMAGES/Snapchat-1268559920.webm',
+    eyebrow: 'Réservation en ligne · Confirmation 24h',
+    h1: 'Réservez',
+    h2: 'En ligne',
+    sub: 'Choisissez votre race et votre quantité. Nous vous contactons par email et WhatsApp.',
   },
 ]
 
 export default function HeroSection() {
-  const [active, setActive] = useState(0)
-  const [fading, setFading] = useState(false)
-  const [mounted, setMounted] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
-  const [stats, setStats] = useState({ totalRabbits: 120, totalBreeds: 4, totalReservations: 98 })
-  const timer = useRef<ReturnType<typeof setInterval> | null>(null)
-  const bgRef = useRef<HTMLDivElement>(null)
+  const [cur, setCur]         = useState(0)
+  const [nextIdx, setNextIdx] = useState<number | null>(null)
 
-  const go = (idx: number) => {
-    if (fading || idx === active) return
-    setFading(true)
-    setTimeout(() => { setActive(idx); setFading(false) }, 600)
+  const nextRef   = useRef<HTMLDivElement>(null)
+  const vidRefs   = useRef<(HTMLVideoElement | null)[]>([])
+  const progRef   = useRef<HTMLDivElement>(null)
+  const busy      = useRef(false)
+  const curRef    = useRef(0)
+
+  useEffect(() => { curRef.current = cur }, [cur])
+
+  // Barre de progression — se relance à chaque changement de slide
+  useEffect(() => {
+    let raf: number
+    const tick = () => {
+      const v = vidRefs.current[cur]
+      if (v && progRef.current && v.duration > 0) {
+        progRef.current.style.width = `${(v.currentTime / v.duration) * 100}%`
+      }
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [cur])
+
+  // Auto-play de la première vidéo
+  useEffect(() => { vidRefs.current[0]?.play().catch(() => {}) }, [])
+
+  const goTo = async (n: number) => {
+    if (busy.current || n === curRef.current) return
+    busy.current = true
+    if (progRef.current) progRef.current.style.width = '0%'
+    vidRefs.current[curRef.current]?.pause()
+
+    setNextIdx(n)
+    await new Promise<void>(r => requestAnimationFrame(() => requestAnimationFrame(() => r())))
+
+    const el = nextRef.current
+    if (el) {
+      // ── Diagonal wipe — Effect 9 ──────────────────────────────
+      el.style.transition = 'none'
+      el.style.clipPath = 'polygon(0 0, 0 0, 0 100%, 0 100%)'
+      el.getBoundingClientRect()
+
+      el.style.transition = 'clip-path 0.55s cubic-bezier(0.77,0,0.175,1)'
+      el.style.clipPath = 'polygon(0 0, 68% 0, 42% 100%, 0 100%)'
+      await new Promise<void>(r => setTimeout(r, 550))
+
+      el.style.transition = 'clip-path 0.35s cubic-bezier(0.25,0.46,0.45,0.94)'
+      el.style.clipPath = 'polygon(0 0, 100% 0, 100% 100%, 0 100%)'
+      await new Promise<void>(r => setTimeout(r, 350))
+    }
+
+    const v = vidRefs.current[n]
+    if (v) { v.currentTime = 0; v.play().catch(() => {}) }
+
+    setCur(n)
+    setNextIdx(null)
+    busy.current = false
   }
 
-  useEffect(() => { const t = setTimeout(() => setMounted(true), 80); return () => clearTimeout(t) }, [])
-
-  useEffect(() => {
-    timer.current = setInterval(() => go((active + 1) % SLIDES.length), 6500)
-    return () => { if (timer.current) clearInterval(timer.current) }
-  }, [active])
-
-  // Charger les statistiques depuis l'API publique
-  useEffect(() => {
-    analyticsApi.publicStats()
-      .then(res => {
-        if (res) {
-          setStats({
-            totalRabbits: res.totalRabbits || 0,
-            totalBreeds: res.totalBreeds || 0,
-            totalReservations: res.totalReservations || 0,
-          })
-        }
-      })
-      .catch(() => {})
-  }, [])
-
-  // Parallax léger au scroll
-  useEffect(() => {
-    let ticking = false
-    const onScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const s = window.pageYOffset
-          if (bgRef.current) {
-            bgRef.current.style.transform = `scale(${1 + s / 1800}) translate3d(0,${s * 0.12}px,0)`
-          }
-          ticking = false
-        })
-        ticking = true
-      }
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth <= 900)
-    check()
-    window.addEventListener('resize', check)
-    return () => window.removeEventListener('resize', check)
-  }, [])
-
-  const s = SLIDES[active]
-  const fc = (delayMs: number) => ({ opacity: mounted ? 1 : 0, transition: `opacity .7s ${delayMs}ms ease` })
+  const s = SLIDES[cur]
 
   return (
-    <section className="relative h-screen min-h-[560px] overflow-hidden">
-      {/* ── Fond image carrousel ── */}
-      <div ref={bgRef} className="absolute inset-[-12%] will-change-transform">
-        {SLIDES.map((sl, i) => (
-          <div
-            key={i}
-            className="absolute inset-0 transition-opacity duration-[1100ms]"
-            style={{ opacity: i === active ? 1 : 0 }}
-          >
-            <img
-              src={sl.img}
-              alt=""
-              aria-hidden="true"
-              loading={i === 0 ? 'eager' : 'lazy'}
-              className="absolute inset-0 w-full h-full object-cover"
-              style={{ objectPosition: 'center 32%' }}
-            />
-          </div>
-        ))}
-      </div>
+    <section className="relative h-screen overflow-hidden bg-black" style={{ minHeight: 560 }}>
 
-      {/* ── Voile dégradé pour lisibilité ── */}
-      <div className="absolute inset-0 bg-gradient-to-b from-espresso/30 via-espresso/55 to-espresso z-[3]" />
-      <div className="absolute inset-0 bg-gradient-to-r from-espresso/75 via-espresso/15 to-transparent z-[4]" />
-      <div
-        className="absolute -top-16 -right-8 w-[560px] h-[560px] rounded-full z-[5] pointer-events-none"
-        style={{ background: 'radial-gradient(circle, rgba(184,131,74,0.18) 0%, transparent 62%)' }}
-      />
+      {/* Barres cinéma haut/bas */}
+      <div className="absolute inset-x-0 top-0 h-[5.5vh] bg-black z-20 pointer-events-none" />
+      <div className="absolute inset-x-0 bottom-0 h-[5.5vh] bg-black z-20 pointer-events-none" />
 
-      {/* ── Contenu ── */}
-      <div className="absolute inset-0 z-10 flex items-center px-6 sm:px-10 lg:px-20">
-        <div className="max-w-xl -mt-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-white/[0.07] border border-white/[0.14] rounded-full backdrop-blur-sm mb-5" style={fc(0)}>
-            <span className="w-1.5 h-1.5 rounded-full bg-caramel animate-pulse" />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-white/80">{s.eyebrow}</span>
-          </div>
+      {/* Toutes les slides empilées */}
+      {SLIDES.map((sl, i) => (
+        <div key={i} className="absolute inset-0" style={{ zIndex: i === cur ? 2 : 1 }}>
+          <video
+            ref={el => { vidRefs.current[i] = el }}
+            src={sl.src}
+            muted playsInline
+            preload={i === 0 ? 'auto' : 'metadata'}
+            onEnded={() => { if (i === curRef.current) goTo((i + 1) % SLIDES.length) }}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-black/50 to-black/90" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/25 to-transparent" />
+        </div>
+      ))}
 
-          <h1
-            className="font-display font-extrabold text-[clamp(38px,5.8vw,72px)] leading-[0.95] text-white mb-4"
-            style={{ textShadow: '0 2px 20px rgba(0,0,0,.5)' }}
-            key={active}
-          >
-            {s.title}<br />
-            <em className="italic font-normal text-white/85">{s.titleItalic}</em>
+      {/* Slide entrante (wipe diagonal) */}
+      {nextIdx !== null && (
+        <div ref={nextRef} className="absolute inset-0" style={{ zIndex: 3 }}>
+          <video src={SLIDES[nextIdx].src} muted playsInline autoPlay
+            className="absolute inset-0 w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-black/50 to-black/90" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/25 to-transparent" />
+        </div>
+      )}
+
+      {/* Contenu héro */}
+      <div className="absolute inset-0 z-10 flex items-end px-8 sm:px-12 lg:px-[2.5vw] pb-[14vh]">
+        <div>
+          <p key={`e-${cur}`} className="text-[0.68rem] tracking-[0.35em] uppercase mb-6"
+            style={{ fontFamily: 'var(--font-label)', color: 'var(--rust)' }}>
+            {s.eyebrow}
+          </p>
+          <h1 key={`h-${cur}`} className="font-bold text-white leading-[0.88] tracking-tight"
+            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(48px,9vw,120px)' }}>
+            {s.h1}<br /><em className="italic text-white/80">{s.h2}</em>
           </h1>
-
-          <p className="text-white/65 text-sm sm:text-base leading-relaxed mb-7 max-w-md" style={fc(240)}>
+          <p key={`s-${cur}`} className="mt-6 text-white/45 font-light leading-relaxed max-w-sm"
+            style={{ fontSize: 'clamp(13px,1vw,15px)' }}>
             {s.sub}
           </p>
-
-          <div className="flex flex-wrap gap-3 mb-2" style={fc(360)}>
-            <Link href="/rabbits" className="btn-neon px-6 py-3 rounded-xl text-sm flex items-center gap-2">
-              <Heart size={15} />
-              Voir les lapins
+          <div className="flex flex-wrap gap-3 mt-8">
+            <Link href="/rabbits" className="btn-neon px-6 py-3 rounded-xl text-sm font-semibold">
+              Voir le catalogue
             </Link>
-            {WHATSAPP && (
-              <a
-                href={`https://wa.me/${WHATSAPP}?text=${encodeURIComponent('Bonjour, je suis intéressé(e) par un lapin Lapinou.')}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white bg-white/[0.08] border border-white/[0.18] backdrop-blur-sm transition-all hover:bg-white/[0.14]"
-              >
-                <MessageCircle size={15} />
-                Discuter sur WhatsApp
+            {process.env.NEXT_PUBLIC_WHATSAPP && (
+              <a href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP.replace(/\D/g,'')}`}
+                target="_blank" rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white bg-white/[0.07] border border-white/[0.12] backdrop-blur-sm hover:bg-white/[0.13] transition-colors">
+                <MessageCircle size={14} /> WhatsApp
               </a>
             )}
           </div>
         </div>
       </div>
 
-      {/* ── Cartes flottantes (desktop) ── */}
-      {!isMobile && (
-        <>
-          <div className="absolute top-[8%] right-[3%] w-64 z-20 glass rounded-2xl p-4" style={fc(350)}>
-            <div className="text-[9px] font-bold uppercase tracking-widest text-white/35 mb-2.5">Lapinou en chiffres</div>
-            <div className="grid grid-cols-2 gap-1.5">
-              {[
-                { n: `${stats.totalRabbits}`, label: 'Lapins' },
-                { n: `${stats.totalBreeds}`, label: 'Races' },
-                { n: `${stats.totalReservations}`, label: 'Réservations' },
-                { n: '98%', label: 'Satisfaction' },
-              ].map((st, i) => (
-                <div key={i} className="bg-white/[0.04] border border-white/[0.07] rounded-lg py-2.5 px-1 text-center">
-                  <div className="font-display text-lg font-extrabold text-caramel leading-none">{st.n}</div>
-                  <div className="text-[8.5px] text-white/40 font-semibold uppercase tracking-wide mt-1">{st.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="absolute top-[44%] right-[3%] -translate-y-1/2 w-64 z-20 glass rounded-2xl p-4" style={fc(480)}>
-            <div className="flex items-center gap-2.5 mb-2.5">
-              <div className="w-8 h-8 rounded-lg bg-caramel/15 border border-caramel/20 flex items-center justify-center shrink-0">
-                <MessageCircle size={15} className="text-caramel" />
-              </div>
-              <div>
-                <div className="text-white font-display font-bold text-[11px]">Contact direct</div>
-                <div className="text-white/40 text-[9px] mt-0.5">Email + WhatsApp</div>
-              </div>
-            </div>
-            <p className="text-white/35 text-[10px] leading-relaxed">
-              Chaque réservation vous met en relation immédiate avec l'éleveur.
-            </p>
-          </div>
-
-          <div className="absolute bottom-[8%] right-[3%] w-64 z-20 glass rounded-2xl p-4" style={fc(580)}>
-            <div className="text-[9px] font-bold uppercase tracking-widest text-white/35 mb-2.5">Races disponibles</div>
-            <div className="flex flex-wrap gap-1.5">
-              {['Bélier nain', 'Rex', 'Angora français', 'Hollandais'].map(r => (
-                <span key={r} className="text-[9.5px] font-semibold text-white/55 bg-white/[0.05] border border-white/[0.09] rounded-md px-2 py-1">
-                  {r}
-                </span>
-              ))}
-            </div>
-          </div>
-        </>
-      )}
-
-      {/* ── Dots ── */}
-      {!isMobile && (
-        <div className="absolute bottom-8 left-20 z-30 flex gap-2">
+      {/* Dots + compteur */}
+      <div className="absolute right-[2.5vw] bottom-[14vh] z-10 hidden sm:flex flex-col items-end gap-3">
+        <span className="text-[0.6rem] tracking-[0.2em] text-white/25" style={{ fontFamily: 'var(--font-label)' }}>
+          0{cur + 1}&nbsp;/&nbsp;0{SLIDES.length}
+        </span>
+        <div className="flex flex-col gap-[6px]">
           {SLIDES.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => go(i)}
-              aria-label={`Slide ${i + 1}`}
-              className="h-1.5 rounded-full transition-all"
-              style={{
-                width: i === active ? 28 : 14,
-                background: i === active ? '#B8834A' : 'rgba(255,255,255,.25)',
-              }}
-            />
+            <button key={i} onClick={() => goTo(i)} aria-label={`Slide ${i + 1}`}
+              className="rounded-full transition-all duration-500"
+              style={{ width: 2, height: i === cur ? 48 : 18,
+                background: i === cur ? 'var(--rust)' : 'rgba(255,255,255,0.2)' }} />
           ))}
         </div>
-      )}
-
-      {/* ── Indicateur scroll ── */}
-      <div className="absolute bottom-8 right-10 z-30 hidden sm:flex items-center gap-1.5 text-white/35 text-[11px] font-mono">
-        <ChevronRight size={13} className="rotate-90 animate-bounce" />
-        Défiler
       </div>
+
+      <span className="absolute left-[2.5vw] bottom-[9vh] z-10 text-[0.6rem] tracking-[0.3em] uppercase text-white/20 hidden sm:block"
+        style={{ fontFamily: 'var(--font-label)', writingMode: 'vertical-rl' }}>
+        Défiler
+      </span>
+
+      <div ref={progRef} className="absolute bottom-[5.5vh] left-0 z-[25] h-px"
+        style={{ width: '0%', background: 'var(--rust)' }} />
     </section>
   )
 }

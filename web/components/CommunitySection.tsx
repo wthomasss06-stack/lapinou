@@ -7,7 +7,7 @@ const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP?.replace(/\D/g, '') || ''
 
 export default function CommunitySection() {
   const whatsappUrl = WHATSAPP
-    ? `https://wa.me/${WHATSAPP}?text=${encodeURIComponent('Bonjour, je suis intéressé(e) par un lapin Lapinou. Pouvez-vous me renseigner ?')}`
+    ? `https://wa.me/${WHATSAPP}?text=${encodeURIComponent('Bonjour, je suis intéressé(e) par un lapin CHEZ FLORENCE. Pouvez-vous me renseigner ?')}`
     : '/contact'
 
   return (
@@ -58,7 +58,7 @@ export default function CommunitySection() {
               className="font-display text-4xl lg:text-5xl font-extrabold mb-4"
             >
               Une question avant{' '}
-              <span className="text-gradient">d'adopter ?</span>
+              <span className="text-gradient">de commander ?</span>
             </motion.h2>
 
             <motion.p

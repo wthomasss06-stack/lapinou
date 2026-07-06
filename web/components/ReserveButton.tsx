@@ -5,7 +5,7 @@ import { rabbitsApi } from '@/lib/api'
 import { formatPrice } from '@/lib/status'
 import { MessageCircle, Check, AlertCircle, Minus, Plus } from 'lucide-react'
 
-const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP || '2250701234567'
+const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP || '2250142507750'
 
 interface ReserveButtonProps {
   slug: string
@@ -50,8 +50,8 @@ export default function ReserveButton({ slug, rabbitName, rabbitPrice, breed, st
       await rabbitsApi.reserve(slug, {
         quantity,
         firstName: 'Visiteur',
-        lastName: 'Lapinou',
-        email: 'visiteur@lapinou.ci',
+        lastName: 'CHEZ FLORENCE',
+        email: 'visiteur@chezflorence.ci',
         phone: '22507000000',
         message: `Réservation instantanée de ${quantity} lapin(s) ${rabbitName} (${breed}) via le bouton Réserver.`,
         // On n'envoie lat/lng QUE si la géoloc a bien été récupérée.
@@ -64,7 +64,7 @@ export default function ReserveButton({ slug, rabbitName, rabbitPrice, breed, st
       if (typeof window !== 'undefined') {
         const waNum = WHATSAPP.replace(/\D/g, '')
         const totalPrice = rabbitPrice * quantity
-        const waText = `Bonjour ! Je souhaite réserver ${quantity} lapin${quantity > 1 ? 's' : ''} *${rabbitName}* (${breed}) à ${formatPrice(rabbitPrice)}/unité (total ${formatPrice(totalPrice)}) sur votre site Lapinou 🐇\n\n` +
+        const waText = `Bonjour ! Je souhaite réserver ${quantity} lapin${quantity > 1 ? 's' : ''} *${rabbitName}* (${breed}) à ${formatPrice(rabbitPrice)}/unité (total ${formatPrice(totalPrice)}) sur votre site CHEZ FLORENCE 🐇\n\n` +
           `Pouvez-vous me confirmer la disponibilité et les modalités de livraison ?`
         const waUrl = `https://wa.me/${waNum}?text=${encodeURIComponent(waText)}`
         window.open(waUrl, '_blank', 'noopener,noreferrer')
@@ -143,9 +143,9 @@ export default function ReserveButton({ slug, rabbitName, rabbitPrice, breed, st
         onClick={handleReserve}
         disabled={state === 'loading'}
         className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl
-                   bg-[#25D366] hover:bg-[#1ebe5d] active:scale-95
+                   bg-[var(--green)] hover:brightness-110 active:scale-95
                    text-white font-bold text-sm transition-all duration-200
-                   shadow-lg shadow-[#25D366]/20 disabled:opacity-50"
+                   shadow-lg shadow-[rgba(var(--green-rgb),0.3)] disabled:opacity-50"
       >
         {state === 'loading' ? (
           <>
@@ -164,7 +164,7 @@ export default function ReserveButton({ slug, rabbitName, rabbitPrice, breed, st
       </button>
 
       {state === 'error' && (
-        <p className="text-[10px] text-red-400 mt-1.5 flex items-center gap-1">
+        <p className="text-[10px] text-[var(--lime)] mt-1.5 flex items-center gap-1">
           <AlertCircle size={10} />
           {errorMsg}
         </p>

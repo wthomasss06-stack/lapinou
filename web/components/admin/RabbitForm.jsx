@@ -136,7 +136,7 @@ function PhotoUploadPanel({ rabbit, onDone }) {
                 <button
                   onClick={() => handleDelete(photo)}
                   disabled={deleting === photo.id}
-                  className="absolute top-1.5 right-1.5 w-7 h-7 rounded-lg bg-black/60 text-white/70 hover:text-red-400 hover:bg-black/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all disabled:opacity-40"
+                  className="absolute top-1.5 right-1.5 w-7 h-7 rounded-lg bg-black/60 text-white/70 hover:text-[var(--lime)] hover:bg-black/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all disabled:opacity-40"
                 >
                   {deleting === photo.id
                     ? <div className="w-3 h-3 border border-white/50 border-t-transparent rounded-full animate-spin" />
@@ -266,7 +266,7 @@ export default function RabbitForm({ rabbit, onSaved, onCancel }) {
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                   <label className="text-xs text-white/40 uppercase tracking-widest font-mono mb-1.5 block">Genre</label>
                   <select

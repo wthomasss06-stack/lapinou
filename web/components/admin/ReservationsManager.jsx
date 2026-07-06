@@ -75,22 +75,22 @@ export default function ReservationsManager() {
         </div>
 
         <div className="glass p-4 rounded-xl flex items-center gap-3">
-          <div className="p-3 rounded-lg bg-[#2ECC71]/15 text-[#2ECC71]">
+          <div className="p-3 rounded-lg bg-[rgba(var(--green-rgb),0.15)] text-[var(--green)]">
             <ShieldCheck size={20} />
           </div>
           <div>
             <div className="text-[10px] text-white/40 uppercase font-bold">Consentements OK</div>
-            <div className="text-xl font-bold text-[#2ECC71] mt-0.5">{stats.accepted}</div>
+            <div className="text-xl font-bold text-[var(--green)] mt-0.5">{stats.accepted}</div>
           </div>
         </div>
 
         <div className="glass p-4 rounded-xl flex items-center gap-3">
-          <div className="p-3 rounded-lg bg-[#E74C3C]/15 text-[#E74C3C]">
+          <div className="p-3 rounded-lg bg-[rgba(var(--lime-rgb),0.15)] text-[var(--lime)]">
             <ShieldAlert size={20} />
           </div>
           <div>
             <div className="text-[10px] text-white/40 uppercase font-bold">Refus Cookies</div>
-            <div className="text-xl font-bold text-[#E74C3C] mt-0.5">{stats.declined}</div>
+            <div className="text-xl font-bold text-[var(--lime)] mt-0.5">{stats.declined}</div>
           </div>
         </div>
       </div>

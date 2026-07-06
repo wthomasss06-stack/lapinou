@@ -5,10 +5,10 @@ import { Star } from 'lucide-react'
 const TESTIMONIALS = [
   { name: 'Adjoua K.', role: 'Cocody', av: 'A', color: '#B8834A', text: "Mon Bélier nain est arrivé en pleine forme. L'échange WhatsApp avec l'éleveur a tout simplifié." },
   { name: 'Kouamé D.', role: 'Marcory', av: 'K', color: '#C2693D', text: "Réservation faite en deux minutes, rendez-vous fixé le lendemain. Très sérieux." },
-  { name: 'Fatou B.', role: 'Yopougon', av: 'F', color: '#7C8B6F', text: "Le suivi vétérinaire m'a rassurée. Mon Rex est en pleine santé depuis 6 mois." },
+  { name: 'Fatou B.', role: 'Yopougon', av: 'F', color: '#A89678', text: "Le suivi vétérinaire m'a rassurée. Mon Rex est en pleine santé depuis 6 mois." },
   { name: 'Yao T.', role: 'Cocody', av: 'Y', color: '#B8834A', text: "Photos fidèles à la réalité, prix annoncé respecté. Exactement ce qu'il fallait." },
   { name: 'Mariam S.', role: 'Bingerville', av: 'M', color: '#C2693D', text: "Mon Angora français est magnifique. L'éleveur a même donné des conseils d'entretien." },
-  { name: 'Issa K.', role: 'Treichville', av: 'I', color: '#7C8B6F', text: "Premier achat de lapin et tout s'est très bien passé. Je recommande Lapinou." },
+  { name: 'Issa K.', role: 'Treichville', av: 'I', color: '#A89678', text: "Premier achat de lapin et tout s'est très bien passé. Je recommande CHEZ FLORENCE." },
 ]
 
 export default function TestimonialsSection() {
@@ -25,7 +25,7 @@ export default function TestimonialsSection() {
         >
           <p className="text-caramel font-mono text-xs tracking-widest uppercase mb-3">Avis clients</p>
           <h2 className="font-display text-4xl lg:text-5xl font-extrabold text-white">
-            Ils ont <span className="text-gradient">adopté chez nous</span>
+            Ils ont <span className="text-gradient">commandé chez nous</span>
           </h2>
           <p className="text-white/40 mt-4 max-w-md mx-auto text-sm">
             À Abidjan, en toute confiance.

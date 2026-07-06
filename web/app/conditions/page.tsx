@@ -2,14 +2,14 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 
 export const metadata = {
-  title: "Conditions d'utilisation | Lapinou",
-  description: "Conditions d'utilisation du site Lapinou — réservation, stock, livraison et paiement.",
+  title: "Conditions d'utilisation | CHEZ FLORENCE",
+  description: "Conditions d'utilisation du site CHEZ FLORENCE — réservation, stock, livraison et paiement.",
 }
 
 const sections = [
   {
     title: '1. Objet',
-    body: "Le site Lapinou permet de consulter les races de lapins disponibles à la vente, de réserver une quantité de lapins parmi le stock affiché, et d'être mis en relation avec le vendeur via WhatsApp pour finaliser la transaction. Lapinou est exploité par AKATech, basé à Abidjan, Côte d'Ivoire.",
+    body: "Le site CHEZ FLORENCE permet de consulter les races de lapins disponibles à la vente, de réserver une quantité de lapins parmi le stock affiché, et d'être mis en relation avec le vendeur via WhatsApp pour finaliser la transaction. CHEZ FLORENCE est exploité par AKATech, basé à Abidjan, Côte d'Ivoire.",
   },
   {
     title: '2. Fonctionnement des réservations',
@@ -25,7 +25,7 @@ const sections = [
   },
   {
     title: '5. Livraison',
-    body: "Lapinou propose une livraison locale en Côte d'Ivoire selon trois zones de frais : Abidjan, Azaguié et alentours, et le reste du territoire. La zone et le frais correspondant sont calculés automatiquement à partir de la position transmise lors de la réservation, sous réserve d'acceptation de la géolocalisation par le client.",
+    body: "CHEZ FLORENCE propose une livraison locale en Côte d'Ivoire selon trois zones de frais : Abidjan, Azaguié et alentours, et le reste du territoire. La zone et le frais correspondant sont calculés automatiquement à partir de la position transmise lors de la réservation, sous réserve d'acceptation de la géolocalisation par le client.",
   },
   {
     title: '6. Annulation',

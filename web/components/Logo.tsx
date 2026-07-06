@@ -10,8 +10,11 @@ interface LogoProps {
 }
 
 export default function Logo({ size = 44, showText = true, className = '' }: LogoProps) {
-  // showText=true  → logo complet (tête + bandeau "LAPINOU" intégré au visuel)
+  // showText=true  → logo complet (tête + bandeau texte intégré au visuel)
   //                  ratio réel ≈ 0.82:1 (plus haut que large)
+  //                  ⚠️ le fichier /logo.png contient encore le texte "LAPINOU"
+  //                  gravé dans l'image : il faudra fournir un nouveau visuel
+  //                  "CHEZ FLORENCE" pour que le logo affiché change réellement.
   // showText=false → icône compacte (tête de lapin seule), carrée (1:1)
   const src = showText ? '/logo.png' : '/logo-icon.png'
   const width = showText ? Math.round(size * 0.82) : size
@@ -28,7 +31,7 @@ export default function Logo({ size = 44, showText = true, className = '' }: Log
       >
         <Image
           src={src}
-          alt="Lapinou — Vente de lapins à Abidjan"
+          alt="CHEZ FLORENCE — Vente de lapins à Abidjan"
           fill
           sizes={`${size}px`}
           className="object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.35)]"

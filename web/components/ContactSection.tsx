@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import { Mail, MessageCircle, MapPin, Send, CheckCircle } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { sendContactMessage } from '@/lib/api'
+import { formatWhatsappDisplay } from '@/lib/whatsapp'
 
 const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP?.replace(/\D/g, '') || ''
 
@@ -33,8 +34,8 @@ export default function ContactSection() {
     : null
 
   const contactInfo = [
-    { icon: <Mail size={20} />, label: 'Email', value: 'contact@lapinou.ci' },
-    { icon: <MessageCircle size={20} />, label: 'WhatsApp', value: WHATSAPP ? `+225 ${WHATSAPP}` : 'Voir le bouton ci-contre' },
+    { icon: <Mail size={20} />, label: 'Email', value: 'wthomasss06@gmail.com' },
+    { icon: <MessageCircle size={20} />, label: 'WhatsApp', value: WHATSAPP ? formatWhatsappDisplay(WHATSAPP) : 'Voir le bouton ci-contre' },
     { icon: <MapPin size={20} />, label: 'Adresse', value: 'Abidjan, Côte d\'Ivoire' },
   ]
 

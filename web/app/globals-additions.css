@@ -1,0 +1,39 @@
+/* ============================================================
+   LAPINOU — DESIGN SYSTEM (à coller en tête de globals.css)
+   Palettes + typographies extraites de index.html
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;0,6..96,700;1,6..96,500;1,6..96,700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* ── Palette papier ──────────────────────────────────────── */
+  --paper:       #F3E9DA;
+  --paper-deep:  #E4D2B4;
+  --ink:         #2A100B;
+  --maroon:      #7C2A1A;
+  --rust:        #C2723D;
+  --caramel:     #B8834A;
+
+  /* ── Typographies ────────────────────────────────────────── */
+  --font-display: "Bodoni Moda", "Times New Roman", Georgia, serif;
+  --font-label:   "IBM Plex Mono", "JetBrains Mono", "Courier New", monospace;
+  --font-body:    "Newsreader", Georgia, serif;
+
+  /* ── Grain SVG (texture film) ────────────────────────────── */
+  --grain: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27200%27%20height%3D%27200%27%3E%3Cfilter%20id%3D%27n%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%270.85%27%20numOctaves%3D%273%27%20stitchTiles%3D%27stitch%27/%3E%3CfeColorMatrix%20type%3D%27matrix%27%20values%3D%270%200%200%200%201%20%200%200%200%200%200.96%20%200%200%200%200%200.88%20%200%200%200%200.45%200%27/%3E%3C/filter%3E%3Crect%20width%3D%27100%25%27%20height%3D%27100%25%27%20filter%3D%27url%28%23n%29%27/%3E%3C/svg%3E");
+
+  /* ── Border radius cards ─────────────────────────────────── */
+  --radius-plate: 10px;
+}
+
+/* Grain overlay global (à mettre dans le layout si besoin) */
+#grain {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  background-image: var(--grain);
+  background-size: 220px 220px;
+  opacity: 0.4;
+  mix-blend-mode: overlay;
+}

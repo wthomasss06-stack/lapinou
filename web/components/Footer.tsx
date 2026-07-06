@@ -1,13 +1,14 @@
 'use client'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { Facebook, Instagram, MessageCircle, Mail, Phone, MapPin } from 'lucide-react'
+import { Facebook, MessageCircle, Mail, Phone, MapPin } from 'lucide-react'
 import Logo from './Logo'
+import { formatWhatsappDisplay } from '@/lib/whatsapp'
 
 const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP?.replace(/\D/g, '') || ''
 
 const footerLinks = {
-  'Lapinou': [
+  'CHEZ FLORENCE': [
     { label: 'Accueil', href: '/' },
     { label: 'Nos Lapins', href: '/#lapins' },
     { label: 'À Propos', href: '/#a-propos' },
@@ -22,7 +23,6 @@ const footerLinks = {
 
 const socials = [
   { icon: <Facebook size={16} />, href: '#', label: 'Facebook' },
-  { icon: <Instagram size={16} />, href: '#', label: 'Instagram' },
 ]
 
 export default function Footer() {
@@ -90,11 +90,11 @@ export default function Footer() {
             <ul className="space-y-2.5 text-xs text-white/40">
               <li className="flex items-center gap-2">
                 <Mail size={12} className="text-caramel/70 shrink-0" />
-                <span>contact@lapinou.ci</span>
+                <span>wthomasss06@gmail.com</span>
               </li>
               <li className="flex items-center gap-2">
                 <Phone size={12} className="text-caramel/70 shrink-0" />
-                <span>+225 {WHATSAPP || '07 00 00 00 00'}</span>
+                <span>{WHATSAPP ? formatWhatsappDisplay(WHATSAPP) : '+225 01 42 50 77 50'}</span>
               </li>
               <li className="flex items-start gap-2">
                 <MapPin size={12} className="text-caramel/70 shrink-0 mt-0.5" />
@@ -107,7 +107,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-brand-border pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-white/30 text-xs font-mono">
-            © {new Date().getFullYear()} Lapinou. Tous droits réservés.
+            © {new Date().getFullYear()} CHEZ FLORENCE. Tous droits réservés.
           </p>
           <div className="flex items-center gap-1 text-white/30 text-xs">
             <span>Élevé avec</span>

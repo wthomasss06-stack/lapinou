@@ -131,15 +131,15 @@ export default function MapView() {
         destEl.innerHTML = `
           <div style="
             width:36px;height:36px;border-radius:50% 50% 50% 0;
-            background:linear-gradient(135deg,#FFD700,#B8834A);
-            transform:rotate(-45deg);border:3px solid #1E1812;
+            background:linear-gradient(135deg,#B8834A,#C2693D);
+            transform:rotate(-45deg);border:3px solid #050505;
             box-shadow:0 4px 14px rgba(0,0,0,.5);
           "></div>`
         new mapboxgl.Marker({ element: destEl, anchor: 'bottom' })
           .setLngLat([DEST.lng, DEST.lat])
           .setPopup(new mapboxgl.Popup({ offset: 30 }).setHTML(
-            `<b style="font-size:13px;color:#1E1812">🐇 Coin Lapin</b><br/>
-             <span style="font-size:11px;color:#555">Azaguié Gare, Côte d'Ivoire</span>`
+            `<b style="font-size:13px;color:#050505">🐇 Coin Lapin</b><br/>
+             <span style="font-size:11px;color:#A89678">Azaguié Gare, Côte d'Ivoire</span>`
           ))
           .addTo(map)
 
@@ -149,8 +149,8 @@ export default function MapView() {
           userEl.innerHTML = `
             <div style="position:relative;width:20px;height:20px;">
               <div style="
-                width:20px;height:20px;background:#4FACFE;border-radius:50%;
-                border:3px solid #fff;box-shadow:0 0 0 6px rgba(79,172,254,.25);
+                width:20px;height:20px;background:#C2693D;border-radius:50%;
+                border:3px solid #fff;box-shadow:0 0 0 6px rgba(194,105,61,.25);
                 animation:lapinouPulse 2s infinite;
               "></div>
             </div>`
@@ -190,7 +190,7 @@ export default function MapView() {
                 map.addLayer({
                   id: 'route-line', type: 'line', source: 'route',
                   layout: { 'line-join': 'round', 'line-cap': 'round' },
-                  paint: { 'line-color': '#FFD700', 'line-width': 4, 'line-opacity': 0.9 },
+                  paint: { 'line-color': '#B8834A', 'line-width': 4, 'line-opacity': 0.9 },
                 })
                 // Pointillés animés par-dessus
                 map.addLayer({
@@ -295,12 +295,12 @@ export default function MapView() {
         {phase === 'ready' && (
           <div className="absolute bottom-2 left-2 z-20 backdrop-blur-md bg-black/40 border border-white/10 px-3 py-2 rounded-xl text-[10px] space-y-1.5">
             <div className="flex items-center gap-1.5">
-              <span className="inline-block w-2.5 h-2.5 rounded-full bg-[#FFD700] shadow-sm shadow-[#FFD700]/50" />
+              <span className="inline-block w-2.5 h-2.5 rounded-full bg-[var(--green)] shadow-sm shadow-[rgba(var(--green-rgb),0.5)]" />
               <span className="text-white/70">Coin Lapin (Azaguié Gare)</span>
             </div>
             {userCoords && (
               <div className="flex items-center gap-1.5">
-                <span className="inline-block w-2.5 h-2.5 rounded-full bg-[#4FACFE] shadow-sm shadow-[#4FACFE]/50" />
+                <span className="inline-block w-2.5 h-2.5 rounded-full bg-[var(--lime)] shadow-sm shadow-[rgba(var(--lime-rgb),0.5)]" />
                 <span className="text-white/70">
                   Votre position
                   {distanceLabel && <> · <span className="text-caramel font-semibold">{distanceLabel}</span></>}
@@ -314,7 +314,7 @@ export default function MapView() {
 
       {/* Message d'erreur géo */}
       {geoError && (
-        <div className="flex items-start gap-2 text-xs text-amber-400 bg-amber-400/10 border border-amber-400/20 rounded-xl px-3 py-2">
+        <div className="flex items-start gap-2 text-xs text-[var(--lime)] bg-[rgba(var(--lime-rgb),0.1)] border border-[rgba(var(--lime-rgb),0.2)] rounded-xl px-3 py-2">
           <AlertTriangle size={13} className="shrink-0 mt-0.5" />
           <span>{geoError}</span>
         </div>

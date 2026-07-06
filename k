@@ -1,3 +1,3 @@
 git add .
-git commit -m "mise a jour 2"
+git commit -m "responsive a jour"
 git push

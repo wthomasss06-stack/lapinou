@@ -1,0 +1,2464 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>La Garenne — Vente de Lapins</title>
+    <link rel="icon"
+        href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2064%2064%27%3E%3Crect%20width%3D%2764%27%20height%3D%2764%27%20fill%3D%27%232A100B%27/%3E%3Crect%20x%3D%2717%27%20y%3D%277%27%20width%3D%2710%27%20height%3D%2727%27%20rx%3D%275%27%20fill%3D%27%23F3E9DA%27/%3E%3Crect%20x%3D%2737%27%20y%3D%277%27%20width%3D%2710%27%20height%3D%2727%27%20rx%3D%275%27%20fill%3D%27%23F3E9DA%27/%3E%3Crect%20x%3D%2715%27%20y%3D%2733%27%20width%3D%2734%27%20height%3D%2723%27%20rx%3D%2711%27%20fill%3D%27%23F3E9DA%27/%3E%3C/svg%3E"
+        type="image/svg+xml">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.17/dist/lenis.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&family=Newsreader:ital,wght@0,400;0,500;1,400;1,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+/* ===================================================================
+   AKAFOLIO — ÉDITION MARRON
+   Système : papier (clair) / encre (sombre) / oxblood (accent)
+   Display  : Bodoni Moda   — titres XXL
+   Body     : Newsreader    — texte courant, intros
+   Label    : IBM Plex Mono — nav, légendes, données
+   =================================================================== */
+
+:root {
+  --paper:        #F3E9DA;
+  --paper-rgb:    243, 233, 218;
+  --paper-deep:   #E4D2B4;
+  --ink:          #2A100B;
+  --ink-rgb:      42, 16, 11;
+  --maroon:       #7C2A1A;
+  --maroon-rgb:   124, 42, 26;
+  --rust:         #C2723D;
+  --rust-rgb:     194, 114, 61;
+
+  --font-display: "Bodoni Moda", "Times New Roman", serif;
+  --font-body:    "Newsreader", Georgia, serif;
+  --font-label:   "IBM Plex Mono", "Courier New", monospace;
+
+  --radius-plate: 10px;
+  --grain: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27200%27%20height%3D%27200%27%3E%3Cfilter%20id%3D%27n%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%270.85%27%20numOctaves%3D%273%27%20stitchTiles%3D%27stitch%27/%3E%3CfeColorMatrix%20type%3D%27matrix%27%20values%3D%270%200%200%200%201%20%200%200%200%200%200.96%20%200%200%200%200%200.88%20%200%200%200%200.45%200%27/%3E%3C/filter%3E%3Crect%20width%3D%27100%25%27%20height%3D%27100%25%27%20filter%3D%27url%28%23n%29%27/%3E%3C/svg%3E");
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  background-color: var(--ink);
+}
+
+body {
+  font-family: var(--font-label);
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* film-grain overlay — static raster texture, no live filter cost */
+#grain {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  background-image: var(--grain);
+  background-size: 220px 220px;
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+}
+
+/* ---------------------------------------------------------------
+   Section backdrops
+   --------------------------------------------------------------- */
+
+#page1 {
+  width: 100%;
+  height: 250vh;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--ink);
+}
+
+#page2 {
+  width: 100%;
+  height: 350vh;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--ink);
+}
+
+#page3 {
+  width: 100%;
+  height: 400vh;
+  overflow: hidden;
+  position: relative;
+  background-color: var(--ink);
+}
+
+#page4 {
+  position: relative;
+  width: 100%;
+  height: 370vh;
+  overflow: hidden;
+  background-color: var(--paper);
+  z-index: 10;
+}
+
+#page5 {
+  width: 100%;
+  height: 120vh;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--ink);
+}
+
+/* ---------------------------------------------------------------
+   Nav
+   --------------------------------------------------------------- */
+
+nav {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 0.8vw 1.25vw 0 1.25vw;
+}
+
+#left-nav {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-evenly;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+#left-nav h1 {
+  font-size: 1.6vw;
+  color: var(--paper);
+  opacity: 0.45;
+  font-family: var(--font-label);
+  letter-spacing: 0.05em;
+}
+
+#right-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: transparent;
+  width: 22vw;
+  height: 7vh;
+  gap: 2vw;
+}
+
+#right-nav a {
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+  color: var(--paper);
+  opacity: 0.55;
+  font-family: var(--font-label);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.95vw;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+#right-nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 1px;
+  background: var(--rust);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+#right-nav a:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ---------------------------------------------------------------
+   Page 1 — Hero
+   --------------------------------------------------------------- */
+
+#heading1 {
+  font-size: 40vw;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: -0.02em;
+  position: absolute;
+  top: 24%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  white-space: nowrap;
+  color: var(--maroon);
+  text-transform: capitalize;
+}
+
+#page1-img-1 {
+  width: 97vw;
+  height: 150vh;
+  overflow: hidden;
+  position: absolute;
+  top: 67.5%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  border-radius: var(--radius-plate);
+}
+
+#cursor {
+  width: 21px;
+  height: 21px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  pointer-events: none;
+  mix-blend-mode: difference;
+  background-color: var(--paper);
+  border-radius: 50%;
+}
+
+/* ---------------------------------------------------------------
+   Page 2 — Notre Histoire / Nos Garanties
+   --------------------------------------------------------------- */
+
+#page2-heading-1 {
+  position: absolute;
+  top: 2.5%;
+  left: 2%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font-size: 1.05vw;
+  font-family: var(--font-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  pointer-events: none;
+  color: var(--paper);
+  opacity: 0.6;
+}
+
+#page2-heading-1::before {
+  content: "No. 02 — ";
+  opacity: 0.6;
+}
+
+#page2-heading-2 {
+  position: absolute;
+  top: 46.5%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 19vw;
+  font-family: var(--font-display);
+  font-weight: 600;
+  pointer-events: none;
+  white-space: nowrap;
+  text-transform: uppercase;
+  color: var(--paper);
+  will-change: transform;
+}
+
+#page2-heading-3 {
+  position: absolute;
+  top: 56.5%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 22vw;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-style: italic;
+  pointer-events: none;
+  white-space: nowrap;
+  text-transform: uppercase;
+  color: var(--maroon);
+  will-change: transform;
+}
+
+#page2-small-heading {
+  font-size: 1vw;
+  font-family: var(--font-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--paper);
+  opacity: 0.4;
+  position: absolute;
+  top: 70.5%;
+  left: 1.5%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+#page2-small-heading-2 {
+  font-size: 0.95vw;
+  font-family: var(--font-label);
+  color: rgba(var(--rust-rgb), 0.65);
+  position: absolute;
+  top: 18.5%;
+  left: 1.5%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  letter-spacing: 0.04em;
+}
+
+#intro-container {
+  position: relative;
+  top: 12%;
+  left: 1.5%;
+  transform: translateY(-50%);
+  width: 90%;
+  pointer-events: none;
+}
+
+#behind-intro,
+#above-intro {
+  font-size: clamp(2.2rem, 4vw, 4.5rem);
+  line-height: 1.15;
+  font-weight: 400;
+  font-style: italic;
+  font-family: var(--font-body);
+}
+
+#behind-intro {
+  color: rgba(var(--paper-rgb), 0.22);
+}
+
+#above-intro {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--paper);
+  clip-path: inset(0 0 100% 0);
+}
+
+#scroll-line {
+  display: block;
+  width: 100%;
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#scroll-line line {
+  stroke: var(--rust) !important;
+}
+
+#skills-container {
+  width: 97vw;
+  height: 95vh;
+  overflow: hidden;
+  position: absolute;
+  top: 85%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  border-bottom: 1px solid rgba(var(--paper-rgb), 0.3);
+}
+
+#skills-container-1,
+#skills-container-2,
+#skills-container-3,
+#skills-container-4 {
+  width: 100%;
+  height: 23.75vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(var(--paper-rgb), 0.3);
+}
+
+#skill-1a,
+#skill-2a,
+#skill-3a,
+#skill-4a {
+  font-size: 1.7vw;
+  font-family: var(--font-label);
+  letter-spacing: 0.02em;
+  color: var(--paper);
+  pointer-events: none;
+}
+
+#skill-1b,
+#skill-2b,
+#skill-3b,
+#skill-4b {
+  font-size: 1.4vw;
+  font-family: var(--font-body);
+  font-style: italic;
+  width: 30%;
+  color: var(--paper);
+  opacity: 0.62;
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------------
+   Page 3 — Nos Races
+   --------------------------------------------------------------- */
+
+#page3-heading-1 {
+  font-size: 1.1vw;
+  color: rgba(var(--paper-rgb), 0.45);
+  font-family: var(--font-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  pointer-events: none;
+  position: absolute;
+  top: 5%;
+  left: 2%;
+  transform: translateY(-50%);
+}
+
+#page3-heading-1::before {
+  content: "No. 03 — ";
+}
+
+#intro-container-1 {
+  position: absolute;
+  top: 11%;
+  left: 2%;
+  transform: translateY(-50%);
+  width: 80%;
+  pointer-events: none;
+}
+
+#behind-intro-1,
+#above-intro-1 {
+  font-size: clamp(2.2rem, 3.5vw, 4.5rem);
+  line-height: 1.15;
+  font-weight: 400;
+  font-style: italic;
+  font-family: var(--font-body);
+}
+
+#behind-intro-1 {
+  color: rgba(var(--paper-rgb), 0.22);
+}
+
+#above-intro-1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--paper);
+  clip-path: inset(0 0 100% 0);
+}
+
+#page3-img {
+  width: 97vw;
+  height: 135vh;
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  top: 33%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  will-change: transform;
+  border-radius: var(--radius-plate);
+}
+
+#page3-img-2 {
+  width: 48vw;
+  height: 135vh;
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  top: 68%;
+  left: 1.5%;
+  transform: translateY(-50%);
+  will-change: transform;
+  border-radius: var(--radius-plate);
+}
+
+#page3-img-3 {
+  width: 48vw;
+  height: 135vh;
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  top: 68%;
+  right: 1.5%;
+  transform: translateY(-50%);
+  will-change: transform;
+  border-radius: var(--radius-plate);
+}
+
+/* ---------------------------------------------------------------
+   Plates — stand in for photography/video, fully self-contained
+   --------------------------------------------------------------- */
+
+.plate {
+  position: absolute;
+  inset: 0;
+}
+
+.plate::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--grain);
+  background-size: 220px 220px;
+  opacity: 0.55;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+.plate--1 {
+  background:
+    radial-gradient(120% 140% at 14% 10%, rgba(var(--rust-rgb), 0.55), transparent 55%),
+    linear-gradient(155deg, var(--maroon) 0%, var(--ink) 78%);
+}
+
+.plate--2 {
+  background:
+    radial-gradient(120% 140% at 88% 14%, rgba(var(--paper-rgb), 0.16), transparent 55%),
+    linear-gradient(155deg, var(--rust) 0%, var(--maroon) 72%);
+}
+
+.plate--3 {
+  background:
+    radial-gradient(120% 140% at 80% 86%, rgba(var(--rust-rgb), 0.4), transparent 55%),
+    linear-gradient(205deg, var(--ink) 0%, var(--maroon) 82%);
+}
+
+.plate--4 {
+  background:
+    radial-gradient(110% 130% at 20% 90%, rgba(var(--paper-rgb), 0.14), transparent 55%),
+    linear-gradient(165deg, var(--maroon) 0%, var(--rust) 55%, var(--ink) 100%);
+}
+
+.plate-mark {
+  position: absolute;
+  left: 1.4em;
+  bottom: 1.1em;
+  font-family: var(--font-label);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(var(--paper-rgb), 0.78);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ---------------------------------------------------------------
+   Page 4 — Nos Lapins (catalogue)
+   --------------------------------------------------------------- */
+
+#page4-heading-1,
+#page4-heading-2 {
+  pointer-events: none;
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--maroon);
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  text-transform: capitalize;
+  will-change: transform;
+}
+
+#page4-heading-1 {
+  font-size: 20vw;
+  top: 5%;
+}
+
+#page4-heading-2 {
+  font-size: 22vw;
+  top: 15%;
+  font-style: italic;
+  color: var(--ink);
+}
+
+#project-container-1,
+#project-container-2,
+#project-container-3,
+#project-container-4 {
+  width: 49vw;
+  height: 110vh;
+  border-radius: var(--radius-plate);
+  overflow: hidden;
+  position: absolute;
+  transform: translateY(-50%);
+  background-color: var(--ink);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+  will-change: transform;
+}
+
+#project-container-1 { top: 39%; left: 0.5%; }
+#project-container-2 { top: 39%; right: 0.5%; }
+#project-container-3 { top: 70%; left: 0.5%; }
+#project-container-4 {
+  top: 70%;
+  right: 0.5%;
+  border: 1px solid rgba(var(--paper-rgb), 0.08);
+}
+
+#upper-part,
+#upper-part-2,
+#upper-part-3,
+#upper-part-4 {
+  width: 97%;
+  height: 82vh;
+  overflow: hidden;
+  position: absolute;
+  top: 39%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: var(--radius-plate);
+}
+
+#bottom-part,
+#bottom-part-2,
+#bottom-part-3,
+#bottom-part-4 {
+  width: 95%;
+  height: 8vh;
+  overflow: hidden;
+  position: absolute;
+  top: 83%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#bottom-left,
+#bottom-left-1,
+#bottom-left-2,
+#bottom-left-3 {
+  font-size: 2.4vw;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  color: var(--paper);
+}
+
+#bottom-right,
+#bottom-right-1,
+#bottom-right-2,
+#bottom-right-3 {
+  font-size: 1.05vw;
+  cursor: pointer;
+  font-family: var(--font-label);
+  color: var(--rust);
+}
+
+#project-video,
+#project-video-1,
+#project-video-2,
+#project-video-3 {
+  width: 35vw;
+  height: 45vh;
+  overflow: hidden;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.92);
+  pointer-events: none;
+  border-radius: 6px;
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1.5vw;
+  transition:
+    opacity 0.35s ease,
+    transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+  will-change: transform, opacity;
+}
+
+#project-video span,
+#project-video-1 span,
+#project-video-2 span,
+#project-video-3 span {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 2.4vw;
+  color: var(--paper);
+  position: relative;
+  z-index: 2;
+}
+
+#page4-btn {
+  width: 12vw;
+  height: 8vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  white-space: nowrap;
+  cursor: pointer;
+  position: absolute;
+  top: 90%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#page4-btn a {
+  text-decoration: none;
+  font-size: 1.05vw;
+  font-family: var(--font-label);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+#page4-btn i {
+  font-size: 1.4vw;
+  font-weight: bold;
+  color: var(--maroon);
+  padding-bottom: 0.1vw;
+}
+
+.marquee-wrap {
+  width: 100%;
+  overflow: hidden;
+  padding: 0.5rem 3rem;
+  position: absolute;
+  top: 94%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  box-sizing: border-box;
+
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+}
+
+.marquee {
+  display: flex;
+  white-space: nowrap;
+}
+
+.marquee-track {
+  display: flex;
+  gap: 1rem;
+  animation: scroll 25s linear infinite;
+}
+
+.marquee-item {
+  font-size: 0.85vw;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(var(--paper-rgb), 0.55);
+  font-family: var(--font-label);
+}
+
+@keyframes scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ---------------------------------------------------------------
+   Horizontal pinned banner
+   --------------------------------------------------------------- */
+
+.Horizontal {
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  background-color: var(--ink);
+  z-index: 100;
+}
+
+.Horizontal__text {
+  display: flex;
+  width: max-content;
+  white-space: nowrap;
+  gap: 4vw;
+  padding-left: 100vw;
+  font-family: var(--font-display);
+  font-style: italic;
+  pointer-events: none;
+}
+
+.heading-xl {
+  font-size: clamp(2rem, 14vw, 12rem);
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--paper);
+}
+
+#page4-wave-div {
+  width: 100%;
+  height: 20vh;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  overflow: visible;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 1000;
+  will-change: transform;
+}
+
+#page4-wave-div div {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background-color: var(--ink);
+}
+
+/* ---------------------------------------------------------------
+   Hover-follow preview (nos garanties)
+   --------------------------------------------------------------- */
+
+#hover-img {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 350px;
+  height: 400px;
+  opacity: 0;
+  pointer-events: none;
+  background-size: cover;
+  background-position: center;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.2s ease, transform 0.1s ease;
+  border: 1px solid rgba(var(--paper-rgb), 0.25);
+  border-radius: 4px;
+  z-index: 1000;
+}
+
+#hover-img::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--grain);
+  background-size: 220px 220px;
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+}
+
+/* ---------------------------------------------------------------
+   Page 5 — Contact / footer
+   --------------------------------------------------------------- */
+
+#page5-heading-1 {
+  font-size: 23vw;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-style: italic;
+  pointer-events: none;
+  white-space: nowrap;
+  position: absolute;
+  top: 22%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-transform: uppercase;
+  color: var(--paper);
+}
+
+#page5-bottom-heading {
+  font-size: 2.1vw;
+  font-family: var(--font-label);
+  pointer-events: none;
+  white-space: nowrap;
+  position: absolute;
+  top: 96%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgba(var(--paper-rgb), 0.75);
+  letter-spacing: 0.02em;
+}
+
+#page5-label-1,
+#page5-label-2,
+#page5-label-3 {
+  width: 18vw;
+  height: 9vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 6px;
+  position: absolute;
+}
+
+#page5-label-1 {
+  background-color: var(--maroon);
+  top: 78%;
+  left: 32%;
+  transform: translateY(-50%);
+  rotate: -7deg;
+}
+
+#page5-label-1 a {
+  color: var(--paper);
+}
+
+#page5-label-2 {
+  background-color: var(--paper);
+  top: 78%;
+  right: 32%;
+  transform: translateY(-50%);
+  rotate: 7deg;
+}
+
+#page5-label-2 a {
+  color: var(--ink);
+}
+
+#page5-label-3 {
+  background-color: var(--rust);
+  top: 87%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#page5-label-3 a {
+  color: var(--ink);
+}
+
+#page5-label-1 a,
+#page5-label-2 a,
+#page5-label-3 a {
+  text-decoration: none;
+  font-size: 1.05vw;
+  white-space: nowrap;
+  font-family: var(--font-label);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+#page5-img-1 {
+  width: 25vw;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  position: absolute;
+  top: 80%;
+  left: 12.5%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  border-radius: var(--radius-plate);
+}
+
+#page5-img-2 {
+  width: 22vw;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  position: absolute;
+  top: 80%;
+  right: 15%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  border-radius: var(--radius-plate);
+}
+
+#page5-footer {
+  width: 93%;
+  height: 10vh;
+  overflow: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  border-top: 1px solid rgba(var(--paper-rgb), 0.3);
+}
+
+#footer-left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.2vw;
+}
+
+#footer-middle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.2vw;
+}
+
+#footer-right {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.2vw;
+}
+
+#footer-left-1,
+#footer-left-2,
+#footer-middle-1,
+#footer-middle-2,
+#footer-right-1,
+#footer-right-2 {
+  font-size: 0.85vw;
+  font-family: var(--font-label);
+  color: rgba(var(--paper-rgb), 0.55);
+}
+
+/* ---------------------------------------------------------------
+   Loader
+   --------------------------------------------------------------- */
+
+#loader {
+  width: 100%;
+  height: 100vh;
+  touch-action: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.stair {
+  width: 10vw;
+  height: 100vh;
+  background-color: var(--paper);
+}
+
+#loader-counter {
+  font-size: 15vw;
+  font-family: var(--font-label);
+  pointer-events: none;
+  color: var(--ink);
+  position: absolute;
+  top: 79%;
+  right: 2%;
+  transform: translateY(-50%);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  line-height: 1;
+  will-change: transform;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+#loader-line {
+  position: absolute;
+  top: 90%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+#loader-line line {
+  stroke: var(--ink) !important;
+}
+
+/* ---------------------------------------------------------------
+   Real photography — fills the plate containers directly with img/video
+   --------------------------------------------------------------- */
+
+#page1-img-1 img,
+#page3-img img,
+#page3-img-2 img,
+#page3-img-3 img,
+#upper-part img,
+#upper-part-2 img,
+#upper-part-3 img,
+#upper-part-4 img,
+#page5-img-1 img,
+#page5-img-2 img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: filter 0.5s ease, transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+#page1-img-1::after,
+#page3-img::after,
+#page3-img-2::after,
+#page3-img-3::after,
+#upper-part::after,
+#upper-part-2::after,
+#upper-part-3::after,
+#upper-part-4::after,
+#page5-img-1::after,
+#page5-img-2::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--grain);
+  background-size: 220px 220px;
+  opacity: 0.35;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+#project-video,
+#project-video-1,
+#project-video-2,
+#project-video-3 {
+  padding: 0;
+}
+
+#project-video video,
+#project-video-1 video,
+#project-video-2 video,
+#project-video-3 video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 6px;
+}
+
+/* ---------------------------------------------------------------
+   Shared eyebrow (No. 0X — (Label)) for the three new gallery sections
+   --------------------------------------------------------------- */
+
+.eyebrow {
+  position: absolute;
+  top: 5%;
+  left: 2%;
+  transform: translateY(-50%);
+  font-size: 1.05vw;
+  font-family: var(--font-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(var(--paper-rgb), 0.45);
+  pointer-events: none;
+  z-index: 5;
+}
+
+.eyebrow::before {
+  content: attr(data-no) " — ";
+}
+
+/* ---------------------------------------------------------------
+   No. 04 — Galerie (grid tunnel dive, ported from superfortttt.html #2)
+   --------------------------------------------------------------- */
+
+.fx-section {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: var(--ink);
+}
+
+#sec-gallery {
+  perspective: 1500px;
+}
+
+.grid-tunnel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.1vw;
+  width: 150vw;
+  height: 150vh;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.grid-item {
+  position: relative;
+  overflow: hidden;
+  opacity: 0.55;
+  border-radius: 6px;
+}
+
+.grid-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.grid-item::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--grain);
+  background-size: 220px 220px;
+  opacity: 0.4;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+.grid-center {
+  border: 1px solid var(--rust);
+  opacity: 1;
+  z-index: 10;
+}
+
+/* ---------------------------------------------------------------
+   No. 05 — Portrait (cinematic iris, ported from superfortttt.html #4)
+   --------------------------------------------------------------- */
+
+#sec-iris .iris-word {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 8vw;
+  color: rgba(var(--paper-rgb), 0.12);
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.takeover-layer {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+}
+
+.takeover-layer img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.takeover-layer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--grain);
+  background-size: 220px 220px;
+  opacity: 0.35;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+.iris-mask {
+  clip-path: circle(0% at 50% 50%);
+  will-change: clip-path;
+}
+
+/* ---------------------------------------------------------------
+   No. 06 — En Mouvement (organic bloom, ported from superfortttt.html #6)
+   --------------------------------------------------------------- */
+
+.blob-mask {
+  width: 12vw;
+  height: 12vw;
+  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  overflow: hidden;
+  will-change: transform, border-radius;
+  position: absolute;
+  box-shadow: 0 0 0 1px rgba(var(--paper-rgb), 0.15);
+}
+
+.blob-mask video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transform: scale(2);
+  will-change: transform;
+}
+
+/* ===================================================================
+   Mobile
+   =================================================================== */
+
+@media (max-width: 767px) {
+  #page1 {
+    width: 100%;
+    height: 120vh;
+    position: relative;
+    overflow: hidden;
+    background-color: var(--ink);
+  }
+  #heading1 {
+    font-size: 40vw;
+    top: 30%;
+  }
+  #page1-img-1 {
+    height: 70vh;
+  }
+  #cursor {
+    display: none;
+  }
+  nav {
+    padding: 0.5vw 2vw;
+  }
+  #left-nav {
+    display: none;
+  }
+  #right-nav {
+    width: 100%;
+    justify-content: space-between;
+  }
+  #right-nav a {
+    font-size: 3.6vw;
+  }
+  #page2 {
+    height: 250vh;
+  }
+  #page2-heading-1 {
+    font-size: 3.4vw;
+    top: 3.5%;
+    left: 2.5%;
+  }
+  #intro-container {
+    top: 15%;
+    left: 2.5%;
+  }
+  #page2-small-heading {
+    font-size: 2.8vw;
+    top: 58.3%;
+    left: 2%;
+  }
+  #page2-small-heading-2 {
+    font-size: 3vw;
+    top: 27.5%;
+    left: 2.5%;
+  }
+  #page2-heading-2 {
+    font-size: 24vw;
+  }
+  #page2-heading-3 {
+    top: 51.5%;
+    font-size: 28vw;
+  }
+  #page3 {
+    margin-top: -1px;
+  }
+  #skills-container {
+    top: 78%;
+  }
+  #skills-container-1,
+  #skills-container-2,
+  #skills-container-3,
+  #skills-container-4 {
+    justify-content: space-around;
+    flex-direction: column;
+  }
+  #skill-1a { font-size: 6vw; }
+  #skill-2a,
+  #skill-3a,
+  #skill-4a { font-size: 4.6vw; }
+  #skill-1b,
+  #skill-2b,
+  #skill-3b,
+  #skill-4b {
+    font-size: 3.4vw;
+    color: var(--paper);
+    opacity: 0.55;
+    width: 75%;
+    padding-left: 6vw;
+  }
+  #page3-heading-1 {
+    top: 3%;
+    left: 2.5%;
+    font-size: 3.4vw;
+    color: rgba(var(--paper-rgb), 0.55);
+  }
+  #intro-container-1 {
+    top: 9.5%;
+    left: 2.5%;
+  }
+  #page3-img-2 {
+    width: 97vw;
+    height: 90vh;
+    top: 61.5%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  #page3-img-3 {
+    width: 97vw;
+    height: 90vh;
+    top: 84.3%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  #page4 {
+    height: 380vh;
+  }
+  #page4-heading-1 {
+    top: 4.5%;
+    font-size: 22vw;
+  }
+  #page4-heading-2 {
+    top: 7.5%;
+    font-size: 25vw;
+  }
+  #project-container-1 {
+    width: 97vw;
+    height: 70vh;
+    top: 22%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  #upper-part {
+    top: 38%;
+    width: 95%;
+    height: 50vh;
+  }
+  #bottom-left,
+  #bottom-right { font-size: 4.4vw; }
+  .marquee-item { font-size: 2.6vw; }
+  #project-container-2 {
+    width: 97vw;
+    height: 70vh;
+    top: 41.5%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  #upper-part-2 {
+    top: 38%;
+    width: 95%;
+    height: 50vh;
+  }
+  #bottom-left-1,
+  #bottom-right-1 { font-size: 4.4vw; }
+  #project-container-3 {
+    width: 97vw;
+    height: 70vh;
+    top: 60.9%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  #upper-part-3 {
+    top: 38%;
+    width: 95%;
+    height: 50vh;
+  }
+  #bottom-left-2,
+  #bottom-right-2 { font-size: 4.4vw; }
+  #project-container-4 {
+    width: 97vw;
+    height: 70vh;
+    top: 80.3%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  #upper-part-4 {
+    top: 38%;
+    width: 95%;
+    height: 50vh;
+  }
+  #bottom-left-3,
+  #bottom-right-3 { font-size: 4.4vw; }
+  #page4-btn {
+    width: 27vw;
+    height: 20vh;
+    top: 92%;
+  }
+  #page4-btn a { font-size: 3.6vw; }
+  #page4-btn i { font-size: 4.6vw; }
+  #page4-wave-div div {
+    width: 100px;
+    height: 100px;
+  }
+  #hover-img { display: none; }
+  #project-video, #project-video-1, #project-video-2, #project-video-3 {
+    display: none;
+  }
+  #page5 { margin-top: -1px; }
+  #page5-heading-1 {
+    font-size: 35vw;
+    white-space: pre-wrap;
+    line-height: 14.8vh;
+    letter-spacing: 1vw;
+  }
+  #page5-footer { justify-content: center; }
+  #footer-left-1, #footer-left-2 { font-size: 3.6vw; }
+  #footer-middle { display: none; }
+  #footer-right { display: none; }
+  #page5-bottom-heading { top: 98%; font-size: 4.4vw; }
+  #page5-img-1, #page5-img-2 { display: none; }
+  #page5-label-1 { width: 40vw; height: 7vh; top: 85%; left: 5%; }
+  #page5-label-2 { width: 40vw; height: 7vh; top: 85%; right: 5%; }
+  #page5-label-3 { width: 40vw; height: 7vh; top: 91.5%; left: 50%; transform: translate(-50%, -50%); }
+  #page5-label-1 a,
+  #page5-label-2 a,
+  #page5-label-3 a { font-size: 3.6vw; }
+
+  .fx-section {
+    height: auto;
+    min-height: 55vh;
+    padding: 10vh 0;
+  }
+  .eyebrow {
+    position: static;
+    display: block;
+    text-align: center;
+    font-size: 3vw;
+    margin-bottom: 4vh;
+    transform: none;
+  }
+  #sec-gallery {
+    perspective: none;
+    flex-direction: column;
+  }
+  .grid-tunnel {
+    position: relative;
+    top: auto; left: auto;
+    transform: none !important;
+    width: 92vw;
+    height: auto;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5vw;
+  }
+  .grid-item {
+    aspect-ratio: 1 / 1;
+    opacity: 1;
+  }
+  .grid-center {
+    opacity: 1;
+  }
+  #sec-iris {
+    flex-direction: column;
+  }
+  #sec-iris .iris-word {
+    font-size: 13vw;
+    order: 2;
+    margin-top: 4vh;
+  }
+  .takeover-layer.iris-mask {
+    clip-path: none !important;
+    position: relative;
+    width: 92vw;
+    height: 45vh;
+    top: auto; left: auto;
+    border-radius: 10px;
+    overflow: hidden;
+    order: 1;
+  }
+  #sec-blob .blob-mask {
+    position: relative;
+    width: 92vw;
+    height: 45vh;
+    border-radius: 16px;
+    transform: none !important;
+  }
+  #sec-blob .blob-mask video {
+    transform: none !important;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  #upper-part:hover ~ #project-video,
+  #upper-part-2:hover ~ #project-video-1,
+  #upper-part-3:hover ~ #project-video-2,
+  #upper-part-4:hover ~ #project-video-3 {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  #upper-part:hover img,
+  #upper-part-2:hover img,
+  #upper-part-3:hover img,
+  #upper-part-4:hover img {
+    filter: blur(6px) brightness(0.7);
+    transform: scale(1.03);
+  }
+
+  #loader-line {
+    top: 93.5%;
+  }
+}
+
+@media (pointer: coarse) and (min-width: 481px) {
+  #cursor {
+    display: none !important;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  #right-nav a::after {
+    display: none !important;
+  }
+}
+
+    </style>
+</head>
+
+<body>
+    <div id="grain"></div>
+    <div id="loader">
+        <div class="stair"></div>
+        <div class="stair"></div>
+        <div class="stair"></div>
+        <div class="stair"></div>
+        <div class="stair"></div>
+        <div class="stair"></div>
+        <div class="stair"></div>
+        <div class="stair"></div>
+        <div class="stair"></div>
+        <div class="stair"></div>
+        <div id="loader-counter">0%</div>
+        <svg id="loader-line" width="97%" height="4" viewBox="0 0 1000 2" preserveAspectRatio="none">
+            <line x1="0" y1="1" x2="1000" y2="1" stroke="#111" stroke-width="50" stroke-linecap="round" />
+        </svg>
+    </div>
+    <div id="page1">
+        <nav>
+            <div id="left-nav">
+                <h1>■</h1>
+            </div>
+            <div id="right-nav">
+                <a href="#page4">Nos Lapins</a>
+                <a href="#page2">Notre Histoire</a>
+                <a href="#page5">Contact</a>
+            </div>
+        </nav>
+        <div id="heading1">Garenne</div>
+        <div id="cursor"></div>
+        <div id="page1-img-1">
+            <img src="IMAGES/Snapchat-1016404691.webp" alt="La Garenne — élevage de lapins">
+        </div>
+    </div>
+    <div id="page2">
+        <div id="page2-heading-1">(Notre Histoire)</div>
+        <div id="intro-container">
+            <div id="behind-intro">
+                Nous élevons et sélectionnons nos lapins avec soin — races pures, bonne santé, et un
+                accompagnement complet du choix jusqu'à l'adoption.
+            </div>
+
+            <div id="above-intro">
+                Nous élevons et sélectionnons nos lapins avec soin — races pures, bonne santé, et un
+                accompagnement complet du choix jusqu'à l'adoption.
+            </div>
+        </div>
+        <svg id="scroll-line" width="100%" height="2" viewBox="0 0 1000 2" preserveAspectRatio="none">
+            <line x1="0" y1="1" x2="1000" y2="1" stroke="#ffffff" stroke-width="12" stroke-linecap="round" />
+        </svg>
+
+        <div id="page2-heading-2" class="split-heading-1">Nos</div>
+        <div id="page2-heading-3" class="split-heading-1">Garanties</div>
+        <div id="page2-small-heading">Nos engagements :</div>
+        <div id="page2-small-heading-2">── Santé · Race · Suivi</div>
+        <div id="skills-container">
+            <div id="skills-container-1" class="hover-item"
+                data-img="url('IMAGES/Snapchat-1016404691~1.webp')">
+                <div id="skill-1a"> 01. Santé Vérifiée</div>
+                <div id="skill-1b">Chaque lapin est examiné avant la vente : poids, pelage et comportement
+                    contrôlés avec soin.</div>
+            </div>
+            <div id="skills-container-2" class="hover-item"
+                data-img="url('IMAGES/Snapchat-1244423645.webp')">
+                <div id="skill-2a">02. Races Pures</div>
+                <div id="skill-2b">Béliers, nains, Rex, Angora — chaque race est sélectionnée et documentée
+                    avec précision.</div>
+            </div>
+            <div id="skills-container-3" class="hover-item"
+                data-img="url('IMAGES/Snapchat-1244423645~1.webp')">
+                <div id="skill-3a">03. Suivi Après-Vente</div>
+                <div id="skill-3b">Conseils d'alimentation, d'habitat et de santé disponibles après chaque
+                    adoption.</div>
+            </div>
+            <div id="skills-container-4" class="hover-item"
+                data-img="url('IMAGES/Snapchat-1244900246.webp')">
+                <div id="skill-4a">04. Remise en Main Propre</div>
+                <div id="skill-4b">Retrait sur place ou livraison encadrée, selon votre disponibilité et votre
+                    zone.</div>
+            </div>
+        </div>
+        <div id="hover-img"></div>
+    </div>
+    <div id="page3">
+        <div id="page3-heading-1">(Nos Races)</div>
+        <div id="intro-container-1">
+            <div id="behind-intro-1">
+                Chaque lignée est choisie pour sa santé et son tempérament — du lapin nain de compagnie au
+                grand lapin d'élevage.
+            </div>
+
+            <div id="above-intro-1">
+                Chaque lignée est choisie pour sa santé et son tempérament — du lapin nain de compagnie au
+                grand lapin d'élevage.
+            </div>
+        </div>
+        <div id="page3-img">
+            <img src="IMAGES/Snapchat-1244900246~1.webp" loading="lazy" alt="Lapin d'élevage">
+            <span class="plate-mark">Plate II</span>
+        </div>
+        <div id="page3-img-2">
+            <img src="IMAGES/Snapchat-1671304199.webp" loading="lazy" alt="Lapin d'élevage">
+            <span class="plate-mark">Plate III</span>
+        </div>
+        <div id="page3-img-3">
+            <img src="IMAGES/Snapchat-1671304199~1.webp" loading="lazy" alt="Lapin d'élevage">
+            <span class="plate-mark">Plate IV</span>
+        </div>
+    </div>
+
+    <section id="sec-gallery" class="fx-section">
+        <div class="eyebrow" data-no="No. 04">(Galerie)</div>
+        <div class="grid-tunnel" id="grid-box">
+            <div class="grid-item"><img src="IMAGES/Snapchat-468138222~1.webp" loading="lazy" alt="Lapin"></div>
+            <div class="grid-item"><img src="IMAGES/Snapchat-533353503~1.webp" loading="lazy" alt="Lapin"></div>
+            <div class="grid-item"><img src="IMAGES/Snapchat-73962748~1.webp" loading="lazy" alt="Lapin"></div>
+            <div class="grid-item"><img src="IMAGES/Snapchat-763078288~1.webp" loading="lazy" alt="Lapin"></div>
+            <div class="grid-item grid-center"><img src="IMAGES/Snapchat-90679770~1.webp" loading="lazy" alt="Lapin"></div>
+            <div class="grid-item"><img src="IMAGES/Snapchat-908462874.webp" loading="lazy" alt="Lapin"></div>
+            <div class="grid-item"><img src="IMAGES/Snapchat-908462874~1.webp" loading="lazy" alt="Lapin"></div>
+            <div class="grid-item"><img src="IMAGES/Snapchat-956074945.webp" loading="lazy" alt="Lapin"></div>
+            <div class="grid-item"><img src="IMAGES/Snapchat-956074945~1.webp" loading="lazy" alt="Lapin"></div>
+        </div>
+    </section>
+
+    <section id="sec-iris" class="fx-section">
+        <div class="eyebrow" data-no="No. 05">(Portrait)</div>
+        <h2 class="iris-word">Garenne</h2>
+        <div class="takeover-layer iris-mask">
+            <img src="IMAGES/Snapchat-1016404691.webp" loading="lazy" alt="Portrait de lapin">
+        </div>
+    </section>
+
+    <section id="sec-blob" class="fx-section">
+        <div class="eyebrow" data-no="No. 06">(En Mouvement)</div>
+        <div class="blob-mask">
+            <video id="blob-video" muted loop autoplay playsinline preload="metadata"
+                src="IMAGES/Snapchat-888968271.webm"></video>
+        </div>
+    </section>
+
+    <div id="page4">
+        <div id="page4-heading-1" class="split-heading">Nos</div>
+        <div id="page4-heading-2" class="split-heading">Lapins</div>
+        <div id="project-container-1">
+            <div id="upper-part" data-video-target="#project-video">
+                <img src="IMAGES/Snapchat-1016404691~1.webp" loading="lazy" alt="Bélier Doré">
+            </div>
+            <div id="bottom-part">
+                <div id="bottom-left">Bélier Doré</div>
+                <div id="bottom-right">3 mois</div>
+            </div>
+            <div class="marquee-wrap">
+                <div class="marquee">
+                    <div class="marquee-track">
+                        <span class="marquee-item">Bélier Anglais,</span>
+                        <span class="marquee-item">Pelage Doré,</span>
+                        <span class="marquee-item">Sociable,</span>
+                        <span class="marquee-item">Vermifugé,</span>
+                        <span class="marquee-item">Bonne Santé,</span>
+                        <span class="marquee-item">Né en Élevage,</span>
+                        <span class="marquee-item">Sevré,</span>
+                        <span class="marquee-item">Câliné,</span>
+                        <span class="marquee-item">Disponible,</span>
+
+
+                        <span class="marquee-item">Bélier Anglais,</span>
+                        <span class="marquee-item">Pelage Doré,</span>
+                        <span class="marquee-item">Sociable,</span>
+                        <span class="marquee-item">Vermifugé,</span>
+                        <span class="marquee-item">Bonne Santé,</span>
+                        <span class="marquee-item">Né en Élevage,</span>
+                        <span class="marquee-item">Sevré,</span>
+                        <span class="marquee-item">Câliné,</span>
+                        <span class="marquee-item">Disponible,</span>
+                    </div>
+                </div>
+            </div>
+            <div id="project-video">
+                <video muted loop playsinline preload="metadata" src="IMAGES/Snapchat-1268559920.webm"></video>
+            </div>
+        </div>
+        <div id="project-container-2">
+            <div id="upper-part-2" data-video-target="#project-video-1">
+                <img src="IMAGES/Snapchat-1244423645.webp" loading="lazy" alt="Nain Blanc">
+            </div>
+            <div id="bottom-part-2">
+                <div id="bottom-left-1">Nain Blanc</div>
+                <div id="bottom-right-1">2 mois</div>
+            </div>
+            <div class="marquee-wrap">
+                <div class="marquee">
+                    <div class="marquee-track">
+                        <span class="marquee-item">Nain de Couleur,</span>
+                        <span class="marquee-item">Pelage Blanc,</span>
+                        <span class="marquee-item">Yeux Rouges,</span>
+                        <span class="marquee-item">Petit Format,</span>
+                        <span class="marquee-item">Doux,</span>
+                        <span class="marquee-item">Vacciné,</span>
+                        <span class="marquee-item">Sevré,</span>
+                        <span class="marquee-item">Idéal Appartement,</span>
+                        <span class="marquee-item">Disponible,</span>
+
+
+                        <span class="marquee-item">Nain de Couleur,</span>
+                        <span class="marquee-item">Pelage Blanc,</span>
+                        <span class="marquee-item">Yeux Rouges,</span>
+                        <span class="marquee-item">Petit Format,</span>
+                        <span class="marquee-item">Doux,</span>
+                        <span class="marquee-item">Vacciné,</span>
+                        <span class="marquee-item">Sevré,</span>
+                        <span class="marquee-item">Idéal Appartement,</span>
+                        <span class="marquee-item">Disponible,</span>
+                    </div>
+                </div>
+            </div>
+            <div id="project-video-1">
+                <video muted loop playsinline preload="metadata" src="IMAGES/Snapchat-1448875183.webm"></video>
+            </div>
+        </div>
+        <div id="project-container-3">
+            <div id="upper-part-3" data-video-target="#project-video-2">
+                <img src="IMAGES/Snapchat-1244423645~1.webp" loading="lazy" alt="Rex Argenté">
+            </div>
+            <div id="bottom-part-3">
+                <div id="bottom-left-2">Rex Argenté</div>
+                <div id="bottom-right-2">4 mois</div>
+            </div>
+            <div class="marquee-wrap">
+                <div class="marquee">
+                    <div class="marquee-track">
+                        <span class="marquee-item">Race Rex,</span>
+                        <span class="marquee-item">Pelage Velouté,</span>
+                        <span class="marquee-item">Robe Argentée,</span>
+                        <span class="marquee-item">Calme,</span>
+                        <span class="marquee-item">Bonne Santé,</span>
+                        <span class="marquee-item">Sevré,</span>
+                        <span class="marquee-item">Suivi Vétérinaire,</span>
+                        <span class="marquee-item">Robuste,</span>
+                        <span class="marquee-item">Disponible,</span>
+
+
+                        <span class="marquee-item">Race Rex,</span>
+                        <span class="marquee-item">Pelage Velouté,</span>
+                        <span class="marquee-item">Robe Argentée,</span>
+                        <span class="marquee-item">Calme,</span>
+                        <span class="marquee-item">Bonne Santé,</span>
+                        <span class="marquee-item">Sevré,</span>
+                        <span class="marquee-item">Suivi Vétérinaire,</span>
+                        <span class="marquee-item">Robuste,</span>
+                        <span class="marquee-item">Disponible,</span>
+                    </div>
+                </div>
+            </div>
+            <div id="project-video-2">
+                <video muted loop playsinline preload="metadata" src="IMAGES/Snapchat-1680052335.webm"></video>
+            </div>
+        </div>
+        <div id="project-container-4">
+            <div id="upper-part-4" data-video-target="#project-video-3">
+                <img src="IMAGES/Snapchat-1244900246.webp" loading="lazy" alt="Angora Roux">
+            </div>
+            <div id="bottom-part-4">
+                <div id="bottom-left-3">Angora Roux</div>
+                <div id="bottom-right-3">5 mois</div>
+            </div>
+            <div class="marquee-wrap">
+                <div class="marquee">
+                    <div class="marquee-track">
+                        <span class="marquee-item">Race Angora,</span>
+                        <span class="marquee-item">Poil Long,</span>
+                        <span class="marquee-item">Robe Rousse,</span>
+                        <span class="marquee-item">Entretien Régulier,</span>
+                        <span class="marquee-item">Affectueux,</span>
+                        <span class="marquee-item">Sevré,</span>
+                        <span class="marquee-item">Bonne Santé,</span>
+                        <span class="marquee-item">Née en Élevage,</span>
+                        <span class="marquee-item">Disponible,</span>
+
+
+                        <span class="marquee-item">Race Angora,</span>
+                        <span class="marquee-item">Poil Long,</span>
+                        <span class="marquee-item">Robe Rousse,</span>
+                        <span class="marquee-item">Entretien Régulier,</span>
+                        <span class="marquee-item">Affectueux,</span>
+                        <span class="marquee-item">Sevré,</span>
+                        <span class="marquee-item">Bonne Santé,</span>
+                        <span class="marquee-item">Née en Élevage,</span>
+                        <span class="marquee-item">Disponible,</span>
+                    </div>
+                </div>
+            </div>
+            <div id="project-video-3">
+                <video muted loop playsinline preload="metadata" src="IMAGES/Snapchat-2076662897.webm"></video>
+            </div>
+        </div>
+        <div id="page4-wave-div">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <div id="page4-btn"><a href="#page5">Voir tout</a><i class="ri-arrow-right-up-line"></i></div>
+    </div>
+    <section class="Horizontal">
+        <div class="container">
+            <h3 class="Horizontal__text heading-xl">
+                Et si chaque lapin trouvait le bon foyer???
+            </h3>
+        </div>
+    </section>
+    <div id="page5">
+        <div id="page5-heading-1">Adoptez</div>
+        <div id="page5-bottom-heading">bonjour@lagarenne.ci</div>
+        <div id="page5-label-1"><a href="#" target="_blank">Instagram</a></div>
+        <div id="page5-label-2"><a href="#" target="_blank">WhatsApp</a></div>
+        <div id="page5-label-3"><a href="#" target="_blank">TikTok</a></div>
+        <div id="page5-footer">
+            <div id="footer-left">
+                <div id="footer-left-1">Une question sur nos lapins ?</div>
+                <div id="footer-left-2">Écrivez-nous directement</div>
+            </div>
+            <div id="footer-middle">
+                <div id="footer-middle-1">on vous</div>
+                <div id="footer-middle-2">répond vite</div>
+            </div>
+            <div id="footer-right">
+                <div id="footer-right-1">ⓒ tous droits réservés</div>
+                <div id="footer-right-2">La Garenne</div>
+            </div>
+        </div>
+        <div id="page5-img-1">
+            <img src="IMAGES/Snapchat-1244900246~1.webp" loading="lazy" alt="Lapin">
+        </div>
+        <div id="page5-img-2">
+            <img src="IMAGES/Snapchat-1671304199.webp" loading="lazy" alt="Lapin">
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"
+        integrity="sha512-NcZdtrT77bJr4STcmsGAESr06BYGE8woZdSdEgqnpyqac7sugNO+Tr4bGwGF3MsnEkGKhU2KL2xh6Ec+BqsaHA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"
+        integrity="sha512-P2IDYZfqSwjcSjX0BKeNhwRUH8zRPGlgcWl5n6gBLzdi4Y5/0O4zaXrtO4K9TZK6Hn1BenYpKowuCavNandERg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/SplitText.min.js"
+        integrity="sha512-wOeEC+9qERAzhliwBFPDb6t8TiFFxdxG8vhK/Ygs7TuC44bpg8pg/X2/U/u+0X4fK05wb9id1EIipnF02+CFQw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://unpkg.com/lenis@1.3.17/dist/lenis.min.js"></script>
+    <script>
+window.addEventListener("DOMContentLoaded", () => {
+
+gsap.registerPlugin(ScrollTrigger, SplitText);
+
+const isDesktop = window.matchMedia("(pointer: fine)").matches;
+
+const lenis = new Lenis({
+  lerp: isDesktop ? 0.08 : 0.18,  
+  smoothWheel: true,
+  smoothTouch: true,
+  syncTouch: true,
+  wheelMultiplier: isDesktop ? 0.8 : 0.6,
+  touchMultiplier: 0.9,   
+  normalizeWheel: true,
+  infinite: false,
+  overscroll: false,
+});
+
+
+lenis.on("scroll", ScrollTrigger.update);
+
+gsap.ticker.add((time) => {
+  lenis.raf(time * 1000);
+});
+
+gsap.ticker.lagSmoothing(0);
+
+
+const c = document.querySelector("#cursor");
+let mx = innerWidth/2, my = innerHeight/2, px = mx, py = my;
+
+addEventListener("mousemove", e => (mx = e.clientX, my = e.clientY));
+
+const xTo = gsap.quickTo(c, "x", { duration: 0.7, ease: "power4.out" });
+const yTo = gsap.quickTo(c, "y", { duration: 0.7, ease: "power4.out" });
+
+gsap.ticker.add(() => {
+  xTo(mx);
+  yTo(my);
+
+  const dx = mx - px, v = Math.hypot(dx, my - py);
+
+  gsap.to(c, {
+    skewX: gsap.utils.clamp(-8, 8, dx * 0.25),
+    scaleX: 1 + v * 0.01,
+    scaleY: 1 - v * 0.01,
+    rotate: dx * 0.15,
+    duration: 0.55,
+    ease: "power4.out"
+  });
+
+  px = mx; py = my;
+});
+
+  const marquee = document.querySelector(".marquee-track");
+  if (marquee) {
+    const width = marquee.scrollWidth / 2;
+    gsap.to(".marquee-track", {
+      x: -width,
+      duration: 12,
+      ease: "none",
+      repeat: -1
+    });
+  }
+
+  gsap.to("#above-intro", {
+    clipPath: "inset(0 0 0% 0)",
+    ease: "none",
+    scrollTrigger: {
+      trigger: "#intro-container",
+      start: "top 80%",
+      end: "top 30%",
+      scrub: 2
+    }
+  });
+
+  gsap.to("#above-intro-1", {
+    clipPath: "inset(0 0 0% 0)",
+    ease: "none",
+    scrollTrigger: {
+      trigger: "#intro-container-1",
+      start: "top 80%",
+      end: "top 30%",
+      scrub: 2
+    }
+  });
+
+  const scrollLine = document.querySelector("#scroll-line line");
+  if (scrollLine) {
+    const length = scrollLine.getTotalLength();
+    gsap.set(scrollLine, {
+      strokeDasharray: length,
+      strokeDashoffset: length
+    });
+
+    gsap.to(scrollLine, {
+      strokeDashoffset: 0,
+      ease: "none",
+      scrollTrigger: {
+        trigger: "#scroll-line",
+        start: "top 80%",
+        end: "top 40%",
+        scrub: 4,
+        once: true
+      }
+    });
+  }
+
+  gsap.to("#page3-img-2",{
+    xPercent: 120,
+    duration: 1,
+    ease: "none",
+    scrollTrigger: {
+      trigger: "#page3-img-2",
+      scroller: "body",
+      start: "top 100%",
+      end: "top -40%",
+      scrub: 2.5
+    }
+  });
+    gsap.to("#page3-img-3",{
+    xPercent: -120,
+    duration: 1,
+    ease: "none",
+    scrollTrigger: {
+      trigger: "#page3-img-3",
+      scroller: "body",
+      start: "top 120%",
+      end: "top -40%",
+      scrub: 2.5
+    }
+  });
+
+  const fxMM = gsap.matchMedia();
+
+  fxMM.add("(min-width: 800px)", () => {
+
+    // No. 04 — Galerie : grid tunnel dive
+    gsap.to(".grid-tunnel", {
+      scrollTrigger: {
+        trigger: "#sec-gallery",
+        pin: true,
+        start: "center center",
+        end: "+=1500",
+        scrub: 1
+      },
+      z: 1500,
+      scale: 3,
+      ease: "power2.in"
+    });
+
+    gsap.to(".grid-center", {
+      scrollTrigger: {
+        trigger: "#sec-gallery",
+        start: "center center",
+        end: "+=1500",
+        scrub: 1
+      },
+      opacity: 0,
+      scale: 2,
+      ease: "power2.in"
+    });
+
+    // No. 05 — Portrait : iris cinématique
+    gsap.to(".iris-mask", {
+      scrollTrigger: {
+        trigger: "#sec-iris",
+        pin: true,
+        start: "center center",
+        end: "+=1000",
+        scrub: 1
+      },
+      clipPath: "circle(150% at 50% 50%)",
+      ease: "power2.inOut"
+    });
+
+    // No. 06 — En Mouvement : éclosion organique
+    gsap.timeline({
+      scrollTrigger: {
+        trigger: "#sec-blob",
+        pin: true,
+        start: "center center",
+        end: "+=1200",
+        scrub: 1
+      }
+    })
+      .to(".blob-mask", {
+        width: "100vw",
+        height: "100vh",
+        borderRadius: "0%",
+        ease: "power3.inOut"
+      }, 0)
+      .to("#blob-video", {
+        scale: 1,
+        ease: "power2.out"
+      }, 0);
+  });
+
+  const wave = document.querySelectorAll("#page4-wave-div div");
+  if (wave.length) {
+    gsap.from(wave, {
+      y: 60,
+      autoAlpha: 0,
+      duration: 1,
+      ease: "power4.out",
+      stagger: {
+        each: 0.3,
+        from: "center"
+      },
+      scrollTrigger: {
+        trigger: "#page4-wave-div",
+        start: "top 90%",
+        end: "bottom 40%",
+        scrub: 2
+      }
+    });
+  }
+ 
+gsap.to("#page3", {
+  backgroundColor: "#F3E9DA",
+  scrollTrigger: {
+    trigger: "#page3",
+    scroller: "body",
+    start: "top -130%",
+    end: "bottom -30%",
+    scrub: 1
+  },
+  ease: "power2.out"
+});
+
+  const hoverImage = document.querySelector("#hover-img");
+  const hoverItem = document.querySelectorAll(".hover-item");
+
+  if (hoverImage) {
+    gsap.set(hoverImage, { xPercent: -50, yPercent: -50 });
+
+    window.addEventListener("mousemove", (e) => {
+      gsap.to(hoverImage, {
+        x: e.clientX,
+        y: e.clientY,
+        duration: 0.5,
+        ease: "power.out"
+      });
+    });
+
+    hoverItem.forEach(item => {
+      item.addEventListener("mouseenter", () => {
+        hoverImage.style.backgroundImage = item.dataset.img;
+        hoverImage.style.opacity = 1;
+      });
+
+      item.addEventListener("mouseleave", () => {
+        hoverImage.style.opacity = 0;
+      });
+    });
+  } 
+
+  document.querySelectorAll("[data-video-target]").forEach((trigger) => {
+    const video = document.querySelector(trigger.dataset.videoTarget)?.querySelector("video");
+    if (!video) return;
+
+    trigger.addEventListener("mouseenter", () => {
+      video.currentTime = 0;
+      video.play().catch(() => {});
+    });
+
+    trigger.addEventListener("mouseleave", () => {
+      video.pause();
+    });
+  });
+
+  document.fonts.ready.then(() => {
+    const wrapper = document.querySelector(".Horizontal");
+    const text = document.querySelector(".Horizontal__text");
+
+    if (wrapper && text) {
+      const split10 = SplitText.create(text, { type: "chars,words" });
+
+      const scrollTween = gsap.to(text, {
+        xPercent: -100,
+        ease: "none",
+        scrollTrigger: {
+          trigger: wrapper,
+          pin: true,
+          end: "+=5000px",
+          scrub: true
+        }
+      });
+
+      split10.chars.forEach((char) => {
+        gsap.from(char, {
+          yPercent: "random(-200,200)",
+          rotation: "random(-20,20)",
+          ease: "back.out(1.2)",
+          scrollTrigger: {
+            trigger: char,
+            containerAnimation: scrollTween,
+            start: "left 100%",
+            end: "left 30%",
+            scrub: 1
+          }
+        });
+      });
+    }
+
+    document.querySelectorAll(".split-heading").forEach((heading) => {
+      const split5 = new SplitText(heading, {
+        type: "lines",
+        linesClass: "line"
+      });
+
+      gsap.from(split5.lines, {
+        yPercent: 60,
+        autoAlpha: 0,
+        duration: 1.2,
+        ease: "power4.out",
+        stagger: 0.08,
+        scrollTrigger: {
+          trigger: heading,
+          start: "top 80%",
+          end: "top 30%",
+          scrub: 1.5,
+          once: true
+        }
+      });
+    });
+
+const split6 = new SplitText(".split-heading-1", { type: "chars" });
+
+gsap.set(split6.chars, {
+  yPercent: 60,
+  rotateX: -35,
+  skewX: -7,
+  autoAlpha: 0,
+});
+
+gsap.to(split6.chars, {
+  yPercent: 0,
+  rotateX: 0,
+  skewX: 0,
+  autoAlpha: 1,
+  duration: 1.4,
+  ease: "power4.out",
+  stagger: {
+    amount: 0.55,
+    from: "start"
+  },
+  scrollTrigger: {
+    trigger: ".split-heading-1",
+    start: "top 90%",
+    end: "top 0%",
+    scrub: 3.8,
+    once: true,                           
+    markers: false
+  }
+});
+
+    const mm = gsap.matchMedia();
+
+    mm.add("(min-width: 800px)", () => initLoader(false));
+    mm.add("(max-width: 767px)", () => initLoader(true));
+
+    function initLoader(isMobile) {
+      const counterEl = document.querySelector("#loader-counter");
+      const stairs = document.querySelectorAll("#loader div");
+      const line2 = document.querySelector("#loader-line line");
+
+      if (!counterEl || !line2) return;
+
+      const length2 = line2.getTotalLength();
+      let counter = { value: 0 };
+
+      gsap.set(line2, {
+        strokeDasharray: length2,
+        strokeDashoffset: length2
+      });
+
+      gsap.set("#loader-line", {
+        scaleX: -1,
+        transformOrigin: "center"
+      });
+
+      const tl = gsap.timeline({
+        defaults: {
+          ease: "power3.out"
+        }
+      });
+
+      tl.to(counter, {
+        value: 100,
+        duration: 2.2,
+        ease: "sine.out",
+        onUpdate: () => {
+          counterEl.textContent = Math.floor(counter.value);
+        }
+      }, "start");
+
+      tl.to(line2, {
+        strokeDashoffset: 0,
+        duration: 2.2,
+        ease: "none"
+      }, "start");
+
+      tl.call(() => {
+        const split = new SplitText(counterEl, { type: "chars" });
+        gsap.to(split.chars, {
+          xPercent: 80,
+          autoAlpha: 0,
+          stagger: { amount: 0.35, from: "end" },
+          duration: 0.8,
+          ease: "expo.inOut"
+        });
+      }, null, "start+=2.25");
+
+      tl.to(line2, {
+        autoAlpha: 0,
+        duration: 0.45,
+        ease: "sine.out"
+      }, "start+=2.4");
+
+      tl.to(stairs, {
+        y: "-110%",
+        duration: 1.25,
+        stagger: {
+          amount: 0.4,
+          from: "center"
+        },
+        ease: "power3.inOut"
+      }, "start+=2.7");
+
+      const splitHeading = new SplitText("#heading1", { type: "chars" });
+
+      tl.from(splitHeading.chars, {
+        y: isMobile ? 120 : 80,
+        autoAlpha: 0,
+        duration: isMobile ? 1.05 : 1.2,
+        stagger: { amount: 0.4 },
+        ease: "power2.out"
+      }, "start+=3.4");
+
+      tl.from("#page1-img-1", {
+        y: 150,
+        scale: 0.97,
+        autoAlpha: 0,
+        duration: 0.85,
+        ease: "power3.out"
+      }, "start+=3.9");
+
+      tl.from("nav", {
+        y: -22,
+        autoAlpha: 0,
+        duration: 0.65,
+        stagger: 0.07,
+        ease: "power2.out"
+      }, "start+=4");
+
+      tl.call(() => {
+        document.querySelector("#loader")?.remove();
+      });
+    }
+  });
+});
+
+    </script>
+</body>
+
+</html>

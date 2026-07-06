@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { Stethoscope, HeartHandshake, MessageCircle, Truck } from 'lucide-react'
 
 const FEATURES = [
-  { num: '01', title: 'Suivi vétérinaire', desc: 'Chaque lapin est vacciné et contrôlé avant son adoption.', icon: <Stethoscope size={18} /> },
+  { num: '01', title: 'Suivi vétérinaire', desc: 'Chaque lapin est vacciné et contrôlé avant la vente.', icon: <Stethoscope size={18} /> },
   { num: '02', title: 'Élevage à taille humaine', desc: 'Nous connaissons chaque lapin par son nom, pas par un numéro.', icon: <HeartHandshake size={18} /> },
   { num: '03', title: 'Contact direct', desc: 'Vous échangez avec l\u2019éleveur sur WhatsApp, sans intermédiaire.', icon: <MessageCircle size={18} /> },
   { num: '04', title: 'Remise en main propre', desc: 'Rendez-vous fixé ensemble à Abidjan, en toute confiance.', icon: <Truck size={18} /> },
@@ -28,7 +28,7 @@ export default function TeamSection() {
             viewport={{ once: true }}
             className="mb-8"
           >
-            <p className="text-caramel font-mono text-xs tracking-widest uppercase mb-3">Pourquoi Lapinou</p>
+            <p className="text-caramel font-mono text-xs tracking-widest uppercase mb-3">Pourquoi CHEZ FLORENCE</p>
             <h2 className="font-display text-4xl lg:text-5xl font-extrabold text-white leading-tight">
               Une <span className="text-gradient">relation de confiance</span>
             </h2>
@@ -68,13 +68,13 @@ export default function TeamSection() {
           className="grid grid-cols-2 gap-3 h-[420px]"
         >
           <div className="relative rounded-2xl overflow-hidden row-span-2">
-            <img src={GALLERY[0]} alt="Lapin Lapinou" className="absolute inset-0 w-full h-full object-cover" />
+            <img src={GALLERY[0]} alt="Lapin CHEZ FLORENCE" className="absolute inset-0 w-full h-full object-cover" />
           </div>
           <div className="relative rounded-2xl overflow-hidden">
-            <img src={GALLERY[1]} alt="Lapin Lapinou" className="absolute inset-0 w-full h-full object-cover" />
+            <img src={GALLERY[1]} alt="Lapin CHEZ FLORENCE" className="absolute inset-0 w-full h-full object-cover" />
           </div>
           <div className="relative rounded-2xl overflow-hidden">
-            <img src={GALLERY[2]} alt="Lapin Lapinou" className="absolute inset-0 w-full h-full object-cover" />
+            <img src={GALLERY[2]} alt="Lapin CHEZ FLORENCE" className="absolute inset-0 w-full h-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-espresso/70 to-transparent flex items-end p-4">
               <span className="text-white text-xs font-semibold">+ de photos sur chaque fiche</span>
             </div>

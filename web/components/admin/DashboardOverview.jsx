@@ -10,10 +10,10 @@ import { formatPrice } from '@/lib/status'
 import toast from 'react-hot-toast'
 
 const ZONE_COLORS = {
-  abidjan:      '#B8834A',
-  azaguie:      '#7C8B6F',
-  pays_profond: '#C2693D',
-  inconnue:     '#5A4D3A',
+  abidjan:      'var(--green)',
+  azaguie:      'var(--lime)',
+  pays_profond: 'var(--muted)',
+  inconnue:     'var(--card)',
 }
 
 const RANGE_OPTIONS = [
@@ -83,7 +83,7 @@ export default function DashboardOverview() {
 
       {/* KPIs */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3">
-        <KpiCard icon={<TrendingUp size={18} />} label="Revenu confirmé" value={formatPrice(kpis.revenueConfirmed)} accent="text-[#2ECC71]" bg="bg-[#2ECC71]/15" />
+        <KpiCard icon={<TrendingUp size={18} />} label="Revenu confirmé" value={formatPrice(kpis.revenueConfirmed)} accent="text-[var(--green)]" bg="bg-[rgba(var(--green-rgb),0.15)]" />
         <KpiCard icon={<Truck size={18} />} label="Revenu livraison" value={formatPrice(kpis.deliveryRevenue)} />
         <KpiCard icon={<Clock size={18} />} label="En attente" value={kpis.pendingCount} accent="text-terracotta" bg="bg-terracotta/15" />
         <KpiCard icon={<PackageCheck size={18} />} label="Confirmées" value={kpis.confirmedCount} accent="text-sage" bg="bg-sage/15" />
@@ -99,25 +99,25 @@ export default function DashboardOverview() {
           <AreaChart data={chartTimeline} margin={{ top: 4, right: 8, left: -16, bottom: 0 }}>
             <defs>
               <linearGradient id="revenueGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#B8834A" stopOpacity={0.45} />
-                <stop offset="100%" stopColor="#B8834A" stopOpacity={0} />
+                <stop offset="0%" stopColor="var(--green)" stopOpacity={0.45} />
+                <stop offset="100%" stopColor="var(--green)" stopOpacity={0} />
               </linearGradient>
               <linearGradient id="resaGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#7C8B6F" stopOpacity={0.4} />
-                <stop offset="100%" stopColor="#7C8B6F" stopOpacity={0} />
+                <stop offset="0%" stopColor="var(--lime)" stopOpacity={0.4} />
+                <stop offset="100%" stopColor="var(--lime)" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid stroke="#4A3D2C" strokeDasharray="3 3" vertical={false} />
+            <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" vertical={false} />
             <XAxis dataKey="label" stroke="#ffffff60" fontSize={11} tickLine={false} axisLine={false} />
             <YAxis yAxisId="left" stroke="#ffffff60" fontSize={11} tickLine={false} axisLine={false} />
             <YAxis yAxisId="right" orientation="right" stroke="#ffffff40" fontSize={11} tickLine={false} axisLine={false} />
             <Tooltip
-              contentStyle={{ background: '#2A2118', border: '1px solid #4A3D2C', borderRadius: 8, fontSize: 12 }}
+              contentStyle={{ background: 'var(--dark)', border: '1px solid var(--border)', borderRadius: 8, fontSize: 12 }}
               labelStyle={{ color: '#fff' }}
               formatter={(value, name) => name === 'revenue' ? [formatPrice(value), 'Revenu'] : [value, 'Réservations']}
             />
-            <Area yAxisId="left" type="monotone" dataKey="revenue" stroke="#B8834A" fill="url(#revenueGrad)" strokeWidth={2} name="revenue" />
-            <Area yAxisId="right" type="monotone" dataKey="reservations" stroke="#7C8B6F" fill="url(#resaGrad)" strokeWidth={2} name="reservations" />
+            <Area yAxisId="left" type="monotone" dataKey="revenue" stroke="var(--green)" fill="url(#revenueGrad)" strokeWidth={2} name="revenue" />
+            <Area yAxisId="right" type="monotone" dataKey="reservations" stroke="var(--lime)" fill="url(#resaGrad)" strokeWidth={2} name="reservations" />
           </AreaChart>
         </ResponsiveContainer>
       </div>
@@ -133,11 +133,11 @@ export default function DashboardOverview() {
               <PieChart>
                 <Pie data={pieData} dataKey="count" nameKey="label" innerRadius={55} outerRadius={85} paddingAngle={2}>
                   {pieData.map((entry) => (
-                    <Cell key={entry.zone} fill={ZONE_COLORS[entry.zone] || '#888'} />
+                    <Cell key={entry.zone} fill={ZONE_COLORS[entry.zone] || 'var(--card)'} />
                   ))}
                 </Pie>
                 <Tooltip
-                  contentStyle={{ background: '#2A2118', border: '1px solid #4A3D2C', borderRadius: 8, fontSize: 12 }}
+                  contentStyle={{ background: 'var(--dark)', border: '1px solid var(--border)', borderRadius: 8, fontSize: 12 }}
                   formatter={(value, name) => [`${value} réservation(s)`, name]}
                 />
                 <Legend wrapperStyle={{ fontSize: 11, color: '#fff' }} />
@@ -154,14 +154,14 @@ export default function DashboardOverview() {
           ) : (
             <ResponsiveContainer width="100%" height={220}>
               <BarChart data={topBreeds} layout="vertical" margin={{ left: 16 }}>
-                <CartesianGrid stroke="#4A3D2C" strokeDasharray="3 3" horizontal={false} />
+                <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" horizontal={false} />
                 <XAxis type="number" stroke="#ffffff60" fontSize={11} tickLine={false} axisLine={false} allowDecimals={false} />
                 <YAxis type="category" dataKey="breed" stroke="#ffffff80" fontSize={11} tickLine={false} axisLine={false} width={110} />
                 <Tooltip
-                  contentStyle={{ background: '#2A2118', border: '1px solid #4A3D2C', borderRadius: 8, fontSize: 12 }}
+                  contentStyle={{ background: 'var(--dark)', border: '1px solid var(--border)', borderRadius: 8, fontSize: 12 }}
                   formatter={(value) => [`${value} unité(s)`, '']}
                 />
-                <Bar dataKey="count" fill="#B8834A" radius={[0, 6, 6, 0]} barSize={16} />
+                <Bar dataKey="count" fill="var(--green)" radius={[0, 6, 6, 0]} barSize={16} />
               </BarChart>
             </ResponsiveContainer>
           )}

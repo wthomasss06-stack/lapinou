@@ -35,7 +35,7 @@ export async function generateMetadata({ params }) {
   const rabbit = await getRabbit(params.slug)
   if (!rabbit) return { title: 'Introuvable' }
   return {
-    title:       `${rabbit.name} — ${rabbit.breed} | Lapinou`,
+    title:       `${rabbit.name} — ${rabbit.breed} | CHEZ FLORENCE`,
     description: rabbit.description || `${rabbit.name}, ${rabbit.breed} à ${formatPrice(rabbit.price)}`,
   }
 }

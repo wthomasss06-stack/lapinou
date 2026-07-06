@@ -2,8 +2,8 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 
 export const metadata = {
-  title: 'Confidentialité | Lapinou',
-  description: 'Politique de confidentialité du site Lapinou — données collectées, géolocalisation, cookies.',
+  title: 'Confidentialité | CHEZ FLORENCE',
+  description: 'Politique de confidentialité du site CHEZ FLORENCE — données collectées, géolocalisation, cookies.',
 }
 
 const sections = [
@@ -21,7 +21,7 @@ const sections = [
   },
   {
     title: '4. Partage des données',
-    body: "Vos données ne sont jamais vendues ni partagées avec des tiers à des fins commerciales. Elles sont uniquement utilisées par l'équipe Lapinou pour traiter votre réservation et vous contacter (email et WhatsApp).",
+    body: "Vos données ne sont jamais vendues ni partagées avec des tiers à des fins commerciales. Elles sont uniquement utilisées par l'équipe CHEZ FLORENCE pour traiter votre réservation et vous contacter (email et WhatsApp).",
   },
   {
     title: '5. Conservation',
@@ -33,7 +33,7 @@ const sections = [
   },
   {
     title: '7. Contact',
-    body: 'Pour toute question relative à vos données personnelles, écrivez-nous à contact@lapinou.ci ou via le formulaire de contact du site.',
+    body: 'Pour toute question relative à vos données personnelles, écrivez-nous à wthomasss06@gmail.com ou via le formulaire de contact du site.',
   },
 ]
 

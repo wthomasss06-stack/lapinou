@@ -25,15 +25,15 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://lapinou.vercel.app'),
-  title: 'Lapinou — Vente de Lapins à Abidjan',
+  title: 'CHEZ FLORENCE — Vente de Lapins à Abidjan',
   description: 'Découvrez et réservez nos lapins de race élevés à Abidjan, Côte d\'Ivoire.',
-  keywords: ['lapin', 'vente lapin', 'élevage', 'Abidjan', 'Côte d\'Ivoire', 'lapinou'],
+  keywords: ['lapin', 'vente lapin', 'élevage', 'Abidjan', 'Côte d\'Ivoire', 'chez florence'],
   manifest: '/manifest.json',
-  applicationName: 'Lapinou',
+  applicationName: 'CHEZ FLORENCE',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'Lapinou',
+    title: 'CHEZ FLORENCE',
   },
   icons: {
     icon: [
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
   },
   openGraph: {
-    title: 'Lapinou — Vente de Lapins à Abidjan',
+    title: 'CHEZ FLORENCE — Vente de Lapins à Abidjan',
     description: 'Découvrez et réservez nos lapins de race élevés à Abidjan, Côte d\'Ivoire.',
     type: 'website',
     images: ['/icon-512.png'],
@@ -71,7 +71,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             style: {
               background: '#3A2F22',
               color: '#fff',
-              border: '1px solid #4A3D2C',
+              border: '1px solid #050505',
             },
             success: { iconTheme: { primary: '#B8834A', secondary: '#3A2F22' } },
           }}

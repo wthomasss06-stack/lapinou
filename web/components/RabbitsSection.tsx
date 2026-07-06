@@ -69,7 +69,7 @@ export default function RabbitsSection() {
             </h2>
             <p className="text-white/40 mt-4 max-w-md text-sm leading-relaxed">
               Chaque lapin est élevé avec soin, suivi par notre équipe, et prêt à
-              rejoindre votre foyer dans les meilleures conditions.
+              rejoindre votre table dans les meilleures conditions.
             </p>
           </motion.div>
 

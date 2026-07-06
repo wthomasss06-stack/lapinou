@@ -5,9 +5,9 @@ import { motion } from 'framer-motion'
 import { Stethoscope, HeartHandshake, MessageCircle, Home } from 'lucide-react'
 
 const values = [
-  { icon: <Stethoscope size={24} />, title: 'Santé', desc: 'Chaque lapin est suivi par un vétérinaire avant son adoption.' },
+  { icon: <Stethoscope size={24} />, title: 'Santé', desc: 'Chaque lapin est suivi par un vétérinaire avant la vente.' },
   { icon: <HeartHandshake size={24} />, title: 'Confiance', desc: 'Un échange direct avec l\'éleveur, sans intermédiaire anonyme.' },
-  { icon: <MessageCircle size={24} />, title: 'Disponibilité', desc: 'Nous répondons à vos questions sur WhatsApp, avant et après l\'adoption.' },
+  { icon: <MessageCircle size={24} />, title: 'Disponibilité', desc: 'Nous répondons à vos questions sur WhatsApp, avant et après votre commande.' },
   { icon: <Home size={24} />, title: 'Confort', desc: 'Des lapins élevés dans un environnement calme et adapté.' },
 ]
 
@@ -23,11 +23,11 @@ export default function AboutSection() {
         >
           <p className="text-caramel font-mono text-xs tracking-widest uppercase mb-3">Notre Histoire</p>
           <h2 className="font-display text-4xl sm:text-5xl font-extrabold text-white mb-6">
-            À Propos de <span className="text-gradient">Lapinou</span>
+            À Propos de <span className="text-gradient">CHEZ FLORENCE</span>
           </h2>
           <p className="text-white/50 leading-relaxed max-w-2xl mx-auto">
-            Lapinou est né d'une passion pour l'élevage de lapins de race à Abidjan.
-            Notre objectif : rendre l'adoption simple, transparente, et accompagnée
+            CHEZ FLORENCE est né d'une passion pour l'élevage de lapins de race à Abidjan.
+            Notre objectif : rendre la commande simple, transparente, et accompagnée
             du début à la fin — du premier message WhatsApp jusqu'à l'arrivée de
             votre lapin chez vous.
           </p>

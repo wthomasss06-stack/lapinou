@@ -92,7 +92,7 @@ export default function AidePage() {
               Questions <span className="text-gradient">Fréquentes</span>
             </h1>
             <p className="text-white/40 max-w-lg mx-auto text-sm leading-relaxed">
-              Tout ce qu'il faut savoir avant de réserver un lapin sur Lapinou.
+              Tout ce qu'il faut savoir avant de réserver un lapin sur CHEZ FLORENCE.
             </p>
           </motion.div>
 

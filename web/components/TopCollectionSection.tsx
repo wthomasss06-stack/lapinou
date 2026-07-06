@@ -36,7 +36,7 @@ export default function TopCollectionSection() {
             Les Lapins <span className="text-gradient">Disponibles</span>
           </h2>
           <p className="text-white/40 mt-4 max-w-lg mx-auto text-sm">
-            Liste actualisée de nos lapins prêts à rejoindre un nouveau foyer.
+            Liste actualisée de nos lapins disponibles, prêts à la vente.
           </p>
         </motion.div>
 
@@ -44,7 +44,7 @@ export default function TopCollectionSection() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {rabbits.map((rabbit, i) => {
             const rank = i + 1
-            const rankColors = ['text-yellow-400', 'text-slate-300', 'text-amber-600']
+            const rankColors = ['text-[var(--green)]', 'text-[var(--muted)]', 'text-[var(--lime)]']
             const rankColor = rank <= 3 ? rankColors[rank - 1] : 'text-white/20'
             const mainPhoto = rabbit.photos?.find(p => p.isMain) || rabbit.photos?.[0]
             const photoSrc = mainPhoto ? resolvePhotoUrl(mainPhoto.url) : null
