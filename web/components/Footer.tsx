@@ -1,11 +1,14 @@
 'use client'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { Facebook, MessageCircle, Mail, Phone, MapPin } from 'lucide-react'
+import { Facebook, Mail, Phone, MapPin } from 'lucide-react'
 import Logo from './Logo'
 import { formatWhatsappDisplay } from '@/lib/whatsapp'
 
 const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP?.replace(/\D/g, '') || ''
+const WHATSAPP_URL = WHATSAPP
+  ? `https://wa.me/${WHATSAPP}?text=${encodeURIComponent("Bonjour, j'aimerais commander un lapin.")}`
+  : '#'
 
 const footerLinks = {
   'CHEZ FLORENCE': [
@@ -25,10 +28,46 @@ const socials = [
   { icon: <Facebook size={16} />, href: '#', label: 'Facebook' },
 ]
 
+// Footer unique du site — repris de la clôture cinématique de la home
+// (sticker WhatsApp incliné, gros email en mono, ton "on vous répond vite")
+// mais en version compacte et responsive : contrairement à la section
+// #page5 (120vh, réservée à la home), ce composant s'affiche sur TOUTES
+// les pages (/aide, /admin, /rabbits/[slug]…) donc pas de unités vw
+// verrouillées ni de scope .home-cinema.
 export default function Footer() {
   return (
-    <footer className="border-t border-brand-border pt-16 pb-8 px-6">
-      <div className="max-w-7xl mx-auto">
+    <footer className="bg-[var(--dark)] border-t border-brand-border">
+      {/* ── Bloc "Commandez" — sticker WhatsApp + email ────────────── */}
+      <div className="text-center px-6 pt-16 pb-14 border-b border-white/10">
+        <p className="font-label text-xs sm:text-sm uppercase tracking-[0.3em] text-[var(--lime)]/70 mb-6">
+          Commandez
+        </p>
+        <p className="font-label text-[10px] sm:text-xs uppercase tracking-[0.2em] text-[var(--lime)] mb-3">
+          Une question sur nos lapins ?
+        </p>
+        <h2 className="font-display italic font-bold text-2xl sm:text-4xl text-white mb-8">
+          Écrivez-nous directement
+        </h2>
+
+        <motion.a
+          href={WHATSAPP_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          initial={{ rotate: -3 }}
+          whileHover={{ rotate: 0, scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="inline-block bg-[var(--muted)] text-[var(--dark)] font-label font-bold text-sm uppercase tracking-[0.1em] px-9 py-4 rounded-lg shadow-lg shadow-black/30"
+        >
+          WhatsApp
+        </motion.a>
+
+        <p className="font-mono text-lg sm:text-2xl text-[var(--muted)] mt-8 break-all sm:break-normal">
+          wthomasss06@gmail.com
+        </p>
+      </div>
+
+      {/* ── Colonnes utilitaires ─────────────────────────────────────── */}
+      <div className="max-w-7xl mx-auto px-6 pt-14 pb-8">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-12">
           {/* Brand column */}
           <div className="col-span-2 md:col-span-1">
@@ -50,18 +89,6 @@ export default function Footer() {
                   {social.icon}
                 </motion.a>
               ))}
-              {WHATSAPP && (
-                <motion.a
-                  href={`https://wa.me/${WHATSAPP}`}
-                  target="_blank" rel="noopener noreferrer"
-                  aria-label="WhatsApp"
-                  className="w-8 h-8 rounded-lg border border-brand-border flex items-center justify-center text-white/40 hover:text-sage hover:border-sage/30 transition-all"
-                  whileHover={{ scale: 1.15, y: -2 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <MessageCircle size={16} />
-                </motion.a>
-              )}
             </div>
           </div>
 
@@ -105,21 +132,13 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-brand-border pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-white/30 text-xs font-mono">
-            © {new Date().getFullYear()} CHEZ FLORENCE. Tous droits réservés.
+        <div className="border-t border-brand-border pt-6 flex flex-col md:flex-row justify-between items-center gap-3">
+          <p className="font-label text-[10px] uppercase tracking-[0.15em] text-white/30">
+            © {new Date().getFullYear()} CHEZ FLORENCE — Tous droits réservés
           </p>
-          <div className="flex items-center gap-1 text-white/30 text-xs">
-            <span>Élevé avec</span>
-            <motion.span
-              animate={{ scale: [1, 1.3, 1] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-              className="text-caramel/60"
-            >
-              🐇
-            </motion.span>
-            <span>en Côte d'Ivoire</span>
-          </div>
+          <p className="font-label text-[10px] uppercase tracking-[0.15em] text-white/30">
+            On vous répond vite
+          </p>
         </div>
       </div>
     </footer>

@@ -5,12 +5,13 @@
 //  • Navbar + HeroSection  — ancien slider vidéo (3 slides, wipe diagonal).
 //  • GarantiesSection (page2, id="a-propos") — fusionne l'ancienne
 //    AboutSection : une seule section "Notre Histoire".
-//  • RacesSection (page3) — parallax + fond ink→paper.
-//  • IrisSection — pin + reveal (No. 04).
+//  • IrisSection — pin + reveal (No. 04), juste après "Nos engagements".
 //  • PricingSection (sec-pricing) — vrais tarifs, indexc.html (No. 05).
 //  • RabbitsPreviewSection (page4) — carousel "Nos Lapins" 1x3, vraies
 //    fiches (RabbitCard + rabbitsApi, même source que RabbitsSection)
 //    (No. 06).
+//  • RacesSection (page3) — parallax + fond ink→paper, repoussée après
+//    "Nos Lapins".
 //  • HorizontalCta — bandeau pinné horizontal.
 //
 //  Triptyque (Galerie, No. 04) et Blob (En Mouvement, No. 06) ont été
@@ -25,9 +26,12 @@
 //    • ContactSection — formulaire contact
 //    • Footer
 //
-//  AdoptSection (page5, "Commandez") est placée entre ContactSection et
-//  Footer, sans ses deux images (retirées) — toujours dans le scope
-//  .home-cinema (réutilisé) pour garder sa charte cinématique propre.
+//  AdoptSection (page5, "Commandez") n'est plus rendue séparément — son
+//  contenu (bouton WhatsApp, gros email, "on vous répond vite") a été
+//  repris et fusionné dans le nouveau Footer (voir Footer.tsx), qui sert
+//  maintenant de pied de page unique sur TOUTES les pages du site, pas
+//  seulement la home. Le fichier AdoptSection.tsx reste dans le projet,
+//  juste plus importé.
 //
 //  AboutSection n'est plus rendue séparément (fusionnée dans page2) — le
 //  fichier reste dans le projet, juste plus importé.
@@ -48,7 +52,6 @@ import IrisSection           from '@/components/IrisSection'
 import PricingSection        from '@/components/PricingSection'
 import RabbitsPreviewSection from '@/components/RabbitsPreviewSection'
 import HorizontalCta         from '@/components/HorizontalCta'
-import AdoptSection          from '@/components/AdoptSection'
 import ContactSection        from '@/components/ContactSection'
 import Footer                from '@/components/Footer'
 
@@ -71,9 +74,6 @@ export default function HomePage() {
         {/* 02 — Notre Histoire / Nos Garanties (fusion avec À propos) */}
         <GarantiesSection />
 
-        {/* 03 — Nos Races */}
-        <RacesSection />
-
         {/* 04 — Portrait iris (sec-iris) */}
         <IrisSection />
 
@@ -83,6 +83,9 @@ export default function HomePage() {
         {/* 06 — Nos Lapins (carousel 1x3, page4) */}
         <RabbitsPreviewSection />
 
+        {/* 03 — Nos Races */}
+        <RacesSection />
+
         {/* Bandeau CTA pinné horizontal */}
         <HorizontalCta />
       </div>
@@ -90,11 +93,6 @@ export default function HomePage() {
       {/* ── Contact only (GARDÉS) ─────────────────────────────── */}
       <div className="home-kept-sections">
         <ContactSection />
-      </div>
-
-      {/* 09 — Commandez, entre le contact et le footer */}
-      <div className="home-cinema">
-        <AdoptSection />
       </div>
 
       <div className="home-kept-sections">

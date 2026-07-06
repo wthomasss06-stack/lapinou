@@ -59,14 +59,6 @@
   z-index: 10;
 }
 
-.home-cinema #page5 {
-  width: 100%;
-  height: 120vh;
-  position: relative;
-  overflow: hidden;
-  background-color: var(--dark);
-}
-
 /* ---------------------------------------------------------------
    Curseur custom (indépendant du hero)
    --------------------------------------------------------------- */
@@ -489,24 +481,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.6vw;
   width: fit-content;
   margin: 4vw auto 0;
-  cursor: pointer;
-}
-
-.home-cinema #page4-btn a {
-  text-decoration: none;
-  font-size: 1.05vw;
-  font-family: var(--font-label);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--dark);
-  font-weight: 600;
-}
-
-.home-cinema #page4-btn svg {
-  color: var(--lime);
 }
 
 /* ---------------------------------------------------------------
@@ -569,114 +545,6 @@
   background-size: 220px 220px;
   opacity: 0.5;
   mix-blend-mode: overlay;
-}
-
-/* ---------------------------------------------------------------
-   Page 5 — Commandez / Contact
-   --------------------------------------------------------------- */
-
-.home-cinema #page5-heading-1 {
-  font-size: 18vw;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-style: italic;
-  pointer-events: none;
-  white-space: nowrap;
-  position: absolute;
-  top: 22%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.home-cinema #page5-bottom-heading {
-  font-size: 2.1vw;
-  font-family: var(--font-label);
-  pointer-events: none;
-  white-space: nowrap;
-  position: absolute;
-  top: 96%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: rgba(var(--muted-rgb, 168, 150, 120), 0.75);
-  letter-spacing: 0.02em;
-}
-
-.home-cinema #page5-label-2 {
-  width: 18vw;
-  height: 9vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  border-radius: 6px;
-  position: absolute;
-  background-color: var(--muted);
-  top: 82%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  rotate: -3deg;
-}
-
-.home-cinema #page5-label-2 a {
-  color: var(--dark);
-  text-decoration: none;
-  font-size: 1.05vw;
-  white-space: nowrap;
-  font-family: var(--font-label);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.home-cinema #page5-footer {
-  width: 93%;
-  height: 10vh;
-  overflow: auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  border-top: 1px solid rgba(var(--muted-rgb, 168, 150, 120), 0.3);
-}
-
-.home-cinema #footer-left {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 0.2vw;
-}
-
-.home-cinema #footer-middle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 0.2vw;
-}
-
-.home-cinema #footer-right {
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  flex-direction: column;
-  gap: 0.2vw;
-}
-
-.home-cinema #footer-left-1,
-.home-cinema #footer-left-2,
-.home-cinema #footer-middle-1,
-.home-cinema #footer-middle-2,
-.home-cinema #footer-right-1,
-.home-cinema #footer-right-2 {
-  font-size: 0.85vw;
-  font-family: var(--font-label);
-  color: rgba(var(--muted-rgb, 168, 150, 120), 0.55);
 }
 
 /* ---------------------------------------------------------------
@@ -1139,22 +1007,7 @@
     font-size: 2.8vw;
     padding: 1.4vw 2.6vw;
   }
-  .home-cinema #page4-btn a { font-size: 3.6vw; }
   .home-cinema #hover-img { display: none; }
-  .home-cinema #page5 { margin-top: -1px; }
-  .home-cinema #page5-heading-1 {
-    font-size: 27vw;
-    white-space: pre-wrap;
-    line-height: 14.8vh;
-    letter-spacing: 1vw;
-  }
-  .home-cinema #page5-footer { justify-content: center; }
-  .home-cinema #footer-left-1, .home-cinema #footer-left-2 { font-size: 3.6vw; }
-  .home-cinema #footer-middle { display: none; }
-  .home-cinema #footer-right { display: none; }
-  .home-cinema #page5-bottom-heading { top: 98%; font-size: 4.4vw; }
-  .home-cinema #page5-label-2 { width: 40vw; height: 7vh; top: 88%; left: 50%; transform: translate(-50%, -50%); }
-  .home-cinema #page5-label-2 a { font-size: 3.6vw; }
 
   .home-cinema .fx-section {
     height: auto;

@@ -1,13 +1,14 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
-import { ChevronLeft, ChevronRight, ArrowUpRight, PawPrint } from 'lucide-react'
+import { ChevronLeft, ChevronRight, PawPrint } from 'lucide-react'
 import RabbitCard from './RabbitCard'
 import { rabbitsApi } from '@/lib/api'
 
 // Page 4 — "Nos Lapins" en carousel 1x3 (scroll-snap natif + boutons).
 // Vraies fiches (même source que <RabbitsSection id="lapins"> plus bas,
 // même <RabbitCard/>) — tout ce qui est ajouté via l'admin s'affiche ici
-// automatiquement. "Voir tout" renvoie vers le catalogue complet filtrable.
+// automatiquement. Le bouton du bas fait glisser le carousel vers la
+// droite (même logique que le chevron du header, scrollByCard(1)).
 export default function RabbitsPreviewSection() {
   const [rabbits, setRabbits] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
@@ -109,8 +110,15 @@ export default function RabbitsPreviewSection() {
       )}
 
       <div id="page4-btn">
-        <a href="/rabbits">Voir tout</a>
-        <ArrowUpRight size={18} strokeWidth={2} />
+        <button
+          type="button"
+          aria-label="Voir plus de lapins"
+          className="lapins-nav-btn lapins-nav-btn--active"
+          onClick={() => scrollByCard(1)}
+          disabled={atEnd}
+        >
+          <ChevronRight size={20} strokeWidth={2} />
+        </button>
       </div>
     </div>
   </section>
