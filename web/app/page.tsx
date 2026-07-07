@@ -24,14 +24,15 @@
 //  dans home-cinematic.css) :
 //    • RabbitsSection — catalogue API complet, filtrable
 //    • ContactSection — formulaire contact
-//    • Footer
+//    • AdoptSection — footer unique du site
 //
-//  AdoptSection (page5, "Commandez") n'est plus rendue séparément — son
-//  contenu (bouton WhatsApp, gros email, "on vous répond vite") a été
-//  repris et fusionné dans le nouveau Footer (voir Footer.tsx), qui sert
-//  maintenant de pied de page unique sur TOUTES les pages du site, pas
-//  seulement la home. Le fichier AdoptSection.tsx reste dans le projet,
-//  juste plus importé.
+//  AdoptSection (ex page5 "Commandez") est maintenant le SEUL composant
+//  footer du site : fusion complète de l'ancienne clôture cinématique
+//  (bouton WhatsApp, gros email, "on vous répond vite") et de l'ancien
+//  Footer.tsx (marque, nav, colonne contact, barre copyright). Affiché
+//  sur TOUTES les pages, pas seulement la home. Footer.tsx redirige
+//  maintenant vers AdoptSection.tsx pour ne rien casser ailleurs dans
+//  le projet.
 //
 //  AboutSection n'est plus rendue séparément (fusionnée dans page2) — le
 //  fichier reste dans le projet, juste plus importé.
@@ -53,7 +54,7 @@ import PricingSection        from '@/components/PricingSection'
 import RabbitsPreviewSection from '@/components/RabbitsPreviewSection'
 import HorizontalCta         from '@/components/HorizontalCta'
 import ContactSection        from '@/components/ContactSection'
-import Footer                from '@/components/Footer'
+import AdoptSection          from '@/components/AdoptSection'
 
 export default function HomePage() {
   return (
@@ -96,7 +97,7 @@ export default function HomePage() {
       </div>
 
       <div className="home-kept-sections">
-        <Footer />
+        <AdoptSection />
       </div>
 
     </main>

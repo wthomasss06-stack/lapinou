@@ -10,11 +10,25 @@ gsap.registerPlugin(useGSAP, SplitText)
 // ("stairs") qui remontent, puis on démonte le loader. Le hero (slider
 // vidéo) gère sa propre apparition — le loader ne fait plus que le
 // masquer le temps du chargement, comme un rideau générique.
+//
+// Ne joue qu'UNE SEULE fois par session (sessionStorage) : revenir sur
+// "/" en navigation interne, ou recharger la home plusieurs fois dans
+// le même onglet, ne rejoue plus l'intro — seul un nouvel onglet/session
+// la remontre.
+const LOADER_SEEN_KEY = 'lapinou_loader_seen'
+
 export default function Loader() {
-  const [done, setDone] = useState(false)
+  const [done, setDone] = useState(() => {
+    if (typeof window === 'undefined') return false
+    try {
+      return sessionStorage.getItem(LOADER_SEEN_KEY) === '1'
+    } catch (_) {
+      return false
+    }
+  })
 
   useGSAP((_context, contextSafe) => {
-    if (!contextSafe) return
+    if (!contextSafe || done) return
     let cancelled = false
 
     const start = contextSafe(() => {
@@ -76,7 +90,10 @@ export default function Loader() {
         }, 'start+=2.7')
 
         tl.call(() => {
-          if (!cancelled) setDone(true)
+          if (!cancelled) {
+            setDone(true)
+            try { sessionStorage.setItem(LOADER_SEEN_KEY, '1') } catch (_) {}
+          }
         }, null, 'start+=3.6')
       }
     })

@@ -100,35 +100,23 @@
   opacity: 0.6;
 }
 
-.home-cinema #page2-heading-2 {
+.home-cinema #page2-heading-wrap {
   position: absolute;
-  top: 46.5%;
+  top: 51%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 19vw;
-  font-family: var(--font-display);
-  font-weight: 600;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 0.28em;
+  width: 90%;
   pointer-events: none;
-  white-space: nowrap;
-  text-transform: uppercase;
-  color: var(--muted);
   will-change: transform;
 }
 
+.home-cinema #page2-heading-2,
 .home-cinema #page2-heading-3 {
-  position: absolute;
-  top: 56.5%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 22vw;
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-style: italic;
-  pointer-events: none;
   white-space: nowrap;
-  text-transform: uppercase;
-  color: var(--lime);
-  will-change: transform;
 }
 
 .home-cinema #page2-small-heading {
@@ -249,6 +237,16 @@
   color: var(--muted);
   opacity: 0.62;
   pointer-events: none;
+}
+
+/* Desktop : le wrapper accordéon mobile est transparent au layout —
+   #skill-Nb garde exactement la même position flex qu'avant, l'image
+   inline reste masquée (l'aperçu desktop passe par #hover-img). */
+.home-cinema .hover-item-content {
+  display: contents;
+}
+.home-cinema .hover-item-image {
+  display: none;
 }
 
 /* ---------------------------------------------------------------
@@ -723,25 +721,37 @@
 }
 
 .home-cinema .pricing-title {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-weight: 600;
-  font-size: clamp(2.2rem, 4.2vw, 4.2rem);
-  color: var(--muted);
   text-align: center;
   max-width: 20ch;
   margin: 0 auto 1.2vw;
 }
 
-.home-cinema .pricing-sub {
+.home-cinema #intro-container-2 {
+  position: relative;
+  max-width: 44ch;
+  margin: 0 auto 6vw;
+}
+
+.home-cinema #behind-intro-2,
+.home-cinema #above-intro-2 {
   font-family: var(--font-body);
   font-style: italic;
   font-size: clamp(1rem, 1.2vw, 1.2rem);
   line-height: 1.5;
-  color: rgba(var(--muted-rgb, 168, 150, 120), 0.6);
   text-align: center;
-  max-width: 44ch;
-  margin: 0 auto 6vw;
+}
+
+.home-cinema #behind-intro-2 {
+  color: rgba(var(--muted-rgb, 168, 150, 120), 0.25);
+}
+
+.home-cinema #above-intro-2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  color: rgba(var(--muted-rgb, 168, 150, 120), 0.6);
+  clip-path: inset(0 0 100% 0);
 }
 
 .home-cinema .pricing-grid {
@@ -891,15 +901,9 @@
     top: 27.5%;
     left: 2.5%;
   }
-  .home-cinema #page2-heading-2 {
-    font-size: 24vw;
-  }
-  .home-cinema #page2-heading-3 {
-    top: 51.5%;
-    font-size: 28vw;
-  }
   .home-cinema #page3 {
     margin-top: -1px;
+    display: none;
   }
   .home-cinema #skills-container {
     top: 78%;
@@ -910,20 +914,62 @@
   .home-cinema #skills-container-4 {
     justify-content: space-around;
     flex-direction: column;
+    position: relative;
+    cursor: pointer;
   }
   .home-cinema #skill-1a { font-size: 6vw; }
   .home-cinema #skill-2a,
   .home-cinema #skill-3a,
   .home-cinema #skill-4a { font-size: 4.6vw; }
+
+  /* ── Accordéon tap-to-open (image + description), inspiré de
+     gemini-code-…html : header toujours visible, .hover-item-content
+     collapsed par défaut (max-height:0), révélé au tap via .is-open. ── */
+  .home-cinema .hover-item::after {
+    content: '+';
+    position: absolute;
+    top: 0;
+    right: 2vw;
+    font-family: var(--font-label);
+    font-size: 6vw;
+    line-height: 1;
+    color: var(--muted);
+    opacity: 0.5;
+    transition: transform 0.35s ease;
+  }
+  .home-cinema .hover-item.is-open::after {
+    transform: rotate(45deg);
+  }
+  .home-cinema .hover-item-content {
+    display: block;
+    width: 100%;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.45s ease-out, opacity 0.3s ease;
+  }
+  .home-cinema .hover-item.is-open .hover-item-content {
+    max-height: 70vw;
+    opacity: 1;
+  }
+  .home-cinema .hover-item-image {
+    display: block;
+    width: 100%;
+    height: 34vw;
+    margin-top: 3vw;
+    border-radius: 8px;
+    background-size: cover;
+    background-position: center;
+  }
   .home-cinema #skill-1b,
   .home-cinema #skill-2b,
   .home-cinema #skill-3b,
   .home-cinema #skill-4b {
     font-size: 3.4vw;
     color: var(--muted);
-    opacity: 0.55;
-    width: 75%;
-    padding-left: 6vw;
+    opacity: 0.7;
+    width: 100%;
+    padding-top: 2.5vw;
   }
   .home-cinema #page3-heading-1 {
     top: 3%;
@@ -952,12 +998,12 @@
   .home-cinema #sec-pricing {
     padding: 10vh 5vw 8vh;
   }
-  .home-cinema .pricing-title {
-    font-size: 8.5vw;
-  }
-  .home-cinema .pricing-sub {
+  .home-cinema #behind-intro-2,
+  .home-cinema #above-intro-2 {
     font-size: 4vw;
-    margin-bottom: 10vw;
+  }
+  .home-cinema #intro-container-2 {
+    margin: 0 auto 10vw;
   }
   .home-cinema .pricing-grid {
     grid-template-columns: 1fr;
@@ -1098,3 +1144,32 @@ html.lp-home-active::-webkit-scrollbar {
 .home-kept-sections div {
   font-family: var(--font-body) !important;
 }
+
+/* ---------------------------------------------------------------
+   AdoptSection — "Commandez", même traitement "gros lettre" que
+   #page2-heading-3 (Garanties), hors scope .home-cinema puisque le
+   footer s'affiche sur toutes les pages, pas seulement la home.
+   .split-heading-1 le fait profiter du même flip 3D scrubé au scroll
+   (lib/useGsapLenis.ts) quand ScrollFX tourne (home uniquement) ;
+   sur les autres pages il reste simplement affiché, déjà stylé.
+
+   RÈGLE PARTAGÉE — .giant-heading est LA typo "gros lettrage" du site :
+   même police, même taille, même couleur, même casse partout où elle
+   est appliquée (Commandez, Nos/Garanties, Un tarif pour chaque besoin,
+   Parlons de Votre Lapin). Volontairement globale (non scopée
+   .home-cinema) puisqu'elle sert aussi bien dans le footer que sur la
+   home. Chaque composant garde sa propre gestion de layout (text-align,
+   max-width, position) à côté de cette classe.
+   --------------------------------------------------------------- */
+
+.giant-heading {
+  font-family: var(--font-display) !important;
+  font-style: italic;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--lime);
+  font-size: clamp(3rem, 9vw, 8rem);
+  line-height: 0.95;
+  margin-bottom: 0.3em;
+}
+

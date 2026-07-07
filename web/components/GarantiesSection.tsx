@@ -1,10 +1,16 @@
 'use client'
+import { useState } from 'react'
 
 // Page 2 — Notre Histoire / Nos Garanties.
 // Le texte "above-intro" est révélé par clip-path scrubé au scroll, les
 // titres "Nos"/"Garanties" par SplitText (chars, 3D flip) et #hover-img par
 // un suivi souris GSAP — toute la logique vit dans lib/useGsapLenis.ts et
 // cible ces éléments par sélecteur, comme dans index.html.
+//
+// Mobile (pas de souris/hover) : chaque item devient un accordéon tap-to-
+// open (voir .hover-item-content / .hover-item-image dans home-cinematic.css)
+// inspiré de gemini-code — image + description se révèlent au tap, le
+// survol desktop (#hover-img qui suit le curseur) est inchangé.
 const GARANTIES = [
   {
     id: 1,
@@ -33,6 +39,8 @@ const GARANTIES = [
 ]
 
 export default function GarantiesSection() {
+  const [openId, setOpenId] = useState<number | null>(null)
+
   return (
     <div id="page2">
       <div id="a-propos" />
@@ -53,8 +61,10 @@ export default function GarantiesSection() {
         <line x1="0" y1="1" x2="1000" y2="1" stroke="#ffffff" strokeWidth={12} strokeLinecap="round" />
       </svg>
 
-      <div id="page2-heading-2" className="split-heading-1">Nos</div>
-      <div id="page2-heading-3" className="split-heading-1">Garanties</div>
+      <div id="page2-heading-wrap">
+        <span id="page2-heading-2" className="giant-heading split-heading-1">Nos</span>{' '}
+        <span id="page2-heading-3" className="giant-heading split-heading-1">Garanties</span>
+      </div>
       <div id="page2-small-heading">Nos engagements :</div>
       <div id="page2-small-heading-2">── Santé · Race · Suivi</div>
 
@@ -63,11 +73,15 @@ export default function GarantiesSection() {
           <div
             key={g.id}
             id={`skills-container-${g.id}`}
-            className="hover-item"
+            className={`hover-item${openId === g.id ? ' is-open' : ''}`}
             data-img={g.img}
+            onClick={() => setOpenId((prev) => (prev === g.id ? null : g.id))}
           >
             <div id={`skill-${g.id}a`}>{g.label}</div>
-            <div id={`skill-${g.id}b`}>{g.desc}</div>
+            <div className="hover-item-content">
+              <div className="hover-item-image" style={{ backgroundImage: g.img }} />
+              <div id={`skill-${g.id}b`}>{g.desc}</div>
+            </div>
           </div>
         ))}
       </div>

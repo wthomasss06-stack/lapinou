@@ -1,39 +1,126 @@
 'use client'
+import { motion } from 'framer-motion'
+import Link from 'next/link'
+import { Facebook } from 'lucide-react'
+import Logo from './Logo'
 
 const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP?.replace(/\D/g, '') || ''
+const WHATSAPP_URL = WHATSAPP
+  ? `https://wa.me/${WHATSAPP}?text=${encodeURIComponent("Bonjour, j'aimerais commander un lapin.")}`
+  : '#'
 
-// Page 5 — clôture cinématique "Commandez". Purement déclarative (aucune
-// animation JS dédiée côté index.html au-delà du scroll normal). Le
-// catalogue complet, le formulaire de contact et le footer utilitaire
-// (liens légaux) restent juste après, inchangés.
+const footerLinks = {
+  'CHEZ FLORENCE': [
+    { label: 'Accueil', href: '/' },
+    { label: 'Nos Lapins', href: '/#lapins' },
+    { label: 'À Propos', href: '/#a-propos' },
+    { label: 'Contact', href: '/#contact' },
+  ],
+  'Informations': [
+    { label: 'Aide', href: '/aide' },
+    { label: 'Conditions', href: '/conditions' },
+    { label: 'Confidentialité', href: '/confidentialite' },
+  ],
+}
+
+const socials = [
+  { icon: <Facebook size={16} />, href: '#', label: 'Facebook' },
+]
+
+// AdoptSection — composant footer unique du site. Fusionne l'ancienne
+// clôture cinématique #page5 (sticker WhatsApp incliné, gros email en
+// mono, ton "on vous répond vite") ET l'ancien Footer.tsx (marque, nav,
+// colonne contact, barre copyright). Affiché sur TOUTES les pages
+// (/aide, /admin, /rabbits/[slug]…) donc pas d'unités vw verrouillées
+// ni de scope .home-cinema. Footer.tsx redirige maintenant ici
+// (export { default } from './AdoptSection') pour ne rien casser
+// ailleurs dans le projet.
 export default function AdoptSection() {
-  const whatsappUrl = WHATSAPP
-    ? `https://wa.me/${WHATSAPP}?text=${encodeURIComponent("Bonjour, j'aimerais commander un lapin.")}`
-    : '#'
-
   return (
-    <div id="page5">
-      <div id="page5-heading-1">Commandez</div>
-      <div id="page5-bottom-heading">wthomasss06@gmail.com</div>
+    <footer className="bg-[var(--dark)] border-t border-brand-border">
+      {/* ── Bloc "Commandez" — sticker WhatsApp + email ────────────── */}
+      <div className="text-center px-6 pt-16 pb-14 border-b border-white/10">
+        <h2 className="giant-heading split-heading-1">Commandez</h2>
+        <p className="font-label text-[10px] sm:text-xs uppercase tracking-[0.2em] text-[var(--lime)] mb-3">
+          Une question sur nos lapins ?
+        </p>
+        <h2 className="font-display italic font-bold text-2xl sm:text-4xl text-white mb-8">
+          Écrivez-nous directement
+        </h2>
 
-      <div id="page5-label-2">
-        <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+        <motion.a
+          href={WHATSAPP_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          initial={{ rotate: -3 }}
+          whileHover={{ rotate: 0, scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="inline-block bg-[var(--muted)] text-[var(--dark)] font-label font-bold text-sm uppercase tracking-[0.1em] px-9 py-4 rounded-lg shadow-lg shadow-black/30"
+        >
+          WhatsApp
+        </motion.a>
+
+        <p className="font-mono text-lg sm:text-2xl text-[var(--muted)] mt-8 break-all sm:break-normal">
+          wthomasss06@gmail.com
+        </p>
       </div>
 
-      <div id="page5-footer">
-        <div id="footer-left">
-          <div id="footer-left-1">Une question sur nos lapins ?</div>
-          <div id="footer-left-2">Écrivez-nous directement</div>
+      {/* ── Colonnes utilitaires ─────────────────────────────────────── */}
+      <div className="max-w-7xl mx-auto px-6 pt-14 pb-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-10 mb-12">
+          {/* Brand column */}
+          <div className="col-span-2 md:col-span-1">
+            <Logo size={72} className="mb-4" />
+            <p className="text-white/40 text-xs leading-relaxed mb-6 max-w-xs">
+              L'élevage qui vous connecte directement aux plus beaux lapins,
+              en toute confiance, partout en Côte d'Ivoire.
+            </p>
+            <div className="flex gap-2">
+              {socials.map(social => (
+                <motion.a
+                  key={social.label}
+                  href={social.href}
+                  aria-label={social.label}
+                  className="w-8 h-8 rounded-lg border border-brand-border flex items-center justify-center text-white/40 hover:text-caramel hover:border-caramel/30 transition-all"
+                  whileHover={{ scale: 1.15, y: -2 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  {social.icon}
+                </motion.a>
+              ))}
+            </div>
+          </div>
+
+          {/* Link columns */}
+          {Object.entries(footerLinks).map(([title, links]) => (
+            <div key={title}>
+              <h4 className="font-display font-bold text-white text-sm mb-4">{title}</h4>
+              <ul className="space-y-2.5">
+                {links.map(link => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="text-white/40 text-xs hover:text-caramel transition-colors duration-300"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
-        <div id="footer-middle">
-          <div id="footer-middle-1">on vous</div>
-          <div id="footer-middle-2">répond vite</div>
-        </div>
-        <div id="footer-right">
-          <div id="footer-right-1">ⓒ tous droits réservés</div>
-          <div id="footer-right-2">CHEZ FLORENCE</div>
+
+        {/* Bottom bar */}
+        <div className="border-t border-brand-border pt-6 flex flex-col md:flex-row justify-between items-center gap-3">
+          <p className="font-label text-[10px] uppercase tracking-[0.15em] text-white/30">
+            © {new Date().getFullYear()} CHEZ FLORENCE — Tous droits réservés
+          </p>
+          <p className="font-label text-[10px] uppercase tracking-[0.15em] text-white/30">
+            On vous répond vite
+          </p>
         </div>
       </div>
-    </div>
+    </footer>
   )
 }

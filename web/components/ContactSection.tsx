@@ -50,8 +50,8 @@ export default function ContactSection() {
           className="text-center mb-16"
         >
           <p className="text-caramel font-mono text-xs tracking-widest uppercase mb-3">Nous Contacter</p>
-          <h2 className="font-display text-4xl sm:text-5xl font-extrabold text-white mb-4">
-            Parlons de <span className="text-gradient">Votre Lapin</span>
+          <h2 className="giant-heading split-heading-1 max-w-3xl mx-auto mb-4">
+            Parlons de Votre Lapin
           </h2>
           <p className="text-white/40 max-w-lg mx-auto text-sm leading-relaxed">
             Une question sur une race, un prix, une disponibilité ? Écrivez-nous.

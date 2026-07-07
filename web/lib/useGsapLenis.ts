@@ -61,14 +61,31 @@ export default function useGsapLenis() {
       },
     })
 
-    // ── Reveal "above-intro-1" (page3) ───────────────────────────
-    gsap.to('#above-intro-1', {
+    // ── Reveal "above-intro-1" (page3) — desktop uniquement : #page3 est
+    // display:none sur mobile (home-cinematic.css), donc on n'attache même
+    // pas ces ScrollTrigger là où il n'y a rien à animer. ────────────────
+    const page3MM = gsap.matchMedia()
+    page3MM.add('(min-width: 768px)', () => {
+      gsap.to('#above-intro-1', {
+        clipPath: 'inset(0 0 0% 0)',
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#intro-container-1',
+          start: 'top 80%',
+          end: 'top 30%',
+          scrub: 2,
+        },
+      })
+    })
+
+    // ── Reveal "above-intro-2" (pricing) ─────────────────────────
+    gsap.to('#above-intro-2', {
       clipPath: 'inset(0 0 0% 0)',
       ease: 'none',
       scrollTrigger: {
-        trigger: '#intro-container-1',
-        start: 'top 80%',
-        end: 'top 30%',
+        trigger: '#intro-container-2',
+        start: 'top 85%',
+        end: 'top 45%',
         scrub: 2,
       },
     })
@@ -91,43 +108,47 @@ export default function useGsapLenis() {
       })
     }
 
-    // ── Parallax croisé page3 (les 2 plates latérales) ───────────
-    gsap.to('#page3-img-2', {
-      xPercent: 120,
-      duration: 1,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: '#page3-img-2',
-        scroller: 'body',
-        start: 'top 100%',
-        end: 'top -40%',
-        scrub: 2.5,
-      },
-    })
-    gsap.to('#page3-img-3', {
-      xPercent: -120,
-      duration: 1,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: '#page3-img-3',
-        scroller: 'body',
-        start: 'top 120%',
-        end: 'top -40%',
-        scrub: 2.5,
-      },
+    // ── Parallax croisé page3 (les 2 plates latérales) — desktop only ──
+    page3MM.add('(min-width: 768px)', () => {
+      gsap.to('#page3-img-2', {
+        xPercent: 120,
+        duration: 1,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#page3-img-2',
+          scroller: 'body',
+          start: 'top 100%',
+          end: 'top -40%',
+          scrub: 2.5,
+        },
+      })
+      gsap.to('#page3-img-3', {
+        xPercent: -120,
+        duration: 1,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#page3-img-3',
+          scroller: 'body',
+          start: 'top 120%',
+          end: 'top -40%',
+          scrub: 2.5,
+        },
+      })
     })
 
-    // ── Fond page3 : dark → muted (clair) ──────────────────────────
-    gsap.to('#page3', {
-      backgroundColor: '#A89678',
-      ease: 'power2.out',
-      scrollTrigger: {
-        trigger: '#page3',
-        scroller: 'body',
-        start: 'top -130%',
-        end: 'bottom -30%',
-        scrub: 1,
-      },
+    // ── Fond page3 : dark → muted (clair) — desktop only ───────────
+    page3MM.add('(min-width: 768px)', () => {
+      gsap.to('#page3', {
+        backgroundColor: '#A89678',
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: '#page3',
+          scroller: 'body',
+          start: 'top -130%',
+          end: 'bottom -30%',
+          scrub: 1,
+        },
+      })
     })
 
     // ── Effet pinné desktop uniquement ────────────────────────────
@@ -236,30 +257,37 @@ export default function useGsapLenis() {
         })
       }
 
-      const splitChars1 = new SplitText('.split-heading-1', { type: 'chars' })
+      // Chaque titre .split-heading-1 (Nos, Garanties, Un tarif pour
+      // chaque besoin, Commandez) a son propre SplitText + ScrollTrigger,
+      // pour se révéler quand LUI entre dans le viewport — pas seulement
+      // quand le premier du lot (Nos) y entre.
+      const splitHeadings = gsap.utils.toArray<HTMLElement>('.split-heading-1')
+      splitHeadings.forEach((heading) => {
+        const split = SplitText.create(heading, { type: 'chars' })
 
-      gsap.set(splitChars1.chars, {
-        yPercent: 60,
-        rotateX: -35,
-        skewX: -7,
-        autoAlpha: 0,
-      })
+        gsap.set(split.chars, {
+          yPercent: 60,
+          rotateX: -35,
+          skewX: -7,
+          autoAlpha: 0,
+        })
 
-      gsap.to(splitChars1.chars, {
-        yPercent: 0,
-        rotateX: 0,
-        skewX: 0,
-        autoAlpha: 1,
-        duration: 1.4,
-        ease: 'power4.out',
-        stagger: { amount: 0.55, from: 'start' },
-        scrollTrigger: {
-          trigger: '.split-heading-1',
-          start: 'top 90%',
-          end: 'top 0%',
-          scrub: 3.8,
-          once: true,
-        },
+        gsap.to(split.chars, {
+          yPercent: 0,
+          rotateX: 0,
+          skewX: 0,
+          autoAlpha: 1,
+          duration: 1.4,
+          ease: 'power4.out',
+          stagger: { amount: 0.55, from: 'start' },
+          scrollTrigger: {
+            trigger: heading,
+            start: 'top 90%',
+            end: 'top 0%',
+            scrub: 3.8,
+            once: true,
+          },
+        })
       })
     })
 

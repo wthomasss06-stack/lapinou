@@ -35,10 +35,15 @@ export default function PricingSection() {
   return (
     <section id="sec-pricing">
       <div className="eyebrow" data-no="No. 05">(Tarifs)</div>
-      <h2 className="pricing-title">Un tarif pour chaque besoin</h2>
-      <p className="pricing-sub">
-        Le prix dépend du poids et de la quantité — à l&apos;unité, en duo, ou en gros pour les professionnels.
-      </p>
+      <h2 className="pricing-title giant-heading split-heading-1">Un tarif pour chaque besoin</h2>
+      <div id="intro-container-2">
+        <p id="behind-intro-2">
+          Le prix dépend du poids et de la quantité — à l&apos;unité, en duo, ou en gros pour les professionnels.
+        </p>
+        <p id="above-intro-2">
+          Le prix dépend du poids et de la quantité — à l&apos;unité, en duo, ou en gros pour les professionnels.
+        </p>
+      </div>
 
       <div className="pricing-grid">
         {PLANS.map((plan) => (
@@ -49,7 +54,7 @@ export default function PricingSection() {
               <span>FCFA</span>
             </div>
             <div className="price-card-desc">{plan.desc}</div>
-            <a href="#page5" className="price-card-btn">Réserver</a>
+            <a href="#contact" className="price-card-btn">Réserver</a>
             <div className="price-card-divider" />
             <ul className="price-card-features">
               {plan.features.map((f) => (

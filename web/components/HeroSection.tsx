@@ -130,8 +130,8 @@ export default function HeroSection() {
       )}
 
       {/* Contenu héro */}
-      <div className="absolute inset-0 z-10 flex items-end px-8 sm:px-12 lg:px-[2.5vw] pb-[14vh]">
-        <div>
+      <div className="absolute inset-0 z-10 flex items-end justify-center px-8 sm:px-12 lg:px-[2.5vw] pb-[14vh] text-center">
+        <div className="max-w-2xl">
           <p key={`e-${cur}`} className="text-[0.68rem] tracking-[0.35em] uppercase mb-6"
             style={{ fontFamily: 'var(--font-label)', color: 'var(--rust)' }}>
             {s.eyebrow}
@@ -140,11 +140,11 @@ export default function HeroSection() {
             style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(48px,9vw,120px)' }}>
             {s.h1}<br /><em className="italic text-white/80">{s.h2}</em>
           </h1>
-          <p key={`s-${cur}`} className="mt-6 text-white/45 font-light leading-relaxed max-w-sm"
+          <p key={`s-${cur}`} className="mt-6 text-white/45 font-light leading-relaxed max-w-sm mx-auto"
             style={{ fontSize: 'clamp(13px,1vw,15px)' }}>
             {s.sub}
           </p>
-          <div className="flex flex-wrap gap-3 mt-8">
+          <div className="flex flex-wrap justify-center gap-3 mt-8">
             <Link href="/rabbits" className="btn-neon px-6 py-3 rounded-xl text-sm font-semibold">
               Voir le catalogue
             </Link>
