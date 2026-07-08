@@ -170,11 +170,7 @@ npm run dev
 * **`npm run db:seed:prod`** : Seeder les lapins de test sur la base de données Neon.
 * **`npm run db:studio:prod`** : Lancer Prisma Studio connecté à votre base Neon.
 
----
 
-.
-
----
 
 ## Logique métier
 
