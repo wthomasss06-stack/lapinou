@@ -172,8 +172,7 @@ npm run dev
 
 ---
 
-## Accéder à l'admin
-Rendez-vous sur `http://localhost:3003/admin` et entrez le mot de passe défini dans `ADMIN_PASSWORD` (par défaut : `lapinou-admin-2026`).
+.
 
 ---
 
@@ -202,29 +201,6 @@ unités déjà réservées-vendues) ainsi qu'un classement des races les plus
 vendues en unités, via `GET /api/rabbits/admin/stock-summary`.
 
 ---
-
-## API Endpoints
-
-```
-GET  /api/rabbits                       liste publique (filtrable par ?breed=, ?status=)
-GET  /api/rabbits/:slug                 détail (inclut le stock restant)
-POST /api/rabbits/:slug/reserve         réservation (public) — body: { quantity, firstName, ... }
-
-POST  /api/admin/login                  vérifie ADMIN_PASSWORD, renvoie un token
-POST  /api/rabbits                      créer une race       (admin — Authorization: Bearer <password>)
-PATCH /api/rabbits/:id                  modifier une race    (admin)
-DELETE /api/rabbits/:id                 supprimer une race   (admin)
-GET   /api/rabbits/admin/stock-summary  suivi du stock global et par race (admin)
-
-GET   /api/admin/reservations           liste                (admin)
-PATCH /api/admin/reservations/:id/confirm
-PATCH /api/admin/reservations/:id/cancel   restitue le stock réservé à la fiche
-PATCH /api/admin/reservations/:id/sold
-
-POST /api/contact                       message depuis la section Contact (public)
-
-GET  /health                            health check (toujours public)
-```
 
 ---
 
