@@ -1,3 +1,4 @@
+import { MessageCircle } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 
@@ -5,6 +6,8 @@ export const metadata = {
   title: 'Confidentialité | CHEZ FLORENCE',
   description: 'Politique de confidentialité du site CHEZ FLORENCE — données collectées, géolocalisation, cookies.',
 }
+
+const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP?.replace(/\D/g, '') || ''
 
 const sections = [
   {
@@ -38,25 +41,53 @@ const sections = [
 ]
 
 export default function ConfidentialitePage() {
+  const whatsappUrl = WHATSAPP
+    ? `https://wa.me/${WHATSAPP}?text=${encodeURIComponent("Bonjour, j'ai une question sur la politique de confidentialité.")}`
+    : null
+
   return (
     <main>
       <Navbar />
       <div className="min-h-screen pt-28 pb-16 px-6">
         <div className="max-w-2xl mx-auto">
-          <p className="text-caramel font-mono text-xs tracking-widest uppercase mb-3">Informations légales</p>
-          <h1 className="font-display text-4xl font-extrabold text-white mb-2">
-            Politique de confidentialité
-          </h1>
-          <p className="text-white/35 text-xs mb-10">Dernière mise à jour : juin 2026</p>
+          <div className="text-center mb-12 animate-fade-in-up">
+            <p className="text-caramel font-mono text-xs tracking-widest uppercase mb-3">Informations légales</p>
+            <h1 className="font-display text-4xl sm:text-5xl font-extrabold text-white mb-4 break-words">
+              Politique de <span className="text-gradient">confidentialité</span>
+            </h1>
+            <p className="text-white/40 text-xs">Dernière mise à jour : juin 2026</p>
+          </div>
 
-          <div className="space-y-8">
-            {sections.map((s) => (
-              <section key={s.title}>
+          <div className="space-y-4">
+            {sections.map((s, i) => (
+              <section
+                key={s.title}
+                className="glass rounded-2xl p-6 animate-fade-in-up"
+                style={{ animationDelay: `${Math.min(i * 0.05, 0.4)}s` }}
+              >
                 <h2 className="font-display font-bold text-white text-base mb-2">{s.title}</h2>
                 <p className="text-white/50 text-sm leading-relaxed">{s.body}</p>
               </section>
             ))}
           </div>
+
+          {whatsappUrl && (
+            <div
+              className="mt-10 glass rounded-2xl p-6 text-center animate-fade-in-up"
+              style={{ animationDelay: '0.45s' }}
+            >
+              <p className="text-white/60 text-sm mb-4">Une question sur vos données personnelles ? Écrivez-nous directement.</p>
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-neon inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold"
+              >
+                <MessageCircle size={16} />
+                Écrire sur WhatsApp
+              </a>
+            </div>
+          )}
         </div>
       </div>
       <Footer />

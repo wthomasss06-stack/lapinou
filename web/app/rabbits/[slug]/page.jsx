@@ -83,16 +83,19 @@ export default async function RabbitDetailPage({ params }) {
           <span className="text-white/65 font-semibold truncate max-w-[160px]">{rabbit.name}</span>
         </div>
 
-        {/* Hero grid — galerie / infos+CTA */}
-        <div className="grid lg:grid-cols-2 gap-10 items-start">
+        {/* Hero grid — galerie / infos+CTA. Desktop : split-pane, la
+            galerie reste fixe pendant que la colonne infos défile toute
+            seule dans son propre conteneur (comme Nexura). Mobile :
+            inchangé, les deux colonnes s'empilent et défilent avec la page. */}
+        <div className="grid lg:grid-cols-2 gap-10 items-start lg:h-[calc(100vh-7rem)]">
 
-          {/* Colonne gauche — Galerie */}
-          <div className="flex flex-col gap-2">
+          {/* Colonne gauche — Galerie (fixe sur desktop) */}
+          <div className="flex flex-col gap-2 lg:sticky lg:top-24 lg:h-[calc(100vh-7rem)]">
             <RabbitGallery photos={photos} title={rabbit.name} unavailable={unavailable} stock={rabbit.stock} />
           </div>
 
-          {/* Colonne droite — Infos + CTA (sticky desktop) */}
-          <div className="lg:sticky lg:top-24 flex flex-col">
+          {/* Colonne droite — Infos + CTA (défile seule sur desktop) */}
+          <div className="flex flex-col lg:h-[calc(100vh-7rem)] lg:overflow-y-auto lg:pr-2">
 
             {/* Titre */}
             <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-white leading-tight mb-2">

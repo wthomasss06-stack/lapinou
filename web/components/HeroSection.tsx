@@ -98,11 +98,14 @@ export default function HeroSection() {
   const s = SLIDES[cur]
 
   return (
-    <section className="relative h-screen overflow-hidden bg-black" style={{ minHeight: 560 }}>
-
-      {/* Barres cinéma haut/bas */}
-      <div className="absolute inset-x-0 top-0 h-[5.5vh] bg-black z-20 pointer-events-none" />
-      <div className="absolute inset-x-0 bottom-0 h-[5.5vh] bg-black z-20 pointer-events-none" />
+    <section className="relative h-screen overflow-hidden bg-black" style={{ minHeight: 560, height: '100svh' }}>
+      {/* height:'100svh' en inline corrige le classique "bande noire en bas
+          sur mobile" causé par 100vh (h-screen) qui ne tient pas compte de
+          la barre d'adresse Chrome/Safari visible au chargement — la vidéo
+          en object-cover derrière ne peut pas combler cet espace en trop
+          puisqu'il est en dehors de la section elle-même. Si le navigateur
+          ne connaît pas svh, cette valeur est invalide et ignorée : la
+          className h-screen (100vh) reste le fallback. */}
 
       {/* Toutes les slides empilées */}
       {SLIDES.map((sl, i) => (

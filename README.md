@@ -97,11 +97,11 @@ npm run db:setup
 Puis lancer :
 
 ```bash
-# API
+cd api
 npm run dev
 
 # Frontend
-cd ../web
+cd web
 npm run dev
 ```
 

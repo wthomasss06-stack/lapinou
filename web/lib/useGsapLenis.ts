@@ -52,7 +52,7 @@ export default function useGsapLenis() {
 
     // ── Reveal "above-intro" (page2) ─────────────────────────────
     gsap.to('#above-intro', {
-      clipPath: 'inset(0 0 0% 0)',
+      clipPath: 'inset(0 0% 0 0)',
       ease: 'none',
       scrollTrigger: {
         trigger: '#intro-container',
@@ -68,7 +68,7 @@ export default function useGsapLenis() {
     const page3MM = gsap.matchMedia()
     page3MM.add('(min-width: 768px)', () => {
       gsap.to('#above-intro-1', {
-        clipPath: 'inset(0 0 0% 0)',
+        clipPath: 'inset(0 0% 0 0)',
         ease: 'none',
         scrollTrigger: {
           trigger: '#intro-container-1',
@@ -81,7 +81,7 @@ export default function useGsapLenis() {
 
     // ── Reveal "above-intro-2" (pricing) ─────────────────────────
     gsap.to('#above-intro-2', {
-      clipPath: 'inset(0 0 0% 0)',
+      clipPath: 'inset(0 0% 0 0)',
       ease: 'none',
       scrollTrigger: {
         trigger: '#intro-container-2',
@@ -93,7 +93,7 @@ export default function useGsapLenis() {
 
     // ── Reveal "above-intro-3" (contact) ──────────────────────────
     gsap.to('#above-intro-3', {
-      clipPath: 'inset(0 0 0% 0)',
+      clipPath: 'inset(0 0% 0 0)',
       ease: 'none',
       scrollTrigger: {
         trigger: '#intro-container-3',
@@ -179,6 +179,13 @@ export default function useGsapLenis() {
           start: 'center center',
           end: '+=1000',
           scrub: 1,
+          // Ce pin ajoute ~1000px de spacer : tout ScrollTrigger positionné
+          // plus bas sur la page (Tarifs, Races, Contact…) doit se
+          // recalculer APRÈS que ce spacer soit posé, sinon son start/end
+          // est calculé sur une page trop courte. refreshPriority bas =
+          // rafraîchi en premier (voir le pin Horizontal plus bas, qui
+          // doit passer juste après).
+          refreshPriority: -2,
         },
       })
     })
@@ -251,6 +258,16 @@ export default function useGsapLenis() {
             pin: true,
             end: '+=5000px',
             scrub: true,
+            // Ce pin (5000px de spacer !) n'est créé qu'ici, après
+            // document.fonts.ready — donc APRÈS le premier calcul de
+            // #above-intro-3 (Contact, plus bas dans le fichier mais
+            // plus bas sur la page aussi). Sans refreshPriority, le
+            // ScrollTrigger.refresh() qui suit (ligne ~318) peut recalculer
+            // Contact avant que ce spacer de 5000px soit posé → son
+            // start/end tombe sur une page bien trop courte et le reveal
+            // ne se déclenche jamais dans la fenêtre visible. -1 = juste
+            // après le pin Iris (-2), mais avant tout le reste (défaut 0).
+            refreshPriority: -1,
           },
         })
 
@@ -307,14 +324,22 @@ export default function useGsapLenis() {
     document.fonts.ready.then(() => {
       if (!cancelled) {
         runFontDependentFx()
-        // #above-intro / -1 / -2 sont configurés plus haut, avant que
-        // la police body (Newsreader) ait fini de charger — leur texte
+        // #above-intro / -1 / -2 / -3 sont tous configurés plus haut, avant
+        // que la police body (Newsreader) ait fini de charger — leur texte
         // change de hauteur au chargement de la police, ce qui décale
         // la zone de déclenchement du reveal. Sur desktop l'écart passe
         // souvent inaperçu ; sur mobile (viewport plus petit, wrapping
         // différent) le trigger se retrouve hors-zone et le reveal ne
         // se voit plus du tout. Un refresh une fois tout stabilisé
         // recalcule tous les ScrollTrigger sur le layout final.
+        //
+        // Cas particulier de #above-intro-3 (Contact) : runFontDependentFx()
+        // ci-dessus vient TOUT JUSTE de créer le pin du bandeau Horizontal
+        // (5000px de spacer). Contact est plus bas sur la page que ce pin,
+        // donc son start/end doit être recalculé après que ce spacer soit
+        // posé — d'où refreshPriority sur les deux pins (Iris et Horizontal)
+        // pour garantir qu'ils se rafraîchissent avant Contact (et avant
+        // tout le reste, par défaut à 0) dans le refresh ci-dessous.
         requestAnimationFrame(() => ScrollTrigger.refresh())
       }
     })
