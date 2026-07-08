@@ -3,28 +3,29 @@ import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { MessageCircle } from 'lucide-react'
 
-// ── Seuls 4 webm disponibles dans /IMAGES :
-//    Snapchat-1268559920.webm   3.1 MB
-//    Snapchat-1680052335.webm   3.6 MB
-//    Snapchat-2076662897.webm   4.9 MB
-//    Snapchat-888968271.webm    2.0 MB  ← réservé pour BlobSection
+// ── /IMAGES a été réexporté (nouveaux noms _00X.webm) — mis à jour pour
+//    matcher le dossier actuel. Snapchat-2076662897 et Snapchat-1268559920
+//    n'existent plus sous ces noms : réassignés à 2 clips actuellement
+//    libres (Snapchat-1344115952_001 / Snapchat-1448875183_001). Dis-moi
+//    si tu veux des clips précis à la place, c'est un simple échange de
+//    nom de fichier.
 const SLIDES = [
   {
-    src: '/IMAGES/Snapchat-1680052335.webm',
+    src: '/IMAGES/Snapchat-1680052335_001.webm',
     eyebrow: "Abidjan · Côte d'Ivoire — Élevage artisanal",
     h1: 'Élevage',
     h2: 'Artisanal',
     sub: 'Des lapins de race élevés avec soin, disponibles pour particuliers, restaurateurs & éleveurs PME.',
   },
   {
-    src: '/IMAGES/Snapchat-2076662897.webm',
+    src: '/IMAGES/Snapchat-1344115952_001.webm',
     eyebrow: 'Restaurateurs · Traiteurs · Gastronomie',
     h1: 'Pour votre',
     h2: 'Table',
     sub: 'Approvisionnement régulier, qualité bouchère garantie. Livraison sur Abidjan et ses environs.',
   },
   {
-    src: '/IMAGES/Snapchat-1268559920.webm',
+    src: '/IMAGES/Snapchat-1448875183_001.webm',
     eyebrow: 'Réservation en ligne · Confirmation 24h',
     h1: 'Réservez',
     h2: 'En ligne',

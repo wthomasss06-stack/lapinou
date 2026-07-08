@@ -96,7 +96,22 @@ async function setStatus(id, status) {
 }
 
 // ─── Suppression (admin) ──────────────────────────────────────────────────────
+// Un lapin réservé ne peut pas être supprimé (contrainte RESTRICT sur
+// Reservation.rabbitId) — Postgres remonte ça en erreur brute (pas un code
+// Prisma "connu", donc pas interceptable proprement dans error.middleware).
+// On vérifie donc en amont et on renvoie un message clair : l'admin doit
+// changer le statut (setStatus) plutôt que supprimer une fiche avec un
+// historique de réservations.
 async function remove(id) {
+  const reservationCount = await prisma.reservation.count({ where: { rabbitId: id } })
+  if (reservationCount > 0) {
+    const err = new Error(
+      `Impossible de supprimer ce lapin : ${reservationCount} réservation(s) y sont liée(s). ` +
+      `Marquez-le plutôt comme "Vendu" ou indisponible.`
+    )
+    err.status = 409
+    throw err
+  }
   return prisma.rabbit.delete({ where: { id } })
 }
 

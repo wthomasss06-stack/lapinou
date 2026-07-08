@@ -53,9 +53,14 @@ export default function ContactSection() {
           <h2 className="giant-heading split-heading-1 max-w-3xl mx-auto mb-4">
             Parlons de Votre Lapin
           </h2>
-          <p className="text-white/40 max-w-lg mx-auto text-sm leading-relaxed">
-            Une question sur une race, un prix, une disponibilité ? Écrivez-nous.
-          </p>
+          <div id="intro-container-3">
+            <p id="behind-intro-3">
+              Une question sur une race, un prix, une disponibilité ? Écrivez-nous.
+            </p>
+            <p id="above-intro-3">
+              Une question sur une race, un prix, une disponibilité ? Écrivez-nous.
+            </p>
+          </div>
         </motion.div>
 
         <div className="grid lg:grid-cols-5 gap-10">

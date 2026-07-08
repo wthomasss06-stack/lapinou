@@ -6,6 +6,7 @@ import { SplitText } from 'gsap/SplitText'
 import Lenis from 'lenis'
 
 gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText)
+ScrollTrigger.config({ ignoreMobileResize: true })
 
 /**
  * Orchestrateur de toute l'animation scroll de la home cinématique
@@ -86,6 +87,18 @@ export default function useGsapLenis() {
         trigger: '#intro-container-2',
         start: 'top 85%',
         end: 'top 45%',
+        scrub: 2,
+      },
+    })
+
+    // ── Reveal "above-intro-3" (contact) ──────────────────────────
+    gsap.to('#above-intro-3', {
+      clipPath: 'inset(0 0 0% 0)',
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '#intro-container-3',
+        start: 'top 90%',
+        end: 'top 55%',
         scrub: 2,
       },
     })
@@ -292,8 +305,23 @@ export default function useGsapLenis() {
     })
 
     document.fonts.ready.then(() => {
-      if (!cancelled) runFontDependentFx()
+      if (!cancelled) {
+        runFontDependentFx()
+        // #above-intro / -1 / -2 sont configurés plus haut, avant que
+        // la police body (Newsreader) ait fini de charger — leur texte
+        // change de hauteur au chargement de la police, ce qui décale
+        // la zone de déclenchement du reveal. Sur desktop l'écart passe
+        // souvent inaperçu ; sur mobile (viewport plus petit, wrapping
+        // différent) le trigger se retrouve hors-zone et le reveal ne
+        // se voit plus du tout. Un refresh une fois tout stabilisé
+        // recalcule tous les ScrollTrigger sur le layout final.
+        requestAnimationFrame(() => ScrollTrigger.refresh())
+      }
     })
+
+    const onWindowLoad = () => ScrollTrigger.refresh()
+    window.addEventListener('load', onWindowLoad)
+    cleanupFns.push(() => window.removeEventListener('load', onWindowLoad))
 
     return () => {
       cancelled = true

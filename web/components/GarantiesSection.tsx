@@ -16,25 +16,25 @@ const GARANTIES = [
     id: 1,
     label: '01. Santé Vérifiée',
     desc: "Chaque lapin est examiné avant la vente : poids, pelage et comportement contrôlés avec soin.",
-    img: "url('/IMAGES/Snapchat-1244423645~1.webp')",
+    img: "url('/IMAGES/Snapchat-1244423645.webp')",
   },
   {
     id: 2,
     label: '02. Pesée & Classement',
     desc: 'Chaque lapin est pesé et classé avec précision — du format simple au lot pour les restaurateurs.',
-    img: "url('/IMAGES/Snapchat-1244900246~1.webp')",
+    img: "url('/IMAGES/Snapchat-1244900246.webp')",
   },
   {
     id: 3,
     label: '03. Suivi Après-Vente',
     desc: "Conseils de conservation et d'élevage disponibles après chaque achat.",
-    img: "url('/IMAGES/Snapchat-1671304199~1.webp')",
+    img: "url('/IMAGES/Snapchat-1671304199.webp')",
   },
   {
     id: 4,
     label: '04. Remise en Main Propre',
     desc: 'Retrait sur place ou livraison encadrée, selon votre disponibilité et votre zone.',
-    img: "url('/IMAGES/Snapchat-468138222~1.webp')",
+    img: "url('/IMAGES/Snapchat-468138222.webp')",
   },
 ]
 
@@ -79,8 +79,8 @@ export default function GarantiesSection() {
           >
             <div id={`skill-${g.id}a`}>{g.label}</div>
             <div className="hover-item-content">
-              <div className="hover-item-image" style={{ backgroundImage: g.img }} />
               <div id={`skill-${g.id}b`}>{g.desc}</div>
+              <div className="hover-item-image" style={{ backgroundImage: g.img }} />
             </div>
           </div>
         ))}

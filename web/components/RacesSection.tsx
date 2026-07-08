@@ -21,19 +21,19 @@ export default function RacesSection() {
 
       <div id="page3-img">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/IMAGES/Snapchat-533353503~1.webp" loading="lazy" alt="Lapin d'élevage" />
+        <img src="/IMAGES/Snapchat-533353503.webp" loading="lazy" alt="Lapin d'élevage" />
         <span className="plate-mark">Plate II</span>
       </div>
 
       <div id="page3-img-2">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/IMAGES/Snapchat-73962748~1.webp" loading="lazy" alt="Lapin d'élevage" />
+        <img src="/IMAGES/Snapchat-73962748.webp" loading="lazy" alt="Lapin d'élevage" />
         <span className="plate-mark">Plate III</span>
       </div>
 
       <div id="page3-img-3">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/IMAGES/Snapchat-763078288~1.webp" loading="lazy" alt="Lapin d'élevage" />
+        <img src="/IMAGES/Snapchat-763078288.webp" loading="lazy" alt="Lapin d'élevage" />
         <span className="plate-mark">Plate IV</span>
       </div>
     </div>

@@ -6,7 +6,7 @@ const CARDS = [
     label: '01 — Particuliers',
     title: 'Pour votre\nCuisine',
     desc: 'Une viande saine et savoureuse pour votre famille. Chaque lapin est élevé avec soin, suivi vétérinairement, prêt pour votre table.',
-    img: '/IMAGES/Snapchat-73962748~1.webp',
+    img: '/IMAGES/Snapchat-73962748.webp',
   },
   {
     label: '02 — Restaurateurs',

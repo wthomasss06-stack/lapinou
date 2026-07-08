@@ -19,13 +19,35 @@ export default function ReserveButton({ slug, rabbitName, rabbitPrice, breed, st
   const [state, setState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState('')
   const [quantity, setQuantity] = useState(1)
+  const [fullName, setFullName] = useState('')
+  const [whatsapp, setWhatsapp] = useState('+225 ')
 
   const maxQty = Math.max(1, Math.min(stock ?? 1, 50))
 
   function decrement() { setQuantity(q => Math.max(1, q - 1)) }
   function increment() { setQuantity(q => Math.min(maxQty, q + 1)) }
 
+  // Empêche d'effacer le "+225 " déjà posé — le client ne tape que son numéro local.
+  function handleWhatsappChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const val = e.target.value
+    setWhatsapp(val.startsWith('+225') ? val : '+225 ')
+  }
+
+  const digitsOnly = whatsapp.replace(/\D/g, '')
+  const isFormValid = fullName.trim().length >= 2 && digitsOnly.length >= 12 // 225 + 8-10 chiffres locaux
+
+  function splitName(name: string) {
+    const parts = name.trim().split(/\s+/)
+    return { firstName: parts[0] || name.trim(), lastName: parts.slice(1).join(' ') || parts[0] || '—' }
+  }
+
   async function handleReserve() {
+    if (!isFormValid) {
+      setErrorMsg('Merci de renseigner ton nom complet et ton numéro WhatsApp.')
+      setState('error')
+      return
+    }
+
     setState('loading')
     setErrorMsg('')
 
@@ -45,14 +67,17 @@ export default function ReserveButton({ slug, rabbitName, rabbitPrice, breed, st
       } catch (_) {}
     }
 
+    const { firstName, lastName } = splitName(fullName)
+    const cleanPhone = `+${digitsOnly}`
+
     try {
       // 1. Appeler l'API de réservation (crée la résa + décompte le stock + envoie le mail via Resend)
       await rabbitsApi.reserve(slug, {
         quantity,
-        firstName: 'Visiteur',
-        lastName: 'CHEZ FLORENCE',
-        email: 'visiteur@chezflorence.ci',
-        phone: '22507000000',
+        firstName,
+        lastName,
+        email: 'visiteur@chezflorence.ci', // pas collecté côté client — la vendeuse recontacte par WhatsApp/tel
+        phone: cleanPhone,
         message: `Réservation instantanée de ${quantity} lapin(s) ${rabbitName} (${breed}) via le bouton Réserver.`,
         // On n'envoie lat/lng QUE si la géoloc a bien été récupérée.
         // Envoyer null explicitement dans le JSON déclencherait une erreur de validation
@@ -60,11 +85,11 @@ export default function ReserveButton({ slug, rabbitName, rabbitPrice, breed, st
         ...(latitude !== null && longitude !== null ? { latitude, longitude } : {}),
       })
 
-      // 2. Ouvrir WhatsApp avec le message intelligent
+      // 2. Ouvrir WhatsApp avec le message intelligent (inclut le nom + numéro du client)
       if (typeof window !== 'undefined') {
         const waNum = WHATSAPP.replace(/\D/g, '')
         const totalPrice = rabbitPrice * quantity
-        const waText = `Bonjour ! Je souhaite réserver ${quantity} lapin${quantity > 1 ? 's' : ''} *${rabbitName}* (${breed}) à ${formatPrice(rabbitPrice)}/unité (total ${formatPrice(totalPrice)}) sur votre site CHEZ FLORENCE 🐇\n\n` +
+        const waText = `Bonjour ! Je m'appelle ${fullName.trim()} (${cleanPhone}). Je souhaite réserver ${quantity} lapin${quantity > 1 ? 's' : ''} *${rabbitName}* (${breed}) à ${formatPrice(rabbitPrice)}/unité (total ${formatPrice(totalPrice)}) sur votre site CHEZ FLORENCE 🐇\n\n` +
           `Pouvez-vous me confirmer la disponibilité et les modalités de livraison ?`
         const waUrl = `https://wa.me/${waNum}?text=${encodeURIComponent(waText)}`
         window.open(waUrl, '_blank', 'noopener,noreferrer')
@@ -139,9 +164,31 @@ export default function ReserveButton({ slug, rabbitName, rabbitPrice, breed, st
         <p className="text-[10px] text-white/30 mb-2 text-right">Stock max atteint ({stock})</p>
       )}
 
+      {/* Identité — nécessaire pour la notification vendeur + le message WhatsApp */}
+      <div className="space-y-2 mb-2">
+        <input
+          type="text"
+          value={fullName}
+          onChange={(e) => setFullName(e.target.value)}
+          placeholder="Nom complet"
+          disabled={state === 'loading'}
+          className="w-full bg-brand-darker/60 border border-brand-border/60 rounded-xl px-3 py-2.5
+                     text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-caramel/50 transition-colors"
+        />
+        <input
+          type="tel"
+          value={whatsapp}
+          onChange={handleWhatsappChange}
+          placeholder="+225 07 00 00 00 00"
+          disabled={state === 'loading'}
+          className="w-full bg-brand-darker/60 border border-brand-border/60 rounded-xl px-3 py-2.5
+                     text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-caramel/50 transition-colors"
+        />
+      </div>
+
       <button
         onClick={handleReserve}
-        disabled={state === 'loading'}
+        disabled={state === 'loading' || !isFormValid}
         className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl
                    bg-[var(--green)] hover:brightness-110 active:scale-95
                    text-white font-bold text-sm transition-all duration-200

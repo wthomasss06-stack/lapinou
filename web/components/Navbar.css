@@ -102,7 +102,7 @@ nav.cf-card-nav {
 }
 
 .cf-card-brand { display: flex; flex-direction: column; gap: 14px; }
-.cf-card-logo-link { display: flex; align-items: center; width: 100%; line-height: 0; transition: transform 0.25s ease; }
+.cf-card-logo-link { display: flex; align-items: center; justify-content: center; width: 100%; line-height: 0; transition: transform 0.25s ease; }
 .cf-card-logo-link:hover { transform: scale(1.05); }
 .cf-card-slogan {
   font-family: var(--font-body); font-style: italic; font-weight: 600;
@@ -153,12 +153,17 @@ nav.cf-card-nav {
     width: 92%; max-width: 480px;
     z-index: 9000;
     align-items: center; justify-content: space-between;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    padding: 8px 8px 8px 18px;
+    transition: background-color 0.35s ease, border-color 0.35s ease, backdrop-filter 0.35s ease;
+  }
+  .cf-mobile-nav.is-open {
     background: rgba(var(--dark-rgb, 42,33,24), 0.72);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(var(--muted-rgb, 168,150,120), 0.15);
-    border-radius: 999px;
-    padding: 8px 8px 8px 18px;
+    border-color: rgba(var(--muted-rgb, 168,150,120), 0.15);
   }
 }
 
@@ -192,7 +197,7 @@ nav.cf-card-nav {
 
 /* Pre-layer swipe */
 .cf-mobile-prelayers {
-  position: fixed; top: 0; right: 0; height: 100vh; width: 100%;
+  position: fixed; top: 0; right: 0; height: 100vh; width: 100%; max-width: 100vw;
   pointer-events: none; z-index: 9990; overflow: hidden;
 }
 .cf-mobile-prelayer {
@@ -204,9 +209,10 @@ nav.cf-card-nav {
 /* Panel */
 .cf-mobile-panel {
   position: fixed; top: 0; right: 0;
-  width: 100%; height: 100vh;
+  width: 100%; max-width: 100vw; height: 100vh;
   background: var(--dark);
   display: flex; flex-direction: column;
+  overflow-x: hidden;
   overflow-y: auto;
   z-index: 9999;
   pointer-events: auto;
@@ -216,7 +222,25 @@ nav.cf-card-nav {
   display: flex; flex-direction: column;
   min-height: 100%;
 }
-.cf-mobile-panel-logo { margin-bottom: 2.5rem; }
+.cf-mobile-panel-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 2.5rem;
+}
+.cf-mobile-close {
+  position: relative;
+  width: 40px; height: 40px; flex-shrink: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(var(--muted-rgb, 168,150,120), 0.3);
+  background: rgba(var(--muted-rgb, 168,150,120), 0.08);
+  cursor: pointer;
+}
+.cf-mobile-close-line {
+  position: absolute; left: 50%; top: 50%;
+  width: 16px; height: 2px; background: rgba(255,255,255,0.92);
+  border-radius: 999px;
+}
+.cf-mobile-close-line:nth-child(1) { transform: translate(-50%, -50%) rotate(45deg); }
+.cf-mobile-close-line:nth-child(2) { transform: translate(-50%, -50%) rotate(-45deg); }
 
 .cf-mobile-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.2rem; flex: 1; counter-reset: cfItem; }
 .cf-mobile-itemWrap { position: relative; overflow: hidden; line-height: 1; }

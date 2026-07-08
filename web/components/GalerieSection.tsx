@@ -12,15 +12,15 @@ export default function GalerieSection() {
       <div className="triptych-wrapper">
         <div className="trip-panel trip-side">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/IMAGES/Snapchat-90679770~1.webp" loading="lazy" alt="Lapin" />
+          <img src="/IMAGES/Snapchat-90679770.jpg" loading="lazy" alt="Lapin" />
         </div>
         <div className="trip-panel trip-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/IMAGES/Snapchat-1016404691~1.webp" loading="lazy" alt="Lapin" />
+          <img src="/IMAGES/Snapchat-1016404691.webp" loading="lazy" alt="Lapin" />
         </div>
         <div className="trip-panel trip-side">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/IMAGES/Snapchat-1244423645~1.webp" loading="lazy" alt="Lapin" />
+          <img src="/IMAGES/Snapchat-1244423645.webp" loading="lazy" alt="Lapin" />
         </div>
       </div>
     </section>

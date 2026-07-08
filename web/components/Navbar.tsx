@@ -24,6 +24,12 @@ const navLinks = [
   { label: 'Contact', href: '/#contact' },
 ]
 
+const infoLinks = [
+  { label: 'Aide', href: '/aide' },
+  { label: 'Conditions', href: '/conditions' },
+  { label: 'Confidentialité', href: '/confidentialite' },
+]
+
 const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP?.replace(/\D/g, '') || ''
 const WHATSAPP_URL = WHATSAPP
   ? `https://wa.me/${WHATSAPP}?text=${encodeURIComponent("Bonjour, j'aimerais commander un lapin.")}`
@@ -93,8 +99,8 @@ function DesktopCardNav() {
           '--nav-border': open ? '1px solid rgba(194,105,61,0.18)' : '1px solid transparent',
           '--nav-shadow': open ? '0 8px 32px rgba(0,0,0,0.35)' : 'none',
           '--nav-hline': '#F3E9DA',
-          background: open ? 'rgba(42,33,24,0.92)' : 'rgba(42,33,24,0.55)',
-          backdropFilter: 'blur(16px)',
+          background: open ? 'rgba(42,33,24,0.92)' : 'transparent',
+          backdropFilter: open ? 'blur(16px)' : 'none',
         } as React.CSSProperties}
       >
         <div className="cf-nav-top">
@@ -104,7 +110,7 @@ function DesktopCardNav() {
           </button>
 
           <Link href="/" className="cf-nav-logo" onClick={closeNav}>
-            <Logo size={40} />
+            <Logo size={52} />
           </Link>
 
           <div className="cf-nav-right">
@@ -119,7 +125,7 @@ function DesktopCardNav() {
             <div className="cf-card-label">Chez Florence</div>
             <div className="cf-card-brand">
               <Link href="/" onClick={closeNav} className="cf-card-logo-link" aria-label="Retour à l'accueil">
-                <Logo size={64} />
+                <Logo size={76} />
               </Link>
               <p className="cf-card-slogan">
                 L&apos;élevage qui vous connecte directement aux plus beaux lapins, en toute confiance.
@@ -140,12 +146,14 @@ function DesktopCardNav() {
           </div>
 
           <div className="cf-nav-card cf-nav-card--contact" ref={el => { cardsRef.current[2] = el }}>
-            <div className="cf-card-label">Une question ?</div>
-            <div>
-              <p className="cf-card-contact-text">On vous répond vite, par WhatsApp ou email.</p>
-              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="cf-card-whatsapp" onClick={closeNav}>
-                WhatsApp
-              </a>
+            <div className="cf-card-label">Informations</div>
+            <div className="cf-card-links">
+              {infoLinks.map(link => (
+                <Link key={link.href} href={link.href} onClick={closeNav} className="cf-card-link">
+                  <ArrowIcon className="cf-card-link-arrow" />
+                  {link.label}
+                </Link>
+              ))}
             </div>
           </div>
         </div>
@@ -266,9 +274,9 @@ function MobileStaggeredNav() {
 
   return (
     <>
-      <div className="cf-mobile-nav">
+      <div className={'cf-mobile-nav' + (open ? ' is-open' : '')}>
         <Link href="/" className="cf-nav-logo" onClick={closeMenu}>
-          <Logo size={38} />
+          <Logo size={48} />
         </Link>
         <button
           className="cf-mobile-toggle"
@@ -296,8 +304,17 @@ function MobileStaggeredNav() {
 
       <div ref={panelRef} className="cf-mobile-panel" aria-hidden={!open}>
         <div className="cf-mobile-panel-inner">
-          <div className="cf-mobile-panel-logo">
+          <div className="cf-mobile-panel-header">
             <Logo size={48} />
+            <button
+              className="cf-mobile-close"
+              onClick={closeMenu}
+              aria-label="Fermer le menu"
+              type="button"
+            >
+              <span className="cf-mobile-close-line" />
+              <span className="cf-mobile-close-line" />
+            </button>
           </div>
 
           <ul className="cf-mobile-list">

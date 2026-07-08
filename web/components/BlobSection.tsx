@@ -15,7 +15,7 @@ export default function BlobSection() {
           loop
           playsInline
           preload="metadata"
-          src="/IMAGES/Snapchat-1680052335.webm"
+          src="/IMAGES/Snapchat-1680052335_001.webm"
         />
       </div>
     </section>

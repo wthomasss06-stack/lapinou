@@ -941,7 +941,10 @@
     transform: rotate(45deg);
   }
   .home-cinema .hover-item-content {
-    display: block;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 4vw;
     width: 100%;
     max-height: 0;
     opacity: 0;
@@ -949,13 +952,14 @@
     transition: max-height 0.45s ease-out, opacity 0.3s ease;
   }
   .home-cinema .hover-item.is-open .hover-item-content {
-    max-height: 70vw;
+    max-height: 50vw;
     opacity: 1;
   }
   .home-cinema .hover-item-image {
     display: block;
-    width: 100%;
-    height: 34vw;
+    flex-shrink: 0;
+    width: 28vw;
+    height: 28vw;
     margin-top: 3vw;
     border-radius: 8px;
     background-size: cover;
@@ -965,10 +969,11 @@
   .home-cinema #skill-2b,
   .home-cinema #skill-3b,
   .home-cinema #skill-4b {
+    flex: 1;
+    min-width: 0;
     font-size: 3.4vw;
     color: var(--muted);
     opacity: 0.7;
-    width: 100%;
     padding-top: 2.5vw;
   }
   .home-cinema #page3-heading-1 {
@@ -1171,5 +1176,34 @@ html.lp-home-active::-webkit-scrollbar {
   font-size: clamp(3rem, 9vw, 8rem);
   line-height: 0.95;
   margin-bottom: 0.3em;
+}
+
+/* ContactSection — même mécanique above/behind-intro que page2/page3/pricing,
+   globale (non scopée .home-cinema) puisque ContactSection vit dans
+   .home-kept-sections. Le texte hérite font-body via la règle
+   .home-kept-sections p{} déjà en place plus haut ; on ne fixe ici que
+   la taille/l'italique/le centrage propres à cette instance. */
+#intro-container-3 {
+  position: relative;
+  max-width: 32rem;
+  margin: 0 auto;
+}
+#behind-intro-3,
+#above-intro-3 {
+  font-style: italic;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  text-align: center;
+}
+#behind-intro-3 {
+  color: rgba(255, 255, 255, 0.14);
+}
+#above-intro-3 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  color: rgba(255, 255, 255, 0.4);
+  clip-path: inset(0 0 100% 0);
 }
 

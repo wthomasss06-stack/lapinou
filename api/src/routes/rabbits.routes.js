@@ -73,14 +73,15 @@ router.post('/:id/images', adminAuth, upload.array('images', 8), async (req, res
 // DELETE /api/rabbits/:id/images/:photoId  → supprimer une photo (Cloudinary + DB)
 router.delete('/:id/images/:photoId', adminAuth, async (req, res, next) => {
   try {
-    const photo = await prisma.rabbitPhoto.findUnique({ where: { id: parseInt(req.params.photoId, 10) } })
+    const photoId = parseInt(req.params.photoId, 10)
+    const photo = await prisma.rabbitPhoto.findUnique({ where: { id: photoId } })
     if (!photo) return res.status(404).json({ error: 'Photo introuvable' })
 
     // Supprime sur Cloudinary — utilise publicId si dispo, sinon tente de le déduire de l'URL
     const publicId = photo.publicId || cloudinarySvc.publicIdFromUrl(photo.url)
     await cloudinarySvc.deleteByPublicId(publicId)
 
-    await prisma.rabbitPhoto.delete({ where: { id: req.params.photoId } })
+    await prisma.rabbitPhoto.delete({ where: { id: photoId } })
     res.status(204).send()
   } catch (err) { next(err) }
 })

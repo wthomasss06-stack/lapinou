@@ -10,7 +10,7 @@ export default function IrisSection() {
       <h2 className="iris-word">CHEZ FLORENCE</h2>
       <div className="takeover-layer iris-mask">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/IMAGES/Snapchat-533353503~1.webp" loading="lazy" alt="Portrait de lapin" />
+        <img src="/IMAGES/Snapchat-533353503.webp" loading="lazy" alt="Portrait de lapin" />
       </div>
     </section>
   )
