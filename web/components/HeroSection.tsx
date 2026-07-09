@@ -1,51 +1,48 @@
 'use client'
+
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { MessageCircle } from 'lucide-react'
+import { gsap } from 'gsap'
 
-// ── /IMAGES a été réexporté (nouveaux noms _00X.webm) — mis à jour pour
-//    matcher le dossier actuel. Snapchat-2076662897 et Snapchat-1268559920
-//    n'existent plus sous ces noms : réassignés à 2 clips actuellement
-//    libres (Snapchat-1344115952_001 / Snapchat-1448875183_001). Dis-moi
-//    si tu veux des clips précis à la place, c'est un simple échange de
-//    nom de fichier.
 const SLIDES = [
   {
     src: '/IMAGES/Snapchat-1680052335_001.webm',
     eyebrow: "Abidjan · Côte d'Ivoire — Élevage artisanal",
-    h1: 'Élevage',
-    h2: 'Artisanal',
+    word1: 'ÉLEVAGE',
+    word2: 'ARTISANAL',
+    word3: 'avec soin.',
     sub: 'Des lapins de race élevés avec soin, disponibles pour particuliers, restaurateurs & éleveurs PME.',
   },
   {
     src: '/IMAGES/Snapchat-1344115952_001.webm',
-    eyebrow: 'Restaurateurs · Traiteurs · Gastronomie',
-    h1: 'Pour votre',
-    h2: 'Table',
-    sub: 'Approvisionnement régulier, qualité bouchère garantie. Livraison sur Abidjan et ses environs.',
+    eyebrow: ' Restaurateurs & traiteurs — Tarif pro',
+    word1: '6 LAPINS',
+    word2: 'À 80k FCFA',
+    word3: 'qualité bouchère.',
+    sub: 'Qualité bouchère garantie. Approvisionnement régulier, livraison sur Abidjan. 13 300 FCFA/lapin en lot pro.',
   },
   {
     src: '/IMAGES/Snapchat-1448875183_001.webm',
-    eyebrow: 'Réservation en ligne · Confirmation 24h',
-    h1: 'Réservez',
-    h2: 'En ligne',
-    sub: 'Choisissez votre race et votre quantité. Nous vous contactons par email et WhatsApp.',
+    eyebrow: ' Stock limité — Confirmation sous 24h',
+    word1: 'COMMANDEZ',
+    word2: 'VITE',
+    
+    sub: '3 formats : Unité 15 000 FCFA · Duo 25 000 FCFA · Pro 80 000 FCFA. WhatsApp ou formulaire — réponse garantie.',
   },
 ]
 
 export default function HeroSection() {
-  const [cur, setCur]         = useState(0)
-  const [nextIdx, setNextIdx] = useState<number | null>(null)
-
-  const nextRef   = useRef<HTMLDivElement>(null)
-  const vidRefs   = useRef<(HTMLVideoElement | null)[]>([])
-  const progRef   = useRef<HTMLDivElement>(null)
-  const busy      = useRef(false)
-  const curRef    = useRef(0)
+  const [cur, setCur] = useState(0)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const blocksRef = useRef<(HTMLSpanElement | null)[]>([])
+  const vidRefs = useRef<(HTMLVideoElement | null)[]>([])
+  const progRef = useRef<HTMLDivElement>(null)
+  const busy = useRef(false)
+  const curRef = useRef(0)
 
   useEffect(() => { curRef.current = cur }, [cur])
 
-  // Barre de progression — se relance à chaque changement de slide
   useEffect(() => {
     let raf: number
     const tick = () => {
@@ -59,132 +56,166 @@ export default function HeroSection() {
     return () => cancelAnimationFrame(raf)
   }, [cur])
 
-  // Auto-play de la première vidéo
   useEffect(() => { vidRefs.current[0]?.play().catch(() => {}) }, [])
 
-  const goTo = async (n: number) => {
+  const goTo = (n: number) => {
     if (busy.current || n === curRef.current) return
     busy.current = true
     if (progRef.current) progRef.current.style.width = '0%'
     vidRefs.current[curRef.current]?.pause()
 
-    setNextIdx(n)
-    await new Promise<void>(r => requestAnimationFrame(() => requestAnimationFrame(() => r())))
-
-    const el = nextRef.current
-    if (el) {
-      // ── Diagonal wipe — Effect 9 ──────────────────────────────
-      el.style.transition = 'none'
-      el.style.clipPath = 'polygon(0 0, 0 0, 0 100%, 0 100%)'
-      el.getBoundingClientRect()
-
-      el.style.transition = 'clip-path 0.55s cubic-bezier(0.77,0,0.175,1)'
-      el.style.clipPath = 'polygon(0 0, 68% 0, 42% 100%, 0 100%)'
-      await new Promise<void>(r => setTimeout(r, 550))
-
-      el.style.transition = 'clip-path 0.35s cubic-bezier(0.25,0.46,0.45,0.94)'
-      el.style.clipPath = 'polygon(0 0, 100% 0, 100% 100%, 0 100%)'
-      await new Promise<void>(r => setTimeout(r, 350))
+    const v = vidRefs.current[n]
+    if (v) { 
+      v.currentTime = 0
+      v.play().catch(() => {}) 
     }
 
-    const v = vidRefs.current[n]
-    if (v) { v.currentTime = 0; v.play().catch(() => {}) }
-
     setCur(n)
-    setNextIdx(null)
     busy.current = false
+  }
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!containerRef.current) return
+    const rect = containerRef.current.getBoundingClientRect()
+    const xPercent = (e.clientX - rect.left) / rect.width - 0.5
+    const yPercent = (e.clientY - rect.top) / rect.height - 0.5
+
+    blocksRef.current.forEach((block, idx) => {
+      if (!block) return
+      const depth = (idx + 1) * 18
+      gsap.to(block, {
+        x: xPercent * depth,
+        y: yPercent * depth,
+        duration: 0.4,
+        ease: 'power1.out'
+      })
+    })
   }
 
   const s = SLIDES[cur]
 
   return (
-    <section className="relative h-screen overflow-hidden bg-black" style={{ minHeight: 560, height: '100svh' }}>
-      {/* height:'100svh' en inline corrige le classique "bande noire en bas
-          sur mobile" causé par 100vh (h-screen) qui ne tient pas compte de
-          la barre d'adresse Chrome/Safari visible au chargement — la vidéo
-          en object-cover derrière ne peut pas combler cet espace en trop
-          puisqu'il est en dehors de la section elle-même. Si le navigateur
-          ne connaît pas svh, cette valeur est invalide et ignorée : la
-          className h-screen (100vh) reste le fallback. */}
-
-      {/* Toutes les slides empilées */}
+    <section 
+      ref={containerRef}
+      onMouseMove={handleMouseMove}
+      className="relative w-full h-screen bg-[#050505] flex flex-col justify-between overflow-hidden select-none"
+      style={{ height: '100svh' }}
+    >
+      {/* Background Videos en COULEUR réelle */}
       {SLIDES.map((sl, i) => (
-        <div key={i} className="absolute inset-0" style={{ zIndex: i === cur ? 2 : 1 }}>
+        <div 
+          key={i} 
+          className="absolute inset-0 transition-opacity duration-700 ease-in-out" 
+          style={{ zIndex: i === cur ? 1 : 0, opacity: i === cur ? 1 : 0 }}
+        >
           <video
             ref={el => { vidRefs.current[i] = el }}
             src={sl.src}
             muted playsInline
             preload={i === 0 ? 'auto' : 'metadata'}
             onEnded={() => { if (i === curRef.current) goTo((i + 1) % SLIDES.length) }}
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-cover opacity-65" 
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-black/50 to-black/90" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/25 to-transparent" />
+          {/* Overlay dégradé subtil pour garder le contraste avec le texte */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/15 via-black/30 to-black/80" />
         </div>
       ))}
 
-      {/* Slide entrante (wipe diagonal) */}
-      {nextIdx !== null && (
-        <div ref={nextRef} className="absolute inset-0" style={{ zIndex: 3 }}>
-          <video src={SLIDES[nextIdx].src} muted playsInline autoPlay
-            className="absolute inset-0 w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-black/50 to-black/90" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/25 to-transparent" />
-        </div>
-      )}
+      {/* Trame Grid Brutaliste */}
+      <div className="absolute inset-0 grid grid-cols-4 md:grid-cols-6 h-full w-full pointer-events-none opacity-15 z-10">
+        {[...Array(6)].map((_, i) => (
+          <div key={i} className="border-r border-neutral-800 h-full" />
+        ))}
+      </div>
 
-      {/* Contenu héro */}
-      <div className="absolute inset-0 z-10 flex items-end justify-center px-8 sm:px-12 lg:px-[2.5vw] pb-[14vh] text-center">
-        <div className="max-w-2xl">
-          <p key={`e-${cur}`} className="text-[0.68rem] tracking-[0.35em] uppercase mb-6"
-            style={{ fontFamily: 'var(--font-label)', color: 'var(--rust)' }}>
-            {s.eyebrow}
-          </p>
-          <h1 key={`h-${cur}`} className="font-bold text-white leading-[0.88] tracking-tight"
-            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(48px,9vw,120px)' }}>
-            {s.h1}<br /><em className="italic text-white/80">{s.h2}</em>
-          </h1>
-          <p key={`s-${cur}`} className="mt-6 text-white/45 font-light leading-relaxed max-w-sm mx-auto"
-            style={{ fontSize: 'clamp(13px,1vw,15px)' }}>
+      
+
+      {/* Corps Central Typographique */}
+      <div className="w-full max-w-6xl mx-auto px-6 md:px-12 relative z-20 flex flex-col gap-3 my-auto">
+        <div className="flex items-center gap-4 flex-wrap">
+          <span 
+            ref={el => { blocksRef.current[0] = el }}
+            className="font-black bg-white text-black px-5 py-2 rotate-[-1deg] inline-block tracking-tight text-4xl md:text-7xl lg:text-8xl"
+            style={{ fontFamily: 'var(--font-display)' }}
+          >
+            {s.word1}
+          </span>
+          <span 
+            ref={el => { blocksRef.current[1] = el }}
+            className="text-xs text-neutral-200 max-w-[240px] leading-relaxed font-mono hidden sm:block bg-black/40 backdrop-blur-sm p-2 rounded border border-white/5"
+          >
             {s.sub}
-          </p>
-          <div className="flex flex-wrap justify-center gap-3 mt-8">
-            <Link href="/rabbits" className="btn-neon px-6 py-3 rounded-xl text-sm font-semibold">
-              Voir le catalogue
-            </Link>
-            {process.env.NEXT_PUBLIC_WHATSAPP && (
-              <a href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP.replace(/\D/g,'')}`}
-                target="_blank" rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white bg-white/[0.07] border border-white/[0.12] backdrop-blur-sm hover:bg-white/[0.13] transition-colors">
-                <MessageCircle size={14} /> WhatsApp
-              </a>
-            )}
-          </div>
+          </span>
+        </div>
+
+        <div className="flex items-center justify-end gap-4 mt-1">
+          <span className="w-full h-[1px] bg-neutral-800 flex-1 hidden md:block"></span>
+          <span 
+            ref={el => { blocksRef.current[2] = el }}
+            className="font-black border-4 px-5 py-2 rotate-[1.5deg] inline-block tracking-tight text-4xl md:text-7xl lg:text-8xl"
+            style={{ 
+              fontFamily: 'var(--font-display)',
+              borderColor: 'var(--lime, #00ff00)', 
+              color: 'var(--lime, #00ff00)' 
+            }}
+          >
+            {s.word2}
+          </span>
+        </div>
+
+        <div className="flex items-center gap-4 mt-1">
+          <span 
+            ref={el => { blocksRef.current[3] = el }}
+            className="text-white italic lowercase tracking-tight text-5xl md:text-8xl lg:text-9xl drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]"
+            style={{ fontFamily: 'var(--font-body)' }}
+          >
+            {s.word3}
+          </span>
+        </div>
+
+        {/* Boutons d'actions (Centrés) */}
+        <div className="flex flex-wrap justify-center items-center gap-3 mt-10 z-30 w-full">
+          <Link href="/rabbits" className="btn-neon px-6 py-3 rounded-xl text-sm font-semibold">
+            Voir le catalogue
+          </Link>
+          {process.env.NEXT_PUBLIC_WHATSAPP && (
+            <a 
+              href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP.replace(/\D/g,'')}`}
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white bg-white/[0.08] border border-white/[0.15] backdrop-blur-md hover:bg-white/[0.18] transition-colors"
+            >
+              <MessageCircle size={14} /> WhatsApp
+            </a>
+          )}
         </div>
       </div>
 
-      {/* Dots + compteur */}
-      <div className="absolute right-[2.5vw] bottom-[14vh] z-10 hidden sm:flex flex-col items-end gap-3">
-        <span className="text-[0.6rem] tracking-[0.2em] text-white/25" style={{ fontFamily: 'var(--font-label)' }}>
-          0{cur + 1}&nbsp;/&nbsp;0{SLIDES.length}
-        </span>
-        <div className="flex flex-col gap-[6px]">
+      {/* Navigation Bas */}
+      <div className="relative z-20 w-full max-w-7xl mx-auto px-6 md:px-12 pb-8 flex justify-between items-center">
+       
+        
+        <div className="flex gap-2">
           {SLIDES.map((_, i) => (
-            <button key={i} onClick={() => goTo(i)} aria-label={`Slide ${i + 1}`}
-              className="rounded-full transition-all duration-500"
-              style={{ width: 2, height: i === cur ? 48 : 18,
-                background: i === cur ? 'var(--rust)' : 'rgba(255,255,255,0.2)' }} />
+            <button
+              key={i}
+              onClick={() => goTo(i)}
+              className="h-1.5 rounded-full transition-all duration-300"
+              style={{ 
+                width: i === cur ? '32px' : '8px', 
+                backgroundColor: i === cur ? 'var(--lime, #00ff00)' : 'rgba(255,255,255,0.2)' 
+              }}
+              aria-label={`Slide ${i + 1}`}
+            />
           ))}
         </div>
       </div>
 
-      <span className="absolute left-[2.5vw] bottom-[9vh] z-10 text-[0.6rem] tracking-[0.3em] uppercase text-white/20 hidden sm:block"
-        style={{ fontFamily: 'var(--font-label)', writingMode: 'vertical-rl' }}>
-        Défiler
-      </span>
-
-      <div ref={progRef} className="absolute bottom-[5.5vh] left-0 z-[25] h-px"
-        style={{ width: '0%', background: 'var(--rust)' }} />
+      <div 
+        ref={progRef} 
+        className="absolute bottom-0 left-0 z-[25] h-[2px] transition-all duration-100"
+        style={{ width: '0%', background: 'var(--lime, #00ff00)' }} 
+      />
     </section>
   )
 }
