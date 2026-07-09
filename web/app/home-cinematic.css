@@ -730,7 +730,7 @@
 
 .home-cinema #intro-container-2 {
   position: relative;
-  max-width: 44ch;
+  max-width: 70ch;
   margin: 0 auto 6vw;
 }
 
@@ -1203,6 +1203,14 @@ footer .giant-heading {
   white-space: nowrap;
 }
 
+/* Filet de sécurité pour le split GSAP (words,chars) : chaque mot garde
+   son propre bloc insécable, seule la frontière ENTRE deux .word peut
+   être un point de retour à la ligne — jamais à l'intérieur. */
+.giant-heading .word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
 /* ContactSection — même mécanique above/behind-intro que page2/page3/pricing,
    globale (non scopée .home-cinema) puisque ContactSection vit dans
    .home-kept-sections. Le texte hérite font-body via la règle
@@ -1213,7 +1221,7 @@ footer .giant-heading {
    suivait pas le viewport comme les 3 autres instances (toutes en clamp). */
 #intro-container-3 {
   position: relative;
-  max-width: 32rem;
+  max-width: 48rem;
   margin: 0 auto;
 }
 #behind-intro-3,

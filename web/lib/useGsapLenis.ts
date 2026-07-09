@@ -291,9 +291,17 @@ export default function useGsapLenis() {
       // chaque besoin, Commandez) a son propre SplitText + ScrollTrigger,
       // pour se révéler quand LUI entre dans le viewport — pas seulement
       // quand le premier du lot (Nos) y entre.
+      // type: 'words, chars' (pas juste 'chars') : sans le niveau "words",
+      // SplitText n'a plus de frontière de mot fiable dans le DOM une fois
+      // les lettres éclatées en spans individuels — le retour à la ligne
+      // du navigateur pouvait alors couper au milieu d'un mot ("PO/UR",
+      // "V/OTRE") au lieu de renvoyer le mot entier. Avec 'words' en plus,
+      // chaque mot garde son propre wrapper (.word, voir home-cinematic.css
+      // "white-space: nowrap") — les chars à l'intérieur s'animent pareil,
+      // seule la frontière de césure change.
       const splitHeadings = gsap.utils.toArray<HTMLElement>('.split-heading-1')
       splitHeadings.forEach((heading) => {
-        const split = SplitText.create(heading, { type: 'chars' })
+        const split = SplitText.create(heading, { type: 'words, chars' })
 
         gsap.set(split.chars, {
           yPercent: 60,
