@@ -348,11 +348,33 @@ export default function useGsapLenis() {
         // posé — d'où refreshPriority sur les deux pins (Iris et Horizontal)
         // pour garantir qu'ils se rafraîchissent avant Contact (et avant
         // tout le reste, par défaut à 0) dans le refresh ci-dessous.
-        requestAnimationFrame(() => ScrollTrigger.refresh())
+        //
+        // Ce refresh recalcule bien ScrollTrigger, mais Lenis a lui aussi
+        // mis en cache la hauteur totale scrollable AVANT le reflow des
+        // polices — sur mobile, où le wrapping change beaucoup plus la
+        // hauteur (texte réparti sur bien plus de lignes qu'en desktop),
+        // ce cache devient assez faux pour que le mapping scroll→progress
+        // de Lenis ne colle plus avec les zones que ScrollTrigger vient
+        // de recalculer. On resync Lenis d'abord. Et un simple rAF ne
+        // garantit pas toujours que le reflow est déjà peint au moment où
+        // il tourne (plus vrai sur mobile, pipeline de rendu plus lent) —
+        // un double rAF attend une frame de plus, et le setTimeout en
+        // filet de secours couvre les cas où même ça arrive trop tôt.
+        lenis.resize()
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => ScrollTrigger.refresh())
+        })
+        setTimeout(() => {
+          lenis.resize()
+          ScrollTrigger.refresh()
+        }, 800)
       }
     })
 
-    const onWindowLoad = () => ScrollTrigger.refresh()
+    const onWindowLoad = () => {
+      lenis.resize()
+      ScrollTrigger.refresh()
+    }
     window.addEventListener('load', onWindowLoad)
     cleanupFns.push(() => window.removeEventListener('load', onWindowLoad))
 
