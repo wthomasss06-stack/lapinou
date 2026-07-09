@@ -11,10 +11,10 @@ interface LogoProps {
 
 export default function Logo({ size = 56, showText = true, className = '' }: LogoProps) {
   // showText=true  → logo complet (tête + bandeau texte intégré au visuel)
-  //                  ratio réel ≈ 0.82:1 (plus haut que large)
+  //                  ratio réel ≈ 0.966:1 (nouveau visuel, quasi carré)
   // showText=false → icône compacte (tête de lapin seule), carrée (1:1)
   const src = showText ? '/logo.png' : '/logo-icon.png'
-  const width = showText ? Math.round(size * 0.82) : size
+  const width = showText ? Math.round(size * 0.966) : size
 
   return (
     <Link href="/" className={`flex items-center gap-2 shrink-0 ${className}`}>

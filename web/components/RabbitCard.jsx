@@ -13,7 +13,7 @@ function RabbitImage({ rabbit, unavailable }) {
   const src = mainPhoto ? resolvePhotoUrl(mainPhoto.url) : null
 
   return (
-    <div className="relative h-52 overflow-hidden bg-brand-darker">
+    <div className="relative h-52 overflow-hidden bg-brand-darker shrink-0">
       {src ? (
         <Image
           src={src}
@@ -131,6 +131,7 @@ export default function RabbitCard({ rabbit, index = 0, layout = 'grid' }) {
 
   return (
     <motion.div
+      className="h-full"
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
@@ -138,17 +139,17 @@ export default function RabbitCard({ rabbit, index = 0, layout = 'grid' }) {
     >
       <Link
         href={`/rabbits/${rabbit.slug}`}
-        className={unavailable ? 'pointer-events-none' : ''}
+        className={`block h-full${unavailable ? ' pointer-events-none' : ''}`}
         aria-disabled={unavailable}
       >
         <motion.div
-          className="card-glow bg-brand-card rounded-2xl overflow-hidden group cursor-pointer"
+          className="card-glow bg-brand-card rounded-2xl overflow-hidden group cursor-pointer h-full flex flex-col"
           whileHover={unavailable ? {} : { y: -8 }}
           transition={{ type: 'spring', stiffness: 300, damping: 25 }}
         >
           <RabbitImage rabbit={rabbit} unavailable={unavailable} />
 
-          <div className="p-4">
+          <div className="p-4 flex flex-col flex-1 min-h-0">
             {/* Race + genre */}
             <div className="flex items-center justify-between mb-2">
               <span className="text-[10px] font-mono uppercase tracking-widest text-caramel/70 bg-caramel/10 px-2 py-0.5 rounded-full">
@@ -175,7 +176,7 @@ export default function RabbitCard({ rabbit, index = 0, layout = 'grid' }) {
             </div>
 
             {/* CTA */}
-            <div className="flex items-center justify-between pt-3 border-t border-brand-border">
+            <div className="flex items-center justify-between pt-3 border-t border-brand-border mt-auto">
               <span className="text-[11px] text-white/30">
                 {rabbit.priceNote || 'Prix net'}
               </span>

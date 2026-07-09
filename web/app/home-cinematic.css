@@ -373,7 +373,8 @@
 .home-cinema .lapins-sub {
   font-family: var(--font-body);
   font-style: italic;
-  font-size: clamp(1rem, 1.3vw, 1.3rem);
+  font-size: clamp(2.2rem, 4vw, 4.5rem);
+  line-height: 1.15;
   color: rgba(var(--dark-rgb, 42, 33, 24), 0.55);
   margin-top: 0.7vw;
 }
@@ -418,6 +419,7 @@
 
 .home-cinema .lapins-viewport {
   display: flex;
+  align-items: stretch;
   gap: 1.6vw;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
@@ -736,8 +738,8 @@
 .home-cinema #above-intro-2 {
   font-family: var(--font-body);
   font-style: italic;
-  font-size: clamp(1rem, 1.2vw, 1.2rem);
-  line-height: 1.5;
+  font-size: clamp(2.2rem, 4vw, 4.5rem);
+  line-height: 1.15;
   text-align: center;
 }
 
@@ -1003,10 +1005,6 @@
   .home-cinema #sec-pricing {
     padding: 10vh 5vw 8vh;
   }
-  .home-cinema #behind-intro-2,
-  .home-cinema #above-intro-2 {
-    font-size: 4vw;
-  }
   .home-cinema #intro-container-2 {
     margin: 0 auto 10vw;
   }
@@ -1048,7 +1046,6 @@
   }
   .home-cinema .lapins-eyebrow { font-size: 3vw; }
   .home-cinema .lapins-title { font-size: 11vw; }
-  .home-cinema .lapins-sub { font-size: 3.6vw; }
   .home-cinema .lapins-nav-btns { align-self: flex-end; }
   .home-cinema .lapins-nav-btn { width: 11vw; height: 11vw; }
   .home-cinema .lapins-card { flex: 0 0 82%; }
@@ -1177,7 +1174,33 @@ html.lp-home-active::-webkit-scrollbar {
   line-height: 0.95;
   margin-bottom: 0.3em;
   overflow-wrap: break-word;
-  word-break: break-word;
+}
+
+/* word-break: break-word a été retiré ci-dessus : combiné à
+   overflow-wrap, il autorisait le navigateur à couper n'importe où
+   (y compris entre deux lettres d'un même mot en plein milieu) —
+   c'est ce qui produisait "PO/UR", "V/OTRE", "COMMANDE/Z" alors
+   qu'un retour à la ligne avant le mot entier suffisait. overflow-wrap
+   seul ne coupe qu'en dernier recours (mot isolé plus large que son
+   conteneur). */
+
+/* En dessous de ~480px, 9vw touchait déjà le plancher de 3rem et n'y
+   bougeait plus, quelle que soit la largeur réelle de l'écran — la
+   taille continue ici de suivre le viewport au lieu de rester figée,
+   pour laisser assez de place aux mots longs (Commandez, Garanties…)
+   sur les très petits téléphones. */
+@media (max-width: 480px) {
+  .giant-heading {
+    font-size: clamp(2.4rem, 11vw, 8rem);
+  }
+}
+
+/* "Commandez" (footer) est un seul mot sans espace : s'il ne tient
+   pas, il n'y a rien à renvoyer à la ligne suivante — comme pour
+   Nos/Garanties (page2-heading-2/-3, déjà en nowrap plus haut), on le
+   garde sur une seule ligne plutôt que de le laisser se couper. */
+footer .giant-heading {
+  white-space: nowrap;
 }
 
 /* ContactSection — même mécanique above/behind-intro que page2/page3/pricing,
@@ -1196,8 +1219,8 @@ html.lp-home-active::-webkit-scrollbar {
 #behind-intro-3,
 #above-intro-3 {
   font-style: italic;
-  font-size: clamp(1rem, 1.2vw, 1.2rem);
-  line-height: 1.6;
+  font-size: clamp(2.2rem, 4vw, 4.5rem);
+  line-height: 1.15;
   text-align: center;
 }
 #behind-intro-3 {
