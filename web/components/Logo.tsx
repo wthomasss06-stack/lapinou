@@ -7,9 +7,11 @@ interface LogoProps {
   size?: number
   showText?: boolean
   className?: string
+  onClick?: () => void
+  ariaLabel?: string
 }
 
-export default function Logo({ size = 56, showText = true, className = '' }: LogoProps) {
+export default function Logo({ size = 56, showText = true, className = '', onClick, ariaLabel }: LogoProps) {
   // showText=true  → logo complet (tête + bandeau texte intégré au visuel)
   //                  ratio réel ≈ 0.966:1 (nouveau visuel, quasi carré)
   // showText=false → icône compacte (tête de lapin seule), carrée (1:1)
@@ -17,7 +19,7 @@ export default function Logo({ size = 56, showText = true, className = '' }: Log
   const width = showText ? Math.round(size * 0.966) : size
 
   return (
-    <Link href="/" className={`flex items-center gap-2 shrink-0 ${className}`}>
+    <Link href="/" className={`flex items-center gap-2 shrink-0 ${className}`} onClick={onClick} aria-label={ariaLabel}>
       <motion.div
         initial={{ rotate: -8, scale: 0.85, opacity: 0 }}
         animate={{ rotate: 0, scale: 1, opacity: 1 }}

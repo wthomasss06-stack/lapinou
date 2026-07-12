@@ -109,9 +109,7 @@ function DesktopCardNav() {
             <div className="cf-hline" />
           </button>
 
-          <Link href="/" className="cf-nav-logo" onClick={closeNav}>
-            <Logo size={52} />
-          </Link>
+          <Logo size={52} className="cf-nav-logo" onClick={closeNav} />
 
           <div className="cf-nav-right">
             <Link href="/#lapins" className="cf-nav-cta" onClick={closeNav}>
@@ -124,9 +122,7 @@ function DesktopCardNav() {
           <div className="cf-nav-card cf-nav-card--brand" ref={el => { cardsRef.current[0] = el }}>
             <div className="cf-card-label">Chez Florence</div>
             <div className="cf-card-brand">
-              <Link href="/" onClick={closeNav} className="cf-card-logo-link" aria-label="Retour à l'accueil">
-                <Logo size={76} />
-              </Link>
+              <Logo size={76} className="cf-card-logo-link" onClick={closeNav} ariaLabel="Retour à l'accueil" />
               <p className="cf-card-slogan">
                 L&apos;élevage qui vous connecte directement aux plus beaux lapins, en toute confiance.
               </p>
@@ -275,9 +271,7 @@ function MobileStaggeredNav() {
   return (
     <>
       <div className={'cf-mobile-nav' + (open ? ' is-open' : '')}>
-        <Link href="/" className="cf-nav-logo" onClick={closeMenu}>
-          <Logo size={48} />
-        </Link>
+        <Logo size={48} className="cf-nav-logo" onClick={closeMenu} />
         <button
           className="cf-mobile-toggle"
           onClick={toggleMenu}

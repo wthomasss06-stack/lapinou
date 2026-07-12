@@ -98,7 +98,7 @@ export default function HeroSection() {
     <section 
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      className="relative w-full h-screen bg-[#050505] flex flex-col justify-between overflow-hidden select-none"
+      className="relative w-full h-screen bg-[#050505] flex flex-col justify-between overflow-hidden select-none max-[899px]:pt-20"
       style={{ height: '100svh' }}
     >
       {/* Background Videos en COULEUR réelle */}
@@ -135,7 +135,7 @@ export default function HeroSection() {
         <div className="flex items-center gap-4 flex-wrap">
           <span 
             ref={el => { blocksRef.current[0] = el }}
-            className="font-black bg-white text-black px-5 py-2 rotate-[-1deg] inline-block tracking-tight text-4xl md:text-7xl lg:text-8xl"
+            className="font-black bg-white text-black px-5 py-2 rotate-[-1deg] inline-block tracking-tight text-[clamp(1.75rem,min(7vw,9vh),4.5rem)]"
             style={{ fontFamily: 'var(--font-display)' }}
           >
             {s.word1}
@@ -152,7 +152,7 @@ export default function HeroSection() {
           <span className="w-full h-[1px] bg-neutral-800 flex-1 hidden md:block"></span>
           <span 
             ref={el => { blocksRef.current[2] = el }}
-            className="font-black border-4 px-5 py-2 rotate-[1.5deg] inline-block tracking-tight text-4xl md:text-7xl lg:text-8xl"
+            className="font-black border-4 px-5 py-2 rotate-[1.5deg] inline-block tracking-tight text-[clamp(1.75rem,min(7vw,9vh),4.5rem)]"
             style={{ 
               fontFamily: 'var(--font-display)',
               borderColor: 'var(--lime, #00ff00)', 
@@ -166,7 +166,7 @@ export default function HeroSection() {
         <div className="flex items-center gap-4 mt-1">
           <span 
             ref={el => { blocksRef.current[3] = el }}
-            className="text-white italic lowercase tracking-tight text-5xl md:text-8xl lg:text-9xl drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]"
+            className="text-white italic lowercase tracking-tight text-[clamp(2rem,min(8vw,10vh),5.5rem)] drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]"
             style={{ fontFamily: 'var(--font-body)' }}
           >
             {s.word3}
@@ -174,7 +174,7 @@ export default function HeroSection() {
         </div>
 
         {/* Boutons d'actions (Centrés) */}
-        <div className="flex flex-wrap justify-center items-center gap-3 mt-10 z-30 w-full">
+        <div className="flex flex-wrap justify-center items-center gap-3 mt-6 z-30 w-full">
           <Link href="/rabbits" className="btn-neon px-6 py-3 rounded-xl text-sm font-semibold">
             Voir le catalogue
           </Link>
