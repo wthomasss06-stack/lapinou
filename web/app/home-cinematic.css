@@ -1,14 +1,12 @@
 /* ═══════════════════════════════════════════════════════════════════
-   CHEZ FLORENCE — Home cinématique (v3 — port fidèle de index.html)
+   CHEZ FLORENCE — Home cinématique (v4)
    Port direct des classes de la maquette (.hero-section, .section-title,
-   .garanties-grid, .pricing-grid, .projects-grid, .testimonials-grid,
-   .faq-grid…) — plus de namespace cf-* inventé. Couleurs/polices via les
-   tokens du projet (--paper/--ink/--rust/--caramel, --font-*), mêmes
-   valeurs que --bg-light/--bg-dark/--accent-orange/--font-pixel/
-   --font-main de la maquette. Tout est scopé .home-cinema, sauf le
-   chrome déjà partagé ailleurs (.giant-heading n'existe plus : la
-   maquette n'a pas cette classe, ContactSection/AdoptSection qui
-   l'utilisaient ont été remplacés par HomeFooter/InnerFooter).
+   .garanties-grid, .projects-grid, .testimonials-grid, .faq-grid…).
+   Couleurs/polices via les tokens du projet (--paper/--ink/--rust/
+   --caramel, --font-*). Fond marron unique (--maroon) sur toute la home.
+   L'ancienne grille tarifs (.pricing-grid/.price-card) a été retirée :
+   les tarifs vivent maintenant dans <TrustMarquee /> (composant séparé,
+   voir components/TrustMarquee.css), juste après le Hero.
    ═══════════════════════════════════════════════════════════════════ */
 
 .home-cinema {
@@ -23,6 +21,7 @@
   min-height: 100vh;
   padding: 140px 50px 80px;
   position: relative;
+  scroll-margin-top: 90px;
 }
 
 /* ---------------------------------------------------------------
@@ -254,57 +253,33 @@
   opacity: 0.75;
   color: var(--paper);
 }
-.home-cinema .social-proof-bar {
-  position: relative;
+.home-cinema .hero-scroll-cue {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 2;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: clamp(1.5rem, 4vw, 2.75rem);
-  margin-top: 40px;
+  width: 22px;
+  height: 36px;
+  border: 2px solid rgba(243,233,218,0.4);
+  border-radius: 999px;
 }
-.home-cinema .sp-item { text-align: center; }
-.home-cinema .sp-num { font-family: var(--font-pixel); font-size: 1.3rem; color: var(--rust); }
-.home-cinema .sp-label {
-  font-family: var(--font-label);
-  font-size: 0.65rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  opacity: 0.65;
-  color: var(--paper);
-  margin-top: 4px;
+.home-cinema .hero-scroll-cue span {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--rust);
+  animation: heroScrollCue 1.6s ease-in-out infinite;
 }
-.home-cinema .cards-container {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 44px;
-  perspective: 1000px;
+@keyframes heroScrollCue {
+  0% { top: 6px; opacity: 1; }
+  70% { top: 18px; opacity: 0; }
+  100% { top: 18px; opacity: 0; }
 }
-.home-cinema .card {
-  width: 220px;
-  padding: 28px 24px;
-  border-radius: 20px;
-  background: rgba(243,233,218,0.08);
-  border: 1px solid rgba(243,233,218,0.18);
-  backdrop-filter: blur(10px);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  text-align: left;
-  text-decoration: none;
-  color: var(--paper);
-  transform-style: preserve-3d;
-  transition: border-color 0.3s ease;
-}
-.home-cinema .card:hover { border-color: var(--rust); }
-.home-cinema .card-tag { font-family: var(--font-label); font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--rust); }
-.home-cinema .card-price { font-family: var(--font-pixel); font-size: 1.5rem; }
-.home-cinema .card-action { font-family: var(--font-body); font-size: 0.8rem; opacity: 0.65; line-height: 1.4; }
 
 
 /* ---------------------------------------------------------------
@@ -334,24 +309,6 @@
   text-align: center;
   color: var(--paper);
 }
-.home-cinema .marquee-container {
-  position: absolute;
-  bottom: 5%;
-  left: 0;
-  width: 100%;
-  overflow: hidden;
-  background: var(--rust);
-  color: var(--ink);
-  padding: 14px 0;
-  transform: rotate(-2deg) scale(1.05);
-}
-.home-cinema .marquee-inner { display: flex; white-space: nowrap; width: max-content; }
-.home-cinema .marquee-inner span {
-  font-family: var(--font-pixel);
-  font-size: 1.3rem;
-  text-transform: uppercase;
-  padding: 0 20px;
-}
 
 /* ---------------------------------------------------------------
    GARANTIES (No. 03)
@@ -367,59 +324,6 @@
 .home-cinema .garantie-num { font-family: var(--font-pixel); color: var(--rust); font-size: 1rem; margin-bottom: 14px; }
 .home-cinema .garantie-title { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; margin-bottom: 8px; }
 .home-cinema .garantie-desc { font-size: 0.9rem; line-height: 1.55; opacity: 0.7; }
-
-/* ---------------------------------------------------------------
-   TARIFS (No. 05, .pricing-grid)
-   --------------------------------------------------------------- */
-
-.home-cinema .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 10px; perspective: 1200px; }
-.home-cinema .price-card {
-  background: rgba(243,233,218,0.05);
-  border: 1px solid rgba(243,233,218,0.15);
-  border-radius: 24px;
-  padding: 40px 32px;
-  display: flex;
-  flex-direction: column;
-  transform-style: preserve-3d;
-  transition: border-color 0.4s ease;
-  position: relative;
-}
-.home-cinema .price-card:hover { border-color: var(--rust); }
-.home-cinema .price-card.featured { border-color: var(--rust); background: rgba(194,114,61,0.08); transform: scale(1.03); }
-.home-cinema .price-badge {
-  align-self: flex-start;
-  background: var(--rust);
-  color: var(--ink);
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  padding: 5px 14px;
-  border-radius: 999px;
-  margin-bottom: 18px;
-}
-.home-cinema .price-tag { font-family: var(--font-label); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.65; margin-bottom: 10px; }
-.home-cinema .price-amount { font-family: var(--font-pixel); font-size: 2.2rem; color: var(--rust); line-height: 1; }
-.home-cinema .price-amount span { font-family: var(--font-label); font-size: 0.9rem; margin-left: 6px; opacity: 0.6; }
-.home-cinema .price-sub { font-size: 0.85rem; opacity: 0.6; margin: 10px 0 24px; }
-.home-cinema .price-cta {
-  text-align: center;
-  padding: 14px;
-  border-radius: 12px;
-  background: var(--paper);
-  color: var(--ink);
-  text-decoration: none;
-  font-weight: 700;
-  text-transform: uppercase;
-  font-size: 0.8rem;
-  letter-spacing: 0.05em;
-  transition: opacity 0.3s ease;
-}
-.home-cinema .price-card.featured .price-cta { background: var(--rust); }
-.home-cinema .price-cta:hover { opacity: 0.82; }
-.home-cinema .price-cta-wrap { display: flex; justify-content: center; }
-.home-cinema .price-features { list-style: none; display: flex; flex-direction: column; gap: 11px; flex-grow: 1; margin-top: 24px; padding-top: 24px; border-top: 1px solid rgba(243,233,218,0.15); }
-.home-cinema .price-features li { font-size: 0.85rem; opacity: 0.85; padding-left: 20px; position: relative; }
-.home-cinema .price-features li::before { content: '✓'; position: absolute; left: 0; color: var(--rust); font-weight: 700; }
 
 /* ---------------------------------------------------------------
    NOS LAPINS (No. 08, .projects-grid)
@@ -492,14 +396,12 @@
   .home-cinema section { padding: 100px 24px 60px; }
   .home-cinema .mission-layout,
   .home-cinema .garanties-grid,
-  .home-cinema .pricing-grid,
   .home-cinema .projects-grid,
   .home-cinema .testimonials-grid,
   .home-cinema .faq-grid {
     grid-template-columns: 1fr;
   }
   .home-cinema .project-item.offset { margin-top: 0; }
-  .home-cinema .price-card.featured { transform: none; }
   .home-cinema .section-title { font-size: 9vw; }
   .home-cinema .mission-text-huge { font-size: 10vw; }
 }

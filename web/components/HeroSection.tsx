@@ -1,22 +1,16 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
-import HeroStats from './HeroStats'
-import HeroTiltCards from './HeroTiltCards'
 import RainbowText from './RainbowText'
 
-// HERO — vidéo webm en fond (3 slides, comme la dernière mise à jour du
-// projet), voile marron par-dessus pour la lisibilité. Titre pixel,
-// compteur de preuve sociale et cartes tarifs inchangés.
+// HERO — plein écran, volontairement épuré : vidéo + titre + sous-titre.
+// Stats et cartes tarifs retirées (elles créaient un hero à rallonge qui
+// débordait du premier écran) — la preuve sociale et les tarifs vivent
+// juste en dessous, dans <TrustMarquee /> (3 bandes défilantes), visibles
+// dès qu'on scrolle d'un cran.
 const SLIDES = [
   '/IMAGES/Snapchat-1680052335_001.webm',
   '/IMAGES/Snapchat-1344115952_001.webm',
   '/IMAGES/Snapchat-1448875183_001.webm',
-]
-
-const CARDS = [
-  { tag: "À l'unité", price: '15 000', action: '1 lapin, environ 2 kg — Réserver', msg: "Bonjour, je suis intéressé par le format à l'unité (15 000 FCFA)." },
-  { tag: 'Le Duo', price: '25 000', action: '2 lapins, format le plus demandé — Réserver', msg: 'Bonjour, je suis intéressé par le format Duo (25 000 FCFA).' },
-  { tag: 'Restaurateur', price: '80 000', action: 'Lot de 6, tarif pro — Réserver', msg: 'Bonjour, je suis intéressé par le format Restaurateur (lot de 6, 80 000 FCFA).' },
 ]
 
 export default function HeroSection() {
@@ -64,10 +58,8 @@ export default function HeroSection() {
         text="Des lapins de race élevés avec soin, disponibles pour particuliers, restaurateurs & éleveurs PME. Élevage artisanal · Abidjan, Côte d'Ivoire."
         variant="white"
         className="hero-sub"
+        immediate
       />
-
-      <HeroStats />
-      <HeroTiltCards cards={CARDS} />
 
       <div className="hero-dots">
         {SLIDES.map((_, i) => (
@@ -79,6 +71,10 @@ export default function HeroSection() {
             aria-label={`Diapositive ${i + 1}`}
           />
         ))}
+      </div>
+
+      <div className="hero-scroll-cue" aria-hidden="true">
+        <span />
       </div>
     </section>
   )

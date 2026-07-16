@@ -2,24 +2,25 @@
 // ═══════════════════════════════════════════════════════════════════
 //  CHEZ FLORENCE — Page d'accueil
 //
-//  • Navbar — CardNav (desktop) + StaggeredMenu (mobile), restaurée telle
-//    qu'à l'origine du projet. Porte maintenant TOUTE la navigation du
-//    site (Nos Lapins/Tarifs/Notre Histoire/FAQ/Contact + Aide/Conditions/
-//    Confidentialité + WhatsApp) — ces liens ne sont plus dans le footer.
-//  • HeroSection — vidéo webm en fond (3 slides), voile marron, titre
-//    pixel, compteur de preuve sociale (HeroStats, données réelles),
-//    cartes tarifs tiltées.
-//  • MissionSection (id="histoire") — Notre Histoire + marquee.
+//  • Navbar — CardNav (desktop) + StaggeredMenu (mobile). Porte toute la
+//    navigation du site (Nos Lapins/Tarifs/Notre Histoire/FAQ/Contact +
+//    Aide/Conditions/Confidentialité + WhatsApp).
+//  • HeroSection — plein écran, épuré (vidéo + titre + sous-titre
+//    seulement). Stats et cartes tarifs retirées d'ici pour que le hero
+//    tienne dans le premier écran et convertisse mieux.
+//  • TrustMarquee — 3 bandes défilantes juste après le hero (donc
+//    visibles dès le premier scroll) : disponibilité (No.02 marquee
+//    déplacé ici), tarifs (id="tarifs", remplace l'ancienne grille),
+//    livraison par zone.
+//  • MissionSection (id="histoire") — Notre Histoire.
 //  • GarantiesSection (id="garanties") — grille 4 items.
-//  • TarifsSection (id="tarifs") — 3 formules, tilt 3D.
 //  • LapinsFeaturedSection (id="lapins") — vraies fiches API.
 //  • TestimonialsSection (id="temoignages") — 3 avis.
 //  • FaqSection (id="faq") — 6 questions ; version complète sur /aide.
-//  • Footer (id="contact") — identité + contact seulement (plus de
-//    liste de liens : toute la nav vit dans <Navbar />).
+//  • Footer (id="contact") — identité + contact (toute la nav vit dans
+//    <Navbar />).
 //
-//  Fond marron unique (--maroon) sur toute la home, plus d'alternance
-//  clair/sombre par section.
+//  Fond marron unique (--maroon) sur toute la home.
 // ═══════════════════════════════════════════════════════════════════
 
 import 'lenis/dist/lenis.css'
@@ -31,9 +32,9 @@ import Loader                from '@/components/Loader'
 import CustomCursor          from '@/components/CustomCursor'
 import ScrollFX              from '@/components/ScrollFX'
 import HeroSection           from '@/components/HeroSection'
+import TrustMarquee          from '@/components/TrustMarquee'
 import MissionSection        from '@/components/MissionSection'
 import GarantiesSection      from '@/components/GarantiesSection'
-import TarifsSection         from '@/components/TarifsSection'
 import LapinsFeaturedSection from '@/components/LapinsFeaturedSection'
 import TestimonialsSection   from '@/components/TestimonialsSection'
 import FaqSection            from '@/components/FaqSection'
@@ -52,9 +53,9 @@ export default function HomePage() {
         <ScrollFX />
 
         <HeroSection />
+        <TrustMarquee />
         <MissionSection />
         <GarantiesSection />
-        <TarifsSection />
         <LapinsFeaturedSection />
         <TestimonialsSection />
         <FaqSection />

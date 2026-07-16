@@ -69,7 +69,7 @@ export default async function RabbitDetailPage({ params }) {
   ].filter(Boolean)
 
   return (
-    <main className="min-h-screen overflow-x-clip" style={{ color: 'var(--paper)' }}>
+    <main className="min-h-screen overflow-x-clip" style={{ backgroundColor: 'var(--maroon)', color: 'var(--paper)' }}>
       <Navbar />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-28 pb-10">

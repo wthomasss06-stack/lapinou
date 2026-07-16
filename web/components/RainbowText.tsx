@@ -51,6 +51,16 @@ interface RainbowTextProps {
   as?: 'p' | 'h2' | 'h3' | 'span' | 'div'
   /** Ne s'active qu'à partir de ce breakpoint (desktop uniquement). */
   minWidth?: number
+  /**
+   * Joue le reveal une fois au montage (tween minuté) au lieu du scrub lié
+   * au scroll. Pour le contenu déjà visible au chargement — typiquement le
+   * Hero — où il n'y a pas de scroll "vers" l'élément : avec le scrub
+   * classique (start: 'top 90%', end: 'top 10%'), un bloc déjà dans le
+   * premier écran reste coincé entre les deux seuils et n'atteint jamais
+   * sa couleur finale tant que l'utilisateur n'a pas scrollé exactement la
+   * bonne plage.
+   */
+  immediate?: boolean
 }
 
 export default function RainbowText({
@@ -59,6 +69,7 @@ export default function RainbowText({
   className = '',
   as: Tag = 'p',
   minWidth,
+  immediate = false,
 }: RainbowTextProps) {
   const containerRef = useRef<HTMLElement | null>(null)
   const charRefs = useRef<(HTMLSpanElement | null)[]>([])
@@ -135,7 +146,7 @@ export default function RainbowText({
       })
     }
 
-    const register = () => {
+    const registerScroll = () => {
       update(0)
       const st = ScrollTrigger.create({
         trigger: container,
@@ -146,6 +157,20 @@ export default function RainbowText({
       })
       return () => st.kill()
     }
+
+    const registerImmediate = () => {
+      update(0)
+      const tw = gsap.to({ p: 0 }, {
+        p: 1,
+        duration: Math.min(2.2, 0.9 + flatChars.length * 0.018),
+        delay: 0.15,
+        ease: 'power1.inOut',
+        onUpdate: function () { update(this.targets()[0].p) },
+      })
+      return () => tw.kill()
+    }
+
+    const register = immediate ? registerImmediate : registerScroll
 
     let cleanup: (() => void) | undefined
     let mm: ReturnType<typeof gsap.matchMedia> | undefined
@@ -161,7 +186,7 @@ export default function RainbowText({
       cleanup?.()
       mm?.revert()
     }
-  }, [flatChars, variant, minWidth])
+  }, [flatChars, variant, minWidth, immediate])
 
   return (
     <Tag ref={containerRef as any} className={`rainbow-reveal ${className}`}>

@@ -1,0 +1,135 @@
+/* ═══════════════════════════════════════════════════════════════
+   TrustMarquee — adapté de TrustStacksMarquee (fourni par Aka), porté
+   sur la palette Chez Florence. Remplace l'ancien MarqueeBanner (dans
+   Notre Histoire, position absolute → chevauchait le texte) et l'ancien
+   TarifsSection en grille. 3 bandes "sticker" tournées en 2D, défilent
+   en sens alterné, en flux normal (pas de position absolute → plus de
+   chevauchement possible).
+     Ligne 1 — Disponibilité (reprend l'ancien marquee : fond rust)
+     Ligne 2 — Tarifs (fond encre, sens inverse)
+     Ligne 3 — Livraison par zone (bande plus plate, comme les
+               métriques de la référence)
+   ═══════════════════════════════════════════════════════════════ */
+
+.tm-section {
+  position: relative;
+  overflow: hidden;
+  padding: 3rem 0;
+  background-color: var(--maroon);
+  scroll-margin-top: 90px;
+}
+
+.tm-band {
+  position: relative;
+  width: 110%;
+  margin-left: -5%;
+  overflow: hidden;
+  padding: 1.1rem 0;
+}
+.tm-band-track { display: flex; width: max-content; will-change: transform; }
+.tm-band-set { display: flex; align-items: center; flex-shrink: 0; }
+
+.tm-band--availability {
+  background: var(--rust);
+  color: var(--ink);
+  transform: rotate(-2.2deg);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.35);
+  margin-bottom: 1.4rem;
+  z-index: 3;
+}
+.tm-band--pricing {
+  background: var(--ink);
+  color: var(--paper);
+  transform: rotate(2deg);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.45);
+  margin-bottom: 1.4rem;
+  z-index: 2;
+}
+.tm-band--delivery {
+  background: var(--card);
+  color: var(--paper);
+  transform: rotate(-1.4deg);
+  box-shadow: 0 14px 32px rgba(0,0,0,0.3);
+  z-index: 1;
+}
+
+.tm-band-track--left  { animation: tmScrollLeft 32s linear infinite; }
+.tm-band-track--right { animation: tmScrollRight 38s linear infinite; }
+.tm-band:hover .tm-band-track { animation-play-state: paused; }
+
+@keyframes tmScrollLeft  { from { transform: translateX(0); }    to { transform: translateX(-50%); } }
+@keyframes tmScrollRight { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+
+/* ── Ligne 1 : Disponibilité ─────────────────────────────────── */
+.tm-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  white-space: nowrap;
+  font-family: var(--font-pixel);
+  font-size: clamp(1rem, 1.7vw, 1.5rem);
+  text-transform: uppercase;
+  padding: 0 1.3rem;
+}
+.tm-item svg { flex-shrink: 0; opacity: 0.75; width: 16px; height: 16px; }
+.tm-sep { opacity: 0.4; }
+
+/* ── Ligne 2 : Tarifs ─────────────────────────────────────────── */
+.tm-price-item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  white-space: nowrap;
+  padding: 0 1.5rem;
+}
+.tm-price-label {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: clamp(0.85rem, 1.2vw, 1.05rem);
+  opacity: 0.65;
+}
+.tm-price-value {
+  font-family: var(--font-pixel);
+  font-size: clamp(1.1rem, 1.9vw, 1.7rem);
+  color: var(--rust);
+}
+.tm-price-value span { font-family: var(--font-label); font-size: 0.6em; opacity: 0.7; margin-left: 0.2em; }
+
+/* ── Ligne 3 : Livraison ──────────────────────────────────────── */
+.tm-band--delivery .tm-band { padding: 0.75rem 0; }
+.tm-delivery-item {
+  font-family: var(--font-label);
+  font-size: clamp(0.8rem, 1.15vw, 1rem);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 1.3rem;
+}
+.tm-delivery-item strong {
+  color: var(--rust);
+  font-family: var(--font-pixel);
+  font-size: 1.15em;
+  font-weight: 400;
+  margin-right: 0.5rem;
+}
+.tm-delivery-sep { opacity: 0.3; margin: 0 0.3rem; }
+
+@media (max-width: 900px) {
+  .tm-band--availability { transform: rotate(-1.6deg); }
+  .tm-band--pricing { transform: rotate(1.4deg); }
+  .tm-band--delivery { transform: rotate(-1deg); }
+}
+@media (max-width: 640px) {
+  .tm-section { padding: 2.2rem 0; }
+  .tm-band { width: 118%; margin-left: -9%; padding: 0.85rem 0; }
+  .tm-band--availability, .tm-band--pricing { margin-bottom: 1rem; }
+  .tm-item, .tm-price-item { padding: 0 0.9rem; }
+  .tm-delivery-item { padding: 0 0.9rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tm-band-track--left, .tm-band-track--right { animation-duration: 90s; }
+}
