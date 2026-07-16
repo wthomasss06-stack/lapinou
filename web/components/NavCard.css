@@ -1,0 +1,135 @@
+/* ═══════════════════════════════════════════════════════════════════
+   NavCard — carte de navigation desktop (≥900px). Se déplie sous le
+   header flottant (SiteNav.css). Cachée en dessous de 900px, où
+   StaggeredMenu prend le relais.
+   ═══════════════════════════════════════════════════════════════════ */
+
+.nav-card {
+  position: fixed;
+  top: 78px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 40px);
+  max-width: 1200px;
+  z-index: 99;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1.1fr;
+  gap: 8px;
+  padding: 36px 40px;
+  border-radius: 26px;
+  background: rgba(var(--ink-rgb), 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.55);
+  color: var(--paper);
+
+  /* État fermé par défaut (avant hydratation JS) — GSAP prend le relais
+     ensuite via clip-path/autoAlpha, jamais width/height. */
+  clip-path: inset(0% 0% 100% 0% round 26px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+@media (min-width: 900px) {
+  .nav-card { display: grid; }
+}
+@media (max-width: 899px) {
+  .nav-card { display: none; }
+}
+
+.nav-card-col {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.nav-card-col--secondary { padding-left: 28px; border-left: 1px solid rgba(255, 255, 255, 0.08); }
+.nav-card-col--cta { padding-left: 28px; border-left: 1px solid rgba(255, 255, 255, 0.08); gap: 14px; }
+
+.nav-card-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.nav-card-link {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.5rem;
+  text-decoration: none;
+  color: var(--paper);
+  padding: 8px 0;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+.nav-card-link-index {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--rust);
+}
+.nav-card-link:hover {
+  color: var(--rust);
+  transform: translateX(6px);
+}
+
+.nav-card-sublink {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--muted);
+  text-decoration: none;
+  padding: 7px 0;
+  transition: color 0.3s ease;
+}
+.nav-card-sublink:hover { color: var(--paper); }
+
+.nav-card-cta-text {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--muted);
+  margin: 0;
+}
+.nav-card-whatsapp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: 999px;
+  background: var(--rust);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.nav-card-whatsapp:hover { transform: translateY(-2px); opacity: 0.92; }
+
+.nav-card-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: background 0.3s ease;
+}
+.nav-card-outline:hover { background: rgba(255, 255, 255, 0.08); }
+.nav-card-outline .pixel-square { width: 8px; height: 8px; background: var(--paper); display: inline-block; }
+
+@media (max-width: 1080px) {
+  .nav-card { grid-template-columns: 1.2fr 1fr; padding: 30px; }
+  .nav-card-col--cta { grid-column: 1 / -1; border-left: none; padding-left: 0; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 20px; flex-direction: row; align-items: center; flex-wrap: wrap; }
+  .nav-card-col--cta .nav-card-eyebrow { width: 100%; }
+  .nav-card-col--cta .nav-card-cta-text { flex: 1 1 220px; }
+}

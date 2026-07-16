@@ -68,13 +68,13 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
-  themeColor: '#2A2118',
+  themeColor: '#3A2F22',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr" className={`${syne.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} ${silkscreen.variable}`}>
-      <body className="bg-brand-dark text-white font-body antialiased">
+      <body className="bg-brand-dark text-white font-body antialiased" style={{ backgroundColor: 'var(--maroon)' }}>
         <Toaster
           position="top-right"
           toastOptions={{

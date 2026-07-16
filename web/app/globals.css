@@ -22,13 +22,13 @@
      admin…) — même couleur, nom à jour. */
   --paper:      #F3E9DA;
   --paper-deep: #E4D2B4;
-  --ink:        #2A100B;
-  --maroon:     #7C2A1A;
+  --ink:        #3A2F22;
+  --maroon:     #3A2F22;
   --rust:       #C2723D;
   --caramel:    #B8834A;
   --card:       #3A2F22;
   --border:     #050505;
-  --muted:      #A89678;
+  --muted:      #B8834A;
 
   /* ── Alias historiques (identiques ou quasi-identiques en hex) ──── */
   --green: var(--caramel);
@@ -79,7 +79,7 @@ html {
 }
 
 body {
-  background: var(--dark);
+  background: var(--maroon);
   overflow-x: hidden;
   background-image:
     radial-gradient(ellipse at 20% 0%, rgba(var(--green-rgb), 0.10) 0%, transparent 50%),
@@ -89,7 +89,7 @@ body {
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--dark); }
+::-webkit-scrollbar-track { background: var(--maroon); }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--green); }
 

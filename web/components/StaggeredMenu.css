@@ -1,0 +1,112 @@
+/* ═══════════════════════════════════════════════════════════════════
+   StaggeredMenu — overlay mobile plein écran (<900px). Remplace
+   l'absence totale de nav mobile sur les pages internes, et complète
+   le CTA sticky sur la home (voir StickyMobileCta, toujours affiché).
+   ═══════════════════════════════════════════════════════════════════ */
+
+.staggered-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  padding: 100px 28px 40px;
+  background: rgba(var(--ink-rgb), 0.97);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  color: var(--paper);
+  overflow-y: auto;
+
+  /* État fermé par défaut (avant hydratation JS). */
+  clip-path: inset(0% 0% 100% 0%);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+@media (min-width: 900px) {
+  .staggered-menu { display: none; }
+}
+
+.staggered-menu-close {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--paper);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.staggered-menu-list {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 32px;
+}
+.staggered-menu-item {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 9vw, 2.6rem);
+  text-decoration: none;
+  color: var(--paper);
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  min-height: 44px;
+}
+.staggered-menu-item:first-child { border-top: 1px solid rgba(255, 255, 255, 0.08); }
+.staggered-menu-index {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--rust);
+}
+
+.staggered-menu-secondary {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 36px;
+}
+.staggered-menu-sublink {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--muted);
+  text-decoration: none;
+  padding: 10px 0;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+.staggered-menu-sublink:active { color: var(--paper); }
+
+.staggered-menu-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 18px;
+  border-radius: 16px;
+  background: var(--rust);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.95rem;
+  text-decoration: none;
+  margin-top: auto;
+  min-height: 56px;
+}
+
+@media (max-width: 380px) {
+  .staggered-menu { padding: 90px 20px 32px; }
+}

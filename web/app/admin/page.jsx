@@ -17,10 +17,7 @@ export default function AdminPage() {
 
   return (
     <AdminGate>
-      <main
-        className="min-h-screen px-4 sm:px-6 py-8 max-w-6xl mx-auto overflow-x-hidden"
-        style={{ backgroundColor: 'var(--maroon)' }}
-      >
+      <main className="min-h-screen px-4 sm:px-6 py-8 max-w-6xl mx-auto overflow-x-hidden">
         {/* Tabs — port direct de .tabs/.tab-btn (admin.html) */}
         <div className="flex flex-wrap items-center gap-2 mb-8 pb-5 border-b border-white/[0.08]">
           {TABS.map(({ id, label, icon: Icon }) => (

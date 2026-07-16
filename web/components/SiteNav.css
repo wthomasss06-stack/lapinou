@@ -1,0 +1,100 @@
+/* ═══════════════════════════════════════════════════════════════════
+   SiteNav — header flottant unique pour tout le site (remplace les 2
+   variantes home/inner de l'ancien Navbar). "Fluid island" détachée du
+   bord plutôt que collée en pleine largeur : voir NavCard.css pour la
+   carte desktop et StaggeredMenu.css pour l'overlay mobile.
+   ═══════════════════════════════════════════════════════════════════ */
+
+.site-nav {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 40px);
+  max-width: 1200px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 10px 10px 22px;
+  border-radius: 999px;
+  background: rgba(var(--ink-rgb), 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--paper);
+}
+
+.site-nav .logo-area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--paper);
+}
+.site-nav .logo-blob {
+  width: 30px;
+  height: 22px;
+  background: var(--rust);
+  border-radius: 40% 60% 60% 40% / 50% 30% 70% 50%;
+  animation: site-nav-blobby 6s infinite ease-in-out;
+  flex-shrink: 0;
+}
+@keyframes site-nav-blobby {
+  0%, 100% { border-radius: 40% 60% 60% 40% / 50% 30% 70% 50%; }
+  50%      { border-radius: 60% 40% 40% 60% / 30% 60% 40% 70%; }
+}
+
+.nav-toggle {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.35s ease;
+}
+.nav-toggle-line {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 18px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--paper);
+  transform: translate(-50%, -50%) translateY(-4px);
+  transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1), background 0.35s ease;
+}
+.nav-toggle-line + .nav-toggle-line {
+  transform: translate(-50%, -50%) translateY(4px);
+}
+
+.site-nav[data-open='true'] .nav-toggle {
+  background: var(--rust);
+}
+.site-nav[data-open='true'] .nav-toggle-line {
+  background: var(--ink);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.site-nav[data-open='true'] .nav-toggle-line + .nav-toggle-line {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+@media (max-width: 640px) {
+  .site-nav {
+    top: 14px;
+    width: calc(100% - 24px);
+    padding: 8px 8px 8px 18px;
+  }
+  .site-nav .logo-area span { font-size: 0.95rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-toggle-line { transition: none; }
+}
