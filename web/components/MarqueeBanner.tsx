@@ -1,65 +1,43 @@
 'use client'
-import { motion } from 'framer-motion'
+import { useRef } from 'react'
+import { useGSAP } from '@gsap/react'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
-const ITEMS = [
-  'Vente de Lapins', 'Élevage Artisanal', 'Races Pures',
-  'Restaurants', 'PME & Éleveurs', 'Abidjan',
-  'Réservation Rapide', 'Suivi Après-Vente',
-]
+gsap.registerPlugin(useGSAP, ScrollTrigger)
 
+const TEXT = 'DISPONIBLE · RETRAIT RAPIDE · QUALITÉ CONTRÔLÉE · PRÊT À LA VENTE · EN STOCK · ENVIRON 2 KG · LAPIN FRAIS · SÉLECTIONNÉ · PESÉ AVEC SOIN ·'
+
+// Port direct de .marquee-container (index.html) : vitesse de base
+// constante, dont le timeScale s'accélère/s'inverse avec la vélocité du
+// scroll sur #histoire (reprend le comportement exact de la maquette).
 export default function MarqueeBanner() {
-  const doubled = [...ITEMS, ...ITEMS, ...ITEMS, ...ITEMS]
+  const innerRef = useRef<HTMLDivElement>(null)
+
+  useGSAP(() => {
+    if (!innerRef.current) return
+    const tween = gsap.to(innerRef.current, { xPercent: -50, repeat: -1, duration: 15, ease: 'none' })
+
+    const st = ScrollTrigger.create({
+      trigger: '#histoire',
+      start: 'top bottom',
+      end: 'bottom top',
+      onUpdate: (self) => {
+        gsap.to(tween, { timeScale: self.getVelocity() / 150 + 1, duration: 0.2 })
+      },
+    })
+
+    return () => {
+      st.kill()
+      tween.kill()
+    }
+  }, [])
 
   return (
-    <div
-      className="overflow-hidden select-none"
-      style={{
-        borderTop: '1px solid rgba(243,233,218,0.12)',
-        borderBottom: '1px solid rgba(243,233,218,0.12)',
-        padding: '0.55rem 0',
-        background: 'var(--ink)',
-      }}
-    >
-      <div className="overflow-hidden"
-        style={{
-          WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
-          maskImage:       'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
-        }}
-      >
-        <motion.div
-          className="flex gap-0 shrink-0"
-          animate={{ x: ['0%', '-25%'] }}
-          transition={{ duration: 22, ease: 'linear', repeat: Infinity }}
-          style={{ willChange: 'transform' }}
-        >
-          {doubled.map((item, i) => (
-            <div key={i} className="flex items-center shrink-0">
-              <span
-                className="whitespace-nowrap"
-                style={{
-                  fontFamily: 'var(--font-label)',
-                  fontSize: 'clamp(10px, 0.82vw, 13px)',
-                  letterSpacing: '0.04em',
-                  textTransform: 'uppercase',
-                  color: i % 3 === 1
-                    ? 'rgba(194,114,61,0.7)'   // rust accent
-                    : 'rgba(243,233,218,0.42)', // paper dim
-                }}
-              >
-                {item}
-              </span>
-              <span
-                className="mx-4"
-                style={{
-                  color: 'rgba(124,42,26,0.5)',
-                  fontSize: '0.7rem',
-                }}
-              >
-                ✦
-              </span>
-            </div>
-          ))}
-        </motion.div>
+    <div className="marquee-container">
+      <div className="marquee-inner" ref={innerRef}>
+        <span>{TEXT}</span>
+        <span>{TEXT}</span>
       </div>
     </div>
   )

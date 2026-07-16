@@ -7,6 +7,7 @@ import { Mail, MessageCircle, MapPin, Send, CheckCircle } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { sendContactMessage } from '@/lib/api'
 import { formatWhatsappDisplay } from '@/lib/whatsapp'
+import RainbowText from './RainbowText'
 
 const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP?.replace(/\D/g, '') || ''
 
@@ -42,26 +43,23 @@ export default function ContactSection() {
   return (
     <section id="contact" className="py-20 px-6 scroll-mt-20">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          className="text-center mb-16"
-        >
+        {/* Header — pas de motion.div ici : le giant-heading (SplitText/3D-flip,
+            voir lib/useGsapLenis.ts) et RainbowText ont chacun leur PROPRE
+            reveal au scroll. Les envelopper dans un whileInView opacity:0→1
+            les cachait pendant que ces reveals tournaient dessous ; le
+            temps que whileInView se déclenche, les deux avaient déjà fini
+            en silence et n'apparaissaient plus qu'en état final, figé. */}
+        <div className="text-center mb-16">
           <p className="text-caramel font-mono text-xs tracking-widest uppercase mb-3">Nous Contacter</p>
           <h2 className="giant-heading split-heading-1 max-w-3xl mx-auto mb-4">
             Parlons de Votre Lapin
           </h2>
-          <div id="intro-container-3">
-            <p id="behind-intro-3">
-              Une question sur une race, un prix, une disponibilité ? Écrivez-nous.
-            </p>
-            <p id="above-intro-3">
-              Une question sur une race, un prix, une disponibilité ? Écrivez-nous.
-            </p>
-          </div>
-        </motion.div>
+          <RainbowText
+            text="Une question sur une race, un prix, une disponibilité ? Écrivez-nous."
+            variant="white"
+            className="max-w-2xl mx-auto"
+          />
+        </div>
 
         <div className="grid lg:grid-cols-5 gap-10">
           {/* Contact info */}

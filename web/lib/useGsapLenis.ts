@@ -2,19 +2,19 @@
 import { useGSAP } from '@gsap/react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { SplitText } from 'gsap/SplitText'
 import Lenis from 'lenis'
 
-gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText)
+gsap.registerPlugin(useGSAP, ScrollTrigger)
 ScrollTrigger.config({ ignoreMobileResize: true })
 
 /**
  * Orchestrateur de toute l'animation scroll de la home cinématique
- * (Lenis + ScrollTrigger + SplitText). Port fidèle du <script> de
- * index.html : cible les sections par sélecteur global (#page2, #sec-iris,
- * .price-card, …) exactement comme le prototype, peu importe dans quel
- * composant React elles vivent — tous sont montés au moment où cet effet
- * tourne. À appeler une seule fois (voir <ScrollFX />).
+ * (Lenis + ScrollTrigger). Reveal au scroll (.reveal-text) et parallax
+ * images (.project-item) — génériques par classe, n'importe quel
+ * nouveau composant de la home peut s'y accrocher sans toucher ce
+ * fichier. (Le thème clair/sombre dynamique par section a été retiré :
+ * un seul fond marron sur tout le site désormais, plus d'alternance.)
+ * À appeler une seule fois (voir <ScrollFX />).
  */
 export default function useGsapLenis() {
   useGSAP((_context, contextSafe) => {
@@ -50,316 +50,64 @@ export default function useGsapLenis() {
     gsap.ticker.add(tickLenis)
     gsap.ticker.lagSmoothing(0)
 
-    // ── Reveal "above-intro" (page2) ─────────────────────────────
-    gsap.to('#above-intro', {
-      clipPath: 'inset(0 0% 0 0)',
-      ease: 'none',
-      scrollTrigger: {
-        trigger: '#intro-container',
-        start: 'top 80%',
-        end: 'top 30%',
-        scrub: 2,
-      },
-    })
+    // ── Reveal "above-intro" / -1 / -2 / -3 : remplacés par <RainbowText />
+    // (voir components/RainbowText.tsx), qui enregistre son propre
+    // ScrollTrigger par instance — plus besoin de les piloter ici.
 
-    // ── Reveal "above-intro-1" (page3) — desktop uniquement : #page3 est
-    // display:none sur mobile (home-cinematic.css), donc on n'attache même
-    // pas ces ScrollTrigger là où il n'y a rien à animer. ────────────────
-    const page3MM = gsap.matchMedia()
-    page3MM.add('(min-width: 768px)', () => {
-      gsap.to('#above-intro-1', {
-        clipPath: 'inset(0 0% 0 0)',
-        ease: 'none',
-        scrollTrigger: {
-          trigger: '#intro-container-1',
-          start: 'top 80%',
-          end: 'top 30%',
-          scrub: 2,
-        },
-      })
-    })
-
-    // ── Reveal "above-intro-2" (pricing) ─────────────────────────
-    gsap.to('#above-intro-2', {
-      clipPath: 'inset(0 0% 0 0)',
-      ease: 'none',
-      scrollTrigger: {
-        trigger: '#intro-container-2',
-        start: 'top 85%',
-        end: 'top 45%',
-        scrub: 2,
-      },
-    })
-
-    // ── Reveal "above-intro-3" (contact) ──────────────────────────
-    gsap.to('#above-intro-3', {
-      clipPath: 'inset(0 0% 0 0)',
-      ease: 'none',
-      scrollTrigger: {
-        trigger: '#intro-container-3',
-        start: 'top 90%',
-        end: 'top 55%',
-        scrub: 2,
-      },
-    })
-
-    // ── Ligne qui se dessine (page2) ─────────────────────────────
-    const scrollLine = document.querySelector<SVGLineElement>('#scroll-line line')
-    if (scrollLine) {
-      const length = scrollLine.getTotalLength()
-      gsap.set(scrollLine, { strokeDasharray: length, strokeDashoffset: length })
-      gsap.to(scrollLine, {
-        strokeDashoffset: 0,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: '#scroll-line',
-          start: 'top 80%',
-          end: 'top 40%',
-          scrub: 4,
-          once: true,
-        },
-      })
-    }
-
-    // ── Parallax croisé page3 (les 2 plates latérales) — desktop only ──
-    page3MM.add('(min-width: 768px)', () => {
-      gsap.to('#page3-img-2', {
-        xPercent: 120,
+    // ── Reveal générique — reprend le seul mécanisme de reveal des 5
+    // maquettes HTML : gsap.from(y:40, opacity:0) au scroll, appliqué à
+    // TOUT ce qui porte .reveal-text (titres compris — pas de traitement
+    // "3D split" séparé pour les headings, la maquette n'en a pas).
+    gsap.utils.toArray<HTMLElement>('.reveal-text').forEach((el) => {
+      gsap.from(el, {
+        y: 40,
+        autoAlpha: 0,
         duration: 1,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 85%',
+        },
+      })
+    })
+
+    // ── Parallax images — grille "Nos Lapins" ────────────────────────
+    gsap.utils.toArray<HTMLElement>('.project-item img').forEach((img) => {
+      gsap.fromTo(img, { yPercent: -15 }, {
+        yPercent: 15,
         ease: 'none',
         scrollTrigger: {
-          trigger: '#page3-img-2',
-          scroller: 'body',
-          start: 'top 100%',
-          end: 'top -40%',
-          scrub: 2.5,
-        },
-      })
-      gsap.to('#page3-img-3', {
-        xPercent: -120,
-        duration: 1,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: '#page3-img-3',
-          scroller: 'body',
-          start: 'top 120%',
-          end: 'top -40%',
-          scrub: 2.5,
+          trigger: img.closest('.project-item') as HTMLElement,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: true,
         },
       })
     })
 
-    // ── Fond page3 : dark → muted (clair) — desktop only ───────────
-    page3MM.add('(min-width: 768px)', () => {
-      gsap.to('#page3', {
-        backgroundColor: '#A89678',
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: '#page3',
-          scroller: 'body',
-          start: 'top -130%',
-          end: 'bottom -30%',
-          scrub: 1,
-        },
-      })
-    })
-
-    // ── Effet pinné desktop uniquement ────────────────────────────
-    // No. 04 Portrait (iris) — seul effet plein écran restant ;
-    // Triptyque (Galerie) et Blob (En Mouvement) ont été entièrement
-    // retirés (composants + CSS supprimés, plus seulement l'animation).
-    const fxMM = gsap.matchMedia()
-    fxMM.add('(min-width: 800px)', () => {
-      gsap.to('.iris-mask', {
-        clipPath: 'circle(150% at 50% 50%)',
-        ease: 'power2.inOut',
-        scrollTrigger: {
-          trigger: '#sec-iris',
-          pin: true,
-          start: 'center center',
-          end: '+=1000',
-          scrub: 1,
-          // Ce pin ajoute ~1000px de spacer : tout ScrollTrigger positionné
-          // plus bas sur la page (Tarifs, Races, Contact…) doit se
-          // recalculer APRÈS que ce spacer soit posé, sinon son start/end
-          // est calculé sur une page trop courte. refreshPriority bas =
-          // rafraîchi en premier (voir le pin Horizontal plus bas, qui
-          // doit passer juste après).
-          refreshPriority: -2,
-        },
-      })
-    })
-
-    // ── Cartes tarifs ──────────────────────────────────────────────
-    gsap.from('.price-card', {
-      y: 40,
-      autoAlpha: 0,
-      duration: 0.8,
-      stagger: 0.15,
-      ease: 'power2.out',
-      scrollTrigger: {
-        trigger: '.pricing-grid',
-        start: 'top 82%',
-        toggleActions: 'play none none reverse',
-      },
-    })
-
-    // ── Aperçu flottant au survol (Nos Garanties) ──────────────────
-    const hoverImage = document.querySelector<HTMLElement>('#hover-img')
-    const hoverItems = document.querySelectorAll<HTMLElement>('.hover-item')
-
-    if (hoverImage) {
-      gsap.set(hoverImage, { xPercent: -50, yPercent: -50 })
-
-      const onMove = contextSafe((e: MouseEvent) => {
-        gsap.to(hoverImage, {
-          x: e.clientX,
-          y: e.clientY,
-          duration: 0.5,
-          ease: 'power1.out',
-        })
-      })
-      window.addEventListener('mousemove', onMove)
-      cleanupFns.push(() => window.removeEventListener('mousemove', onMove))
-
-      hoverItems.forEach((item) => {
-        const enter = contextSafe(() => {
-          hoverImage.style.backgroundImage = item.dataset.img || ''
-          hoverImage.style.opacity = '1'
-        })
-        const leave = contextSafe(() => {
-          hoverImage.style.opacity = '0'
-        })
-        item.addEventListener('mouseenter', enter)
-        item.addEventListener('mouseleave', leave)
-        cleanupFns.push(() => {
-          item.removeEventListener('mouseenter', enter)
-          item.removeEventListener('mouseleave', leave)
-        })
-      })
-    }
-
-    // ── Effets dépendant des polices (SplitText) ────────────────────
-    // Bandeau horizontal pinné + titres "lines"/"chars" — comme
-    // index.html, on attend document.fonts.ready pour que SplitText
-    // mesure le texte avec la bonne police (Bodoni Moda / IBM Plex Mono).
-    const runFontDependentFx = contextSafe(() => {
-      const wrapper = document.querySelector<HTMLElement>('.Horizontal')
-      const text = document.querySelector<HTMLElement>('.Horizontal__text')
-
-      if (wrapper && text) {
-        const splitWords = SplitText.create(text, { type: 'chars,words' })
-
-        const scrollTween = gsap.to(text, {
-          xPercent: -100,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: wrapper,
-            pin: true,
-            end: '+=5000px',
-            scrub: true,
-            // Ce pin (5000px de spacer !) n'est créé qu'ici, après
-            // document.fonts.ready — donc APRÈS le premier calcul de
-            // #above-intro-3 (Contact, plus bas dans le fichier mais
-            // plus bas sur la page aussi). Sans refreshPriority, le
-            // ScrollTrigger.refresh() qui suit (ligne ~318) peut recalculer
-            // Contact avant que ce spacer de 5000px soit posé → son
-            // start/end tombe sur une page bien trop courte et le reveal
-            // ne se déclenche jamais dans la fenêtre visible. -1 = juste
-            // après le pin Iris (-2), mais avant tout le reste (défaut 0).
-            refreshPriority: -1,
-          },
-        })
-
-        splitWords.chars.forEach((char) => {
-          gsap.from(char, {
-            yPercent: 'random(-200,200)',
-            rotation: 'random(-20,20)',
-            ease: 'back.out(1.2)',
-            scrollTrigger: {
-              trigger: char,
-              containerAnimation: scrollTween,
-              start: 'left 100%',
-              end: 'left 30%',
-              scrub: 1,
-            },
-          })
-        })
-      }
-
-      // Chaque titre .split-heading-1 (Nos, Garanties, Un tarif pour
-      // chaque besoin, Commandez) a son propre SplitText + ScrollTrigger,
-      // pour se révéler quand LUI entre dans le viewport — pas seulement
-      // quand le premier du lot (Nos) y entre.
-      // type: 'words, chars' (pas juste 'chars') : sans le niveau "words",
-      // SplitText n'a plus de frontière de mot fiable dans le DOM une fois
-      // les lettres éclatées en spans individuels — le retour à la ligne
-      // du navigateur pouvait alors couper au milieu d'un mot ("PO/UR",
-      // "V/OTRE") au lieu de renvoyer le mot entier. Avec 'words' en plus,
-      // chaque mot garde son propre wrapper (.word, voir home-cinematic.css
-      // "white-space: nowrap") — les chars à l'intérieur s'animent pareil,
-      // seule la frontière de césure change.
-      const splitHeadings = gsap.utils.toArray<HTMLElement>('.split-heading-1')
-      splitHeadings.forEach((heading) => {
-        const split = SplitText.create(heading, { type: 'words, chars' })
-
-        gsap.set(split.chars, {
-          yPercent: 60,
-          rotateX: -35,
-          skewX: -7,
-          autoAlpha: 0,
-        })
-
-        gsap.to(split.chars, {
-          yPercent: 0,
-          rotateX: 0,
-          skewX: 0,
-          autoAlpha: 1,
-          duration: 1.4,
-          ease: 'power4.out',
-          stagger: { amount: 0.55, from: 'start' },
-          scrollTrigger: {
-            trigger: heading,
-            start: 'top 90%',
-            end: 'top 0%',
-            scrub: 3.8,
-            once: true,
-          },
-        })
-      })
-    })
-
+    // ── Attend les polices avant de recalculer les zones de déclenchement
+    // Tous les ScrollTrigger créés plus haut (.reveal-text, thème
+    // dynamique, parallax images — et ceux, indépendants, de chaque
+    // <RainbowText />) le sont avant que la police body (Space Grotesk)
+    // ait fini de charger — le texte change de hauteur au chargement de
+    // la police, ce qui décale leur zone de déclenchement. Sur desktop
+    // l'écart passe souvent inaperçu ; sur mobile (viewport plus petit,
+    // wrapping différent) le trigger se retrouve hors-zone et le reveal
+    // ne se voit plus du tout. Un refresh une fois tout stabilisé
+    // recalcule tous les ScrollTrigger de la page sur le layout final.
     document.fonts.ready.then(() => {
       if (!cancelled) {
-        runFontDependentFx()
-        // #above-intro / -1 / -2 / -3 sont tous configurés plus haut, avant
-        // que la police body (Newsreader) ait fini de charger — leur texte
-        // change de hauteur au chargement de la police, ce qui décale
-        // la zone de déclenchement du reveal. Sur desktop l'écart passe
-        // souvent inaperçu ; sur mobile (viewport plus petit, wrapping
-        // différent) le trigger se retrouve hors-zone et le reveal ne
-        // se voit plus du tout. Un refresh une fois tout stabilisé
-        // recalcule tous les ScrollTrigger sur le layout final.
-        //
-        // Cas particulier de #above-intro-3 (Contact) : runFontDependentFx()
-        // ci-dessus vient TOUT JUSTE de créer le pin du bandeau Horizontal
-        // (5000px de spacer). Contact est plus bas sur la page que ce pin,
-        // donc son start/end doit être recalculé après que ce spacer soit
-        // posé — d'où refreshPriority sur les deux pins (Iris et Horizontal)
-        // pour garantir qu'ils se rafraîchissent avant Contact (et avant
-        // tout le reste, par défaut à 0) dans le refresh ci-dessous.
-        //
-        // Ce refresh recalcule bien ScrollTrigger, mais Lenis a lui aussi
-        // mis en cache la hauteur totale scrollable AVANT le reflow des
-        // polices — sur mobile, où le wrapping change beaucoup plus la
-        // hauteur (texte réparti sur bien plus de lignes qu'en desktop),
-        // ce cache devient assez faux pour que le mapping scroll→progress
-        // de Lenis ne colle plus avec les zones que ScrollTrigger vient
-        // de recalculer. On resync Lenis d'abord. Et un simple rAF ne
-        // garantit pas toujours que le reflow est déjà peint au moment où
-        // il tourne (plus vrai sur mobile, pipeline de rendu plus lent) —
-        // un double rAF attend une frame de plus, et le setTimeout en
-        // filet de secours couvre les cas où même ça arrive trop tôt.
+        // Lenis a lui aussi mis en cache la hauteur totale scrollable
+        // AVANT le reflow des polices — sur mobile, où le wrapping
+        // change beaucoup plus la hauteur (texte réparti sur bien plus
+        // de lignes qu'en desktop), ce cache devient assez faux pour que
+        // le mapping scroll→progress de Lenis ne colle plus avec les
+        // zones que ScrollTrigger vient de recalculer. On resync Lenis
+        // d'abord. Et un simple rAF ne garantit pas toujours que le
+        // reflow est déjà peint au moment où il tourne (plus vrai sur
+        // mobile, pipeline de rendu plus lent) — un double rAF attend
+        // une frame de plus, et le setTimeout en filet de secours
+        // couvre les cas où même ça arrive trop tôt.
         lenis.resize()
         requestAnimationFrame(() => {
           requestAnimationFrame(() => ScrollTrigger.refresh())

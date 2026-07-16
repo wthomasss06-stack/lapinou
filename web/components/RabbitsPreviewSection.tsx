@@ -1,7 +1,9 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import { ChevronLeft, ChevronRight, PawPrint } from 'lucide-react'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import RabbitCard from './RabbitCard'
+import RainbowText from './RainbowText'
 import { rabbitsApi } from '@/lib/api'
 
 // Page 4 — "Nos Lapins" en carousel 1x3 (scroll-snap natif + boutons).
@@ -22,7 +24,17 @@ export default function RabbitsPreviewSection() {
     rabbitsApi.list({})
       .then((r: any) => setRabbits(r.results || []))
       .catch(() => setError(true))
-      .finally(() => setLoading(false))
+      .finally(() => {
+        setLoading(false)
+        // Le skeleton (hauteur fixe) est remplacé par les vraies cartes ici
+        // (hauteur variable) — ça décale tout ce qui suit dans la page.
+        // Sans ce refresh, un ScrollTrigger déjà calculé avant l'arrivée
+        // des données (RainbowText de cette section ou d'une section
+        // suivante) garde une zone de déclenchement basée sur le skeleton.
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => ScrollTrigger.refresh())
+        })
+      })
   }, [])
 
   const updateEdges = () => {
@@ -60,7 +72,6 @@ export default function RabbitsPreviewSection() {
           <div>
             <div className="lapins-eyebrow">(Nos Lapins)</div>
             <h2 className="lapins-title">En Vedette</h2>
-            <p className="lapins-sub">Ajoutés par notre équipe, prêts à la vente</p>
           </div>
           <div className="lapins-nav-btns">
           <button
@@ -83,6 +94,12 @@ export default function RabbitsPreviewSection() {
           </button>
         </div>
       </div>
+
+      <RainbowText
+        text="Ajoutés par notre équipe, prêts à la vente"
+        variant="dark"
+        className="lapins-sub"
+      />
 
       {loading ? (
         <div className="lapins-viewport" aria-hidden="true">

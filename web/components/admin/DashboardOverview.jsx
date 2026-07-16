@@ -4,13 +4,12 @@ import {
   AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
 } from 'recharts'
-import { TrendingUp, PackageCheck, Clock, XCircle, Rabbit as RabbitIcon, Truck } from 'lucide-react'
 import { adminApi } from '@/lib/api'
 import { formatPrice } from '@/lib/status'
 import toast from 'react-hot-toast'
 
 const ZONE_COLORS = {
-  abidjan:      'var(--green)',
+  abidjan:      'var(--admin-green)',
   azaguie:      'var(--lime)',
   pays_profond: 'var(--muted)',
   inconnue:     'var(--card)',
@@ -22,14 +21,11 @@ const RANGE_OPTIONS = [
   { label: '90j', value: 90 },
 ]
 
-function KpiCard({ icon, label, value, accent = 'text-caramel', bg = 'bg-white/5' }) {
+function KpiCard({ label, value, accent }) {
   return (
-    <div className="glass p-4 rounded-xl flex items-center gap-3">
-      <div className={`p-3 rounded-lg ${bg} ${accent}`}>{icon}</div>
-      <div className="min-w-0">
-        <div className="text-[10px] text-white/40 uppercase font-bold truncate">{label}</div>
-        <div className={`text-xl font-bold mt-0.5 truncate ${accent}`}>{value}</div>
-      </div>
+    <div className="bg-[var(--panel)] border border-white/[0.08] rounded-2xl p-5 transition-all hover:border-[var(--rust)]/40 hover:-translate-y-0.5">
+      <div className="text-[0.68rem] uppercase font-bold tracking-wide text-white/40 mb-3">{label}</div>
+      <div className={`font-pixel text-2xl ${accent || 'text-white'}`} style={{ fontFamily: 'var(--font-pixel)' }}>{value}</div>
     </div>
   )
 }
@@ -65,14 +61,14 @@ export default function DashboardOverview() {
     <div className="space-y-6">
       {/* Sélecteur de période */}
       <div className="flex items-center justify-between flex-wrap gap-3">
-        <h2 className="font-display text-2xl font-bold text-white">Tableau de bord</h2>
-        <div className="flex gap-1.5 glass rounded-xl p-1">
+        <h2 className="text-2xl font-bold text-white uppercase" style={{ fontFamily: 'var(--font-pixel)' }}>Tableau de bord</h2>
+        <div className="flex gap-1.5 bg-[var(--panel)] rounded-xl p-1 border border-white/[0.08]">
           {RANGE_OPTIONS.map(opt => (
             <button
               key={opt.value}
               onClick={() => setRange(opt.value)}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
-                range === opt.value ? 'bg-caramel text-espresso' : 'text-white/50 hover:text-white'
+                range === opt.value ? 'bg-[var(--rust)] text-[var(--ink)]' : 'text-white/50 hover:text-white'
               }`}
             >
               {opt.label}
@@ -83,24 +79,24 @@ export default function DashboardOverview() {
 
       {/* KPIs */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3">
-        <KpiCard icon={<TrendingUp size={18} />} label="Revenu confirmé" value={formatPrice(kpis.revenueConfirmed)} accent="text-[var(--green)]" bg="bg-[rgba(var(--green-rgb),0.15)]" />
-        <KpiCard icon={<Truck size={18} />} label="Revenu livraison" value={formatPrice(kpis.deliveryRevenue)} />
-        <KpiCard icon={<Clock size={18} />} label="En attente" value={kpis.pendingCount} accent="text-terracotta" bg="bg-terracotta/15" />
-        <KpiCard icon={<PackageCheck size={18} />} label="Confirmées" value={kpis.confirmedCount} accent="text-sage" bg="bg-sage/15" />
-        <KpiCard icon={<XCircle size={18} />} label="Annulées" value={kpis.cancelledCount} accent="text-white/50" />
-        <KpiCard icon={<RabbitIcon size={18} />} label="Races dispo." value={`${kpis.rabbitsAvailable}/${kpis.totalRabbits}`} />
-        <KpiCard icon={<RabbitIcon size={18} />} label="Stock restant" value={kpis.stockRemaining} accent="text-caramel" bg="bg-caramel/15" />
+        <KpiCard label="Revenu confirmé" value={formatPrice(kpis.revenueConfirmed)} accent="text-[var(--admin-green)]" />
+        <KpiCard label="Revenu livraison" value={formatPrice(kpis.deliveryRevenue)} />
+        <KpiCard label="En attente" value={kpis.pendingCount} accent="text-[var(--rust)]" />
+        <KpiCard label="Confirmées" value={kpis.confirmedCount} accent="text-[var(--admin-green)]" />
+        <KpiCard label="Annulées" value={kpis.cancelledCount} />
+        <KpiCard label="Races dispo." value={`${kpis.rabbitsAvailable}/${kpis.totalRabbits}`} />
+        <KpiCard label="Stock restant" value={kpis.stockRemaining} accent="text-[var(--rust)]" />
       </div>
 
       {/* Courbe revenu + réservations */}
-      <div className="glass rounded-xl p-4">
+      <div className="bg-[var(--panel)] border border-white/[0.08] rounded-2xl p-4">
         <h3 className="text-sm font-bold text-white/70 mb-4">Réservations &amp; revenu confirmé ({range}j)</h3>
         <ResponsiveContainer width="100%" height={260}>
           <AreaChart data={chartTimeline} margin={{ top: 4, right: 8, left: -16, bottom: 0 }}>
             <defs>
               <linearGradient id="revenueGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="var(--green)" stopOpacity={0.45} />
-                <stop offset="100%" stopColor="var(--green)" stopOpacity={0} />
+                <stop offset="0%" stopColor="var(--admin-green)" stopOpacity={0.45} />
+                <stop offset="100%" stopColor="var(--admin-green)" stopOpacity={0} />
               </linearGradient>
               <linearGradient id="resaGrad" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="var(--lime)" stopOpacity={0.4} />
@@ -116,7 +112,7 @@ export default function DashboardOverview() {
               labelStyle={{ color: '#fff' }}
               formatter={(value, name) => name === 'revenue' ? [formatPrice(value), 'Revenu'] : [value, 'Réservations']}
             />
-            <Area yAxisId="left" type="monotone" dataKey="revenue" stroke="var(--green)" fill="url(#revenueGrad)" strokeWidth={2} name="revenue" />
+            <Area yAxisId="left" type="monotone" dataKey="revenue" stroke="var(--admin-green)" fill="url(#revenueGrad)" strokeWidth={2} name="revenue" />
             <Area yAxisId="right" type="monotone" dataKey="reservations" stroke="var(--lime)" fill="url(#resaGrad)" strokeWidth={2} name="reservations" />
           </AreaChart>
         </ResponsiveContainer>
@@ -124,7 +120,7 @@ export default function DashboardOverview() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Répartition zones de livraison */}
-        <div className="glass rounded-xl p-4">
+        <div className="bg-[var(--panel)] border border-white/[0.08] rounded-2xl p-4">
           <h3 className="text-sm font-bold text-white/70 mb-4">Zones de livraison</h3>
           {pieData.length === 0 ? (
             <div className="text-white/30 text-xs text-center py-12">Aucune donnée encore</div>
@@ -147,7 +143,7 @@ export default function DashboardOverview() {
         </div>
 
         {/* Top races */}
-        <div className="glass rounded-xl p-4">
+        <div className="bg-[var(--panel)] border border-white/[0.08] rounded-2xl p-4">
           <h3 className="text-sm font-bold text-white/70 mb-4">Races les plus vendues (en unités)</h3>
           {topBreeds.length === 0 ? (
             <div className="text-white/30 text-xs text-center py-12">Aucune donnée encore</div>
@@ -161,7 +157,7 @@ export default function DashboardOverview() {
                   contentStyle={{ background: 'var(--dark)', border: '1px solid var(--border)', borderRadius: 8, fontSize: 12 }}
                   formatter={(value) => [`${value} unité(s)`, '']}
                 />
-                <Bar dataKey="count" fill="var(--green)" radius={[0, 6, 6, 0]} barSize={16} />
+                <Bar dataKey="count" fill="var(--admin-green)" radius={[0, 6, 6, 0]} barSize={16} />
               </BarChart>
             </ResponsiveContainer>
           )}

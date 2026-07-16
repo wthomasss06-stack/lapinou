@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Syne, Space_Grotesk, JetBrains_Mono } from 'next/font/google'
+import { Syne, Space_Grotesk, JetBrains_Mono, Silkscreen } from 'next/font/google'
 import './globals.css'
 import { Toaster } from 'react-hot-toast'
 import CookieBanner from '@/components/CookieBanner'
@@ -9,6 +9,16 @@ const syne = Syne({
   subsets: ['latin'],
   variable: '--font-display',
   weight: ['400', '600', '700', '800'],
+})
+
+// Accent "pixel" réservé aux moments d'affichage géants (titre du Hero,
+// gros lettrage). Ne remplace PAS --font-display (Syne, utilisé partout
+// ailleurs — nav, boutons, titres de section) : un accent ponctuel,
+// pas un changement de typo sitewide.
+const silkscreen = Silkscreen({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-pixel',
 })
 
 const spaceGrotesk = Space_Grotesk({
@@ -63,7 +73,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" className={`${syne.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}>
+    <html lang="fr" className={`${syne.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} ${silkscreen.variable}`}>
       <body className="bg-brand-dark text-white font-body antialiased">
         <Toaster
           position="top-right"

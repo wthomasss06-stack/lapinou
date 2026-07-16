@@ -1,0 +1,90 @@
+footer#contact {
+  min-height: 100vh;
+  background-color: var(--maroon);
+  color: var(--paper);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 100px 50px 40px;
+  position: relative;
+  overflow: hidden;
+}
+.footer-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+}
+.footer-title {
+  font-family: var(--font-pixel);
+  font-size: 8vw;
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 20px;
+  line-height: 0.9;
+}
+.footer-sub {
+  text-align: center;
+  max-width: 420px;
+  opacity: 0.6;
+  margin-bottom: 50px;
+}
+.magnetic-btn-wrapper {
+  position: relative;
+  width: 250px;
+  height: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.magnetic-btn {
+  width: 180px;
+  height: 180px;
+  background-color: var(--rust);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--ink);
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+  text-decoration: none;
+  text-align: center;
+}
+.contact-details {
+  display: flex;
+  gap: 50px;
+  justify-content: center;
+  margin-top: 60px;
+  flex-wrap: wrap;
+}
+.contact-item { text-align: center; }
+.contact-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; opacity: 0.5; margin-bottom: 8px; }
+.contact-value { font-size: 1rem; }
+.contact-value a { color: var(--paper); text-decoration: none; }
+.contact-value a:hover { color: var(--rust); }
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid rgba(243,233,218,0.15);
+  padding-top: 20px;
+  font-size: 0.85rem;
+  color: rgba(243,233,218,0.45);
+  text-transform: uppercase;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.footer-bottom a { color: inherit; text-decoration: none; }
+.footer-bottom a:hover { color: var(--rust); }
+.footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
+
+@media (max-width: 768px) {
+  footer#contact { padding: 80px 24px 30px; }
+  .footer-title { font-size: 16vw; }
+  .magnetic-btn-wrapper { width: 200px; height: 200px; }
+  .magnetic-btn { width: 150px; height: 150px; font-size: 1rem; }
+  .footer-bottom { flex-direction: column; text-align: center; }
+}

@@ -69,7 +69,7 @@ export default async function RabbitDetailPage({ params }) {
   ].filter(Boolean)
 
   return (
-    <main className="min-h-screen overflow-x-clip">
+    <main className="min-h-screen overflow-x-clip" style={{ backgroundColor: 'var(--maroon)', color: 'var(--paper)' }}>
       <Navbar />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-28 pb-10">
@@ -98,7 +98,7 @@ export default async function RabbitDetailPage({ params }) {
           <div className="flex flex-col lg:h-[calc(100vh-7rem)] lg:overflow-y-auto lg:pr-2">
 
             {/* Titre */}
-            <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-white leading-tight mb-2">
+            <h1 className="uppercase text-3xl sm:text-4xl font-extrabold text-white leading-tight mb-2" style={{ fontFamily: 'var(--font-pixel)' }}>
               {rabbit.name}
             </h1>
             <p className="text-white/40 text-sm mb-5">Azaguié Gare, Côte d'Ivoire</p>
@@ -106,7 +106,7 @@ export default async function RabbitDetailPage({ params }) {
             <div className="h-px bg-brand-border mb-5" />
 
             {/* Grille Prix & Réservation */}
-            <div className="bg-brand-card border border-brand-border rounded-2xl p-5 mb-5">
+            <div className="bg-[rgba(243,233,218,0.06)] border border-[rgba(243,233,218,0.14)] rounded-2xl p-5 mb-5">
               <div className="grid grid-cols-2 gap-4 items-center">
                 <div>
                   <div className="text-[10px] font-bold uppercase tracking-widest text-white/35 mb-1">Prix de vente</div>
@@ -129,7 +129,7 @@ export default async function RabbitDetailPage({ params }) {
                   ) : (
                     <button
                       disabled
-                      className="w-full py-3 px-4 rounded-xl bg-brand-border text-white/30 font-bold text-xs cursor-not-allowed text-center"
+                      className="w-full py-3 px-4 rounded-xl bg-[rgba(243,233,218,0.08)] text-[rgba(243,233,218,0.35)] font-bold text-xs cursor-not-allowed text-center"
                     >
                       Stock épuisé
                     </button>
@@ -145,7 +145,7 @@ export default async function RabbitDetailPage({ params }) {
                 { icon: <MessageCircleHeart size={12} />, txt: 'Contact direct' },
                 { icon: <ShieldCheck size={12} />, txt: 'Rendez-vous sécurisé' },
               ].map((g, i) => (
-                <span key={i} className="inline-flex items-center gap-1.5 text-[11px] text-white/40 bg-brand-card border border-brand-border rounded-full px-3 py-1.5">
+                <span key={i} className="inline-flex items-center gap-1.5 text-[11px] text-white/40 bg-[rgba(243,233,218,0.06)] border border-[rgba(243,233,218,0.14)] rounded-full px-3 py-1.5">
                   <span className="text-caramel">{g.icon}</span>
                   {g.txt}
                 </span>
@@ -153,7 +153,7 @@ export default async function RabbitDetailPage({ params }) {
             </div>
 
             {/* Informations Détaillées (Fusionnées ici) */}
-            <div className="bg-brand-card border border-brand-border rounded-2xl p-6 mb-5 space-y-6">
+            <div className="bg-[rgba(243,233,218,0.06)] border border-[rgba(243,233,218,0.14)] rounded-2xl p-6 mb-5 space-y-6">
               <div className="flex items-center justify-between pb-3 border-b border-brand-border/55">
                 <span className="text-[11px] font-bold uppercase tracking-widest text-white/45">
                   Informations détaillées
@@ -177,7 +177,7 @@ export default async function RabbitDetailPage({ params }) {
                   {specs.map(({ label, value, isStatus, isFull }) => (
                     <div 
                       key={label} 
-                      className={`bg-brand-darker/60 border border-brand-border/60 rounded-xl px-3.5 py-2.5 ${isFull ? 'col-span-2' : ''}`}
+                      className={`bg-[rgba(243,233,218,0.04)] border border-[rgba(243,233,218,0.1)] rounded-xl px-3.5 py-2.5 ${isFull ? 'col-span-2' : ''}`}
                     >
                       <dt className="text-[10px] text-white/35 uppercase tracking-wide mb-0.5">{label}</dt>
                       <dd className={`text-xs font-semibold ${isStatus ? (unavailable ? 'text-terracotta' : 'text-sage') : 'text-white/85'}`}>
@@ -201,7 +201,7 @@ export default async function RabbitDetailPage({ params }) {
 
         {/* Section bas — similaires */}
         <div className="mt-14">
-          <div className="h-px bg-gradient-to-r from-transparent via-brand-border to-transparent mb-10" />
+          <div className="h-px bg-gradient-to-r from-transparent via-[rgba(243,233,218,0.15)] to-transparent mb-10" />
           <SimilarRabbits currentSlug={rabbit.slug} breed={rabbit.breed} />
         </div>
       </div>

@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useLayoutEffect } from 'react'
 import { useGSAP } from '@gsap/react'
 import { gsap } from 'gsap'
 import { SplitText } from 'gsap/SplitText'
@@ -18,14 +18,22 @@ gsap.registerPlugin(useGSAP, SplitText)
 const LOADER_SEEN_KEY = 'lapinou_loader_seen'
 
 export default function Loader() {
-  const [done, setDone] = useState(() => {
-    if (typeof window === 'undefined') return false
+  // IMPORTANT : cette valeur doit être identique au premier rendu serveur
+  // ET au premier rendu client, sinon React lève une erreur d'hydratation
+  // (le serveur n'a jamais accès à sessionStorage, donc il rendrait
+  // toujours false — lire sessionStorage ici dans l'initializer du
+  // useState faisait diverger le client dès le premier rendu si le
+  // loader avait déjà été vu). On démarre donc toujours à false, et on
+  // resynchronise avec sessionStorage juste après, en layout effect
+  // (avant peinture), pour qu'un retour dans la même session saute le
+  // loader sans qu'il ne soit jamais visible à l'écran.
+  const [done, setDone] = useState(false)
+
+  useLayoutEffect(() => {
     try {
-      return sessionStorage.getItem(LOADER_SEEN_KEY) === '1'
-    } catch (_) {
-      return false
-    }
-  })
+      if (sessionStorage.getItem(LOADER_SEEN_KEY) === '1') setDone(true)
+    } catch (_) {}
+  }, [])
 
   useGSAP((_context, contextSafe) => {
     if (!contextSafe || done) return

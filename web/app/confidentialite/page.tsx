@@ -1,96 +1,151 @@
-import { MessageCircle } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import RainbowText from '@/components/RainbowText'
+import { LegalSectionBlock, type LegalSection } from '@/components/LegalBlocks'
+import '@/components/LegalPage.css'
 
 export const metadata = {
-  title: 'Confidentialité | CHEZ FLORENCE',
-  description: 'Politique de confidentialité du site CHEZ FLORENCE — données collectées, géolocalisation, cookies.',
+  title: 'Politique de Confidentialité — Chez Florence',
+  description: "Politique de confidentialité de Chez Florence : données collectées, durée de conservation, cookies et vos droits.",
 }
 
-const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP?.replace(/\D/g, '') || ''
-
-const sections = [
+const SECTIONS: LegalSection[] = [
   {
-    title: '1. Données collectées',
-    body: "Lors d'une réservation ou d'un message via le formulaire de contact, nous collectons votre nom, email, numéro de téléphone et le contenu de votre message. Ces informations servent uniquement à organiser la vente et la livraison de votre lapin.",
+    title: '1. Qui Sommes-Nous ?',
+    body: [
+      "Chez Florence est un élevage artisanal de lapins basé à Abidjan, Côte d'Ivoire. Nous vendons des lapins de race (Hollandais, Angora, Rex) à des particuliers, restaurateurs et éleveurs.",
+      'Responsable du traitement : Chez Florence, Abidjan, Côte d\u2019Ivoire.',
+      'Contact DPO : wthomasss06@gmail.com ou WhatsApp +225 01 42 50 77 50.',
+    ],
   },
   {
-    title: '2. Géolocalisation',
-    body: "Si vous l'autorisez, votre position GPS est utilisée pour calculer automatiquement votre zone de livraison et le frais correspondant. Cette autorisation vous est demandée explicitement au moment où elle est utile (par exemple sur la carte de localisation), jamais en arrière-plan sans action de votre part. Vous pouvez refuser sans que cela empêche la réservation — la zone de livraison sera alors convenue directement avec le vendeur.",
+    title: '2. Données Collectées',
+    body: ['Nous collectons uniquement les données nécessaires à votre commande :'],
+    items: [
+      'Identité — nom et prénom (pour la livraison)',
+      'Contact — numéro WhatsApp, email (optionnel)',
+      'Adresse — zone de livraison ou point de retrait',
+      'Commande — race, quantité, format choisi',
+      'Paiement — historique des transactions (Mobile Money)',
+    ],
+    note: { icon: 'warning', text: 'Nous ne collectons jamais : numéro de carte bancaire, données biométriques, localisation GPS précise, ou informations sur vos proches.' },
   },
   {
-    title: '3. Cookies',
-    body: "Le site utilise un nombre minimal de cookies techniques pour mémoriser votre choix de consentement et, si vous l'acceptez, des statistiques de visite anonymisées (nombre de visites, pages consultées) qui nous aident à améliorer le site. Aucun cookie publicitaire ou de tracking tiers n'est utilisé.",
+    title: '3. Finalités du Traitement',
+    body: ['Vos données sont utilisées pour :'],
+    items: [
+      'Traiter votre commande — confirmation, préparation, livraison',
+      'Vous contacter — via WhatsApp ou email sur votre commande',
+      'Assurer le suivi après-vente — conseils d\u2019élevage, garantie',
+      'Améliorer nos services — analyse anonymisée des préférences clients',
+      'Obligations légales — facturation, comptabilité',
+    ],
   },
   {
-    title: '4. Partage des données',
-    body: "Vos données ne sont jamais vendues ni partagées avec des tiers à des fins commerciales. Elles sont uniquement utilisées par l'équipe CHEZ FLORENCE pour traiter votre réservation et vous contacter (email et WhatsApp).",
+    title: '4. Base Légale du Traitement',
+    body: ['Conformément à la législation ivoirienne et aux standards internationaux, nous traitons vos données sur les bases suivantes :'],
+    items: [
+      'Exécution du contrat — votre commande constitue un contrat de vente',
+      'Consentement — pour l\u2019envoi d\u2019offres promotionnelles (désinscription possible à tout moment)',
+      'Obligation légale — conservation comptable',
+      'Intérêt légitime — amélioration de nos services',
+    ],
   },
   {
-    title: '5. Conservation',
-    body: "Les informations liées à une réservation sont conservées le temps nécessaire au traitement de la commande et à des fins de suivi commercial raisonnable, puis supprimées ou anonymisées.",
+    title: '5. Durée de Conservation',
+    subs: [{
+      title: '',
+      table: {
+        headers: ['Type de donnée', 'Durée'],
+        rows: [
+          ['Données de commande', '3 ans après dernière commande'],
+          ['Conversations WhatsApp', '1 an (puis archivage anonymisé)'],
+          ['Factures', '10 ans (obligation légale)'],
+          ['Données marketing', 'Jusqu\u2019à désinscription'],
+        ],
+      },
+    }],
   },
   {
-    title: '6. Vos droits',
-    body: "Vous pouvez à tout moment demander l'accès, la correction ou la suppression de vos données personnelles en nous contactant via la page Contact ou directement sur WhatsApp.",
+    title: '6. Partage des Données',
+    body: ['Vos données ne sont jamais vendues à des tiers. Elles peuvent être partagées avec :'],
+    items: [
+      'Prestataires de livraison — uniquement nom, téléphone et adresse de livraison',
+      'Opérateurs Mobile Money — pour le traitement du paiement',
+      'Autorités compétentes — en cas de réquisition légale',
+    ],
+    subs: [{ title: '', body: ['Tous nos prestataires sont soumis à des clauses de confidentialité strictes.'] }],
   },
   {
-    title: '7. Contact',
-    body: 'Pour toute question relative à vos données personnelles, écrivez-nous à wthomasss06@gmail.com ou via le formulaire de contact du site.',
+    title: '7. Sécurité des Données',
+    body: ['Nous mettons en œuvre les mesures suivantes :'],
+    items: [
+      'Conversations WhatsApp chiffrées de bout en bout (par Meta)',
+      'Accès aux données restreint (seul le responsable traite les commandes)',
+      'Smartphone professionnel dédié avec authentification biométrique',
+      'Pas de stockage cloud — données conservées localement',
+      'Mise à jour régulière des applications de sécurité',
+    ],
+  },
+  {
+    title: '8. Vos Droits',
+    body: ['Conformément à la législation, vous disposez des droits suivants :'],
+    items: [
+      'Droit d\u2019accès — obtenir une copie de vos données',
+      'Droit de rectification — corriger des informations inexactes',
+      'Droit à l\u2019effacement — demander la suppression de vos données',
+      'Droit d\u2019opposition — refuser les communications marketing',
+      'Droit à la portabilité — récupérer vos données dans un format lisible',
+    ],
+    note: { icon: 'mail', text: 'Pour exercer vos droits, contactez-nous par email à wthomasss06@gmail.com ou par WhatsApp. Nous répondons sous 72 heures.' },
+  },
+  {
+    title: '9. Cookies & Traçage',
+    body: ['Notre site utilise :'],
+    items: [
+      'Aucun cookie tiers (pas de Google Analytics, pas de Facebook Pixel)',
+      'Cookies techniques — mémorisation du thème clair/sombre (durée : session)',
+      'Liens WhatsApp — redirigent vers l\u2019application WhatsApp (traitement par Meta)',
+    ],
+    subs: [{ title: '', body: ['Aucun profilage publicitaire n\u2019est réalisé.'] }],
+  },
+  {
+    title: '10. Modifications',
+    body: ['Cette politique peut être mise à jour. Les modifications seront publiées sur cette page avec la date de mise à jour. En cas de changement substantiel, nous vous en informerons par WhatsApp ou email.'],
   },
 ]
 
 export default function ConfidentialitePage() {
-  const whatsappUrl = WHATSAPP
-    ? `https://wa.me/${WHATSAPP}?text=${encodeURIComponent("Bonjour, j'ai une question sur la politique de confidentialité.")}`
-    : null
-
   return (
-    <main>
+    <div className="legal-page">
       <Navbar />
-      <div className="min-h-screen pt-28 pb-16 px-6">
-        <div className="max-w-2xl mx-auto">
-          <div className="text-center mb-12 animate-fade-in-up">
-            <p className="text-caramel font-mono text-xs tracking-widest uppercase mb-3">Informations légales</p>
-            <h1 className="font-display text-4xl sm:text-5xl font-extrabold text-white mb-4 break-words">
-              Politique de <span className="text-gradient">confidentialité</span>
-            </h1>
-            <p className="text-white/40 text-xs">Dernière mise à jour : juin 2026</p>
-          </div>
+      <main>
+        <div className="breadcrumb"><a href="/">Accueil</a> / <span>Confidentialité</span></div>
+        <section className="page-hero">
+          <div className="eyebrow">Protection de vos données</div>
+          <h1 className="page-title">Politique de Confidentialité</h1>
+          <RainbowText
+            text="Chez Florence s'engage à protéger vos informations personnelles. Transparence, sécurité et contrôle : voici comment nous traitons vos données."
+            variant="white"
+            className="page-sub"
+          />
+          <p className="last-update">Dernière mise à jour : 12 juillet 2026</p>
+        </section>
+        <div className="legal-content">
+          {SECTIONS.map((s) => <LegalSectionBlock section={s} key={s.title} />)}
 
-          <div className="space-y-4">
-            {sections.map((s, i) => (
-              <section
-                key={s.title}
-                className="glass rounded-2xl p-6 animate-fade-in-up"
-                style={{ animationDelay: `${Math.min(i * 0.05, 0.4)}s` }}
-              >
-                <h2 className="font-display font-bold text-white text-base mb-2">{s.title}</h2>
-                <p className="text-white/50 text-sm leading-relaxed">{s.body}</p>
-              </section>
-            ))}
+          <div className="contact-highlight">
+            <h3>Une Question Sur Vos Données ?</h3>
+            <p>Contactez notre responsable de la protection des données :</p>
+            <p style={{ marginTop: '12px' }}>
+              <a href="mailto:wthomasss06@gmail.com">wthomasss06@gmail.com</a>
+              <br />
+              <a href="https://wa.me/2250142507750" target="_blank" rel="noopener noreferrer">+225 01 42 50 77 50</a>
+            </p>
           </div>
-
-          {whatsappUrl && (
-            <div
-              className="mt-10 glass rounded-2xl p-6 text-center animate-fade-in-up"
-              style={{ animationDelay: '0.45s' }}
-            >
-              <p className="text-white/60 text-sm mb-4">Une question sur vos données personnelles ? Écrivez-nous directement.</p>
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-neon inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold"
-              >
-                <MessageCircle size={16} />
-                Écrire sur WhatsApp
-              </a>
-            </div>
-          )}
         </div>
-      </div>
+      </main>
       <Footer />
-    </main>
+    </div>
   )
 }

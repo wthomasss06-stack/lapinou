@@ -1,0 +1,22 @@
+.inner-footer {
+  padding: 40px 50px;
+  text-align: center;
+  background: var(--maroon);
+  color: var(--paper);
+}
+.inner-footer p {
+  font-size: 0.85rem;
+  opacity: 0.65;
+}
+.inner-footer a {
+  color: var(--paper);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.inner-footer a:hover {
+  color: var(--rust);
+}
+
+@media (max-width: 768px) {
+  .inner-footer { padding: 30px 20px; }
+}

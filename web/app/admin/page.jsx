@@ -6,47 +6,37 @@ import DashboardOverview from '@/components/admin/DashboardOverview'
 import RabbitsManager from '@/components/admin/RabbitsManager'
 import ReservationsManager from '@/components/admin/ReservationsManager'
 
+const TABS = [
+  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { id: 'rabbits', label: 'Lapins', icon: Rabbit },
+  { id: 'reservations', label: 'Réservations', icon: ClipboardList },
+]
+
 export default function AdminPage() {
-  const [tab, setTab] = useState('dashboard') // 'dashboard' | 'rabbits' | 'reservations'
+  const [tab, setTab] = useState('dashboard')
 
   return (
     <AdminGate>
-      <main className="min-h-screen px-4 sm:px-6 py-8 max-w-6xl mx-auto overflow-x-hidden">
-        {/* Tabs */}
-        <div className="flex flex-wrap items-center gap-2 mb-8">
-          <button
-            onClick={() => setTab('dashboard')}
-            className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all ${
-              tab === 'dashboard'
-                ? 'bg-caramel text-espresso font-bold'
-                : 'glass text-white/60 hover:text-white border border-brand-border'
-            }`}
-          >
-            <LayoutDashboard size={16} />
-            Dashboard
-          </button>
-          <button
-            onClick={() => setTab('rabbits')}
-            className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all ${
-              tab === 'rabbits'
-                ? 'bg-caramel text-espresso font-bold'
-                : 'glass text-white/60 hover:text-white border border-brand-border'
-            }`}
-          >
-            <Rabbit size={16} />
-            Lapins
-          </button>
-          <button
-            onClick={() => setTab('reservations')}
-            className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all ${
-              tab === 'reservations'
-                ? 'bg-caramel text-espresso font-bold'
-                : 'glass text-white/60 hover:text-white border border-brand-border'
-            }`}
-          >
-            <ClipboardList size={16} />
-            Réservations
-          </button>
+      <main
+        className="min-h-screen px-4 sm:px-6 py-8 max-w-6xl mx-auto overflow-x-hidden"
+        style={{ backgroundColor: 'var(--maroon)' }}
+      >
+        {/* Tabs — port direct de .tabs/.tab-btn (admin.html) */}
+        <div className="flex flex-wrap items-center gap-2 mb-8 pb-5 border-b border-white/[0.08]">
+          {TABS.map(({ id, label, icon: Icon }) => (
+            <button
+              key={id}
+              onClick={() => setTab(id)}
+              className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all border ${
+                tab === id
+                  ? 'bg-[var(--rust)] text-[var(--ink)] border-[var(--rust)]'
+                  : 'bg-white/[0.03] text-white/55 border-white/10 hover:text-white hover:border-[var(--rust)]/40'
+              }`}
+            >
+              <Icon size={16} />
+              {label}
+            </button>
+          ))}
         </div>
 
         {tab === 'dashboard' && <DashboardOverview />}

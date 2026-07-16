@@ -2,40 +2,24 @@
 // ═══════════════════════════════════════════════════════════════════
 //  CHEZ FLORENCE — Page d'accueil
 //
-//  • Navbar + HeroSection  — ancien slider vidéo (3 slides, wipe diagonal).
-//  • GarantiesSection (page2, id="a-propos") — fusionne l'ancienne
-//    AboutSection : une seule section "Notre Histoire".
-//  • IrisSection — pin + reveal (No. 04), juste après "Nos engagements".
-//  • PricingSection (sec-pricing) — vrais tarifs, indexc.html (No. 05).
-//  • RabbitsPreviewSection (page4) — carousel "Nos Lapins" 1x3, vraies
-//    fiches (RabbitCard + rabbitsApi, même source que RabbitsSection)
-//    (No. 06).
-//  • RacesSection (page3) — parallax + fond ink→paper, repoussée après
-//    "Nos Lapins".
-//  • HorizontalCta — bandeau pinné horizontal.
+//  • Navbar — CardNav (desktop) + StaggeredMenu (mobile), restaurée telle
+//    qu'à l'origine du projet. Porte maintenant TOUTE la navigation du
+//    site (Nos Lapins/Tarifs/Notre Histoire/FAQ/Contact + Aide/Conditions/
+//    Confidentialité + WhatsApp) — ces liens ne sont plus dans le footer.
+//  • HeroSection — vidéo webm en fond (3 slides), voile marron, titre
+//    pixel, compteur de preuve sociale (HeroStats, données réelles),
+//    cartes tarifs tiltées.
+//  • MissionSection (id="histoire") — Notre Histoire + marquee.
+//  • GarantiesSection (id="garanties") — grille 4 items.
+//  • TarifsSection (id="tarifs") — 3 formules, tilt 3D.
+//  • LapinsFeaturedSection (id="lapins") — vraies fiches API.
+//  • TestimonialsSection (id="temoignages") — 3 avis.
+//  • FaqSection (id="faq") — 6 questions ; version complète sur /aide.
+//  • Footer (id="contact") — identité + contact seulement (plus de
+//    liste de liens : toute la nav vit dans <Navbar />).
 //
-//  Triptyque (Galerie, No. 04) et Blob (En Mouvement, No. 06) ont été
-//  entièrement retirés (composants, CSS et logique GSAP) — pas seulement
-//  leur animation. GalerieSection.tsx et BlobSection.tsx ne sont plus
-//  importés nulle part ; tu peux les supprimer du projet si tu veux.
-//
-//  GARDÉS (routes /rabbits, /#contact en dépendent), harmonisés avec un
-//  seul fond marron (--ink) et les mêmes 3 polices (.home-kept-sections
-//  dans home-cinematic.css) :
-//    • RabbitsSection — catalogue API complet, filtrable
-//    • ContactSection — formulaire contact
-//    • AdoptSection — footer unique du site
-//
-//  AdoptSection (ex page5 "Commandez") est maintenant le SEUL composant
-//  footer du site : fusion complète de l'ancienne clôture cinématique
-//  (bouton WhatsApp, gros email, "on vous répond vite") et de l'ancien
-//  Footer.tsx (marque, nav, colonne contact, barre copyright). Affiché
-//  sur TOUTES les pages, pas seulement la home. Footer.tsx redirige
-//  maintenant vers AdoptSection.tsx pour ne rien casser ailleurs dans
-//  le projet.
-//
-//  AboutSection n'est plus rendue séparément (fusionnée dans page2) — le
-//  fichier reste dans le projet, juste plus importé.
+//  Fond marron unique (--maroon) sur toute la home, plus d'alternance
+//  clair/sombre par section.
 // ═══════════════════════════════════════════════════════════════════
 
 import 'lenis/dist/lenis.css'
@@ -47,14 +31,13 @@ import Loader                from '@/components/Loader'
 import CustomCursor          from '@/components/CustomCursor'
 import ScrollFX              from '@/components/ScrollFX'
 import HeroSection           from '@/components/HeroSection'
+import MissionSection        from '@/components/MissionSection'
 import GarantiesSection      from '@/components/GarantiesSection'
-import RacesSection          from '@/components/RacesSection'
-import IrisSection           from '@/components/IrisSection'
-import PricingSection        from '@/components/PricingSection'
-import RabbitsPreviewSection from '@/components/RabbitsPreviewSection'
-import HorizontalCta         from '@/components/HorizontalCta'
-import ContactSection        from '@/components/ContactSection'
-import AdoptSection          from '@/components/AdoptSection'
+import TarifsSection         from '@/components/TarifsSection'
+import LapinsFeaturedSection from '@/components/LapinsFeaturedSection'
+import TestimonialsSection   from '@/components/TestimonialsSection'
+import FaqSection            from '@/components/FaqSection'
+import Footer                from '@/components/Footer'
 
 export default function HomePage() {
   return (
@@ -62,43 +45,22 @@ export default function HomePage() {
 
       <Navbar />
 
-      {/* ── Home cinématique ──────────────────────────────────── */}
       <div className="home-cinema">
         <GrainOverlay />
         <Loader />
         <CustomCursor />
         <ScrollFX />
 
-        {/* 01 — Hero (slider vidéo) */}
         <HeroSection />
-
-        {/* 02 — Notre Histoire / Nos Garanties (fusion avec À propos) */}
+        <MissionSection />
         <GarantiesSection />
-
-        {/* 04 — Portrait iris (sec-iris) */}
-        <IrisSection />
-
-        {/* 05 — Tarifs (sec-pricing) */}
-        <PricingSection />
-
-        {/* 06 — Nos Lapins (carousel 1x3, page4) */}
-        <RabbitsPreviewSection />
-
-        {/* 03 — Nos Races */}
-        <RacesSection />
-
-        {/* Bandeau CTA pinné horizontal */}
-        <HorizontalCta />
+        <TarifsSection />
+        <LapinsFeaturedSection />
+        <TestimonialsSection />
+        <FaqSection />
       </div>
 
-      {/* ── Contact only (GARDÉS) ─────────────────────────────── */}
-      <div className="home-kept-sections">
-        <ContactSection />
-      </div>
-
-      <div className="home-kept-sections">
-        <AdoptSection />
-      </div>
+      <Footer />
 
     </main>
   )

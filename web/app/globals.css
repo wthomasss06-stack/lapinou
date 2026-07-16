@@ -1,7 +1,11 @@
 /* ═══════════════════════════════════════════════════════════════════
    CHEZ FLORENCE — Design System
-   Palette stricte à 6 couleurs. Polices : voir app/layout.tsx (next/font
-   — Syne = display, Space Grotesk = body, JetBrains Mono = mono/label).
+   Palette papier/caramel (paper/ink/maroon/rust/caramel) — fusion de
+   l'ancien globals-additions.css (jamais importé) directement ici.
+   --green/--lime/--dark restent en alias pour compat (voir plus haut).
+   Polices : voir app/layout.tsx (next/font — Syne = display, Space
+   Grotesk = body, JetBrains Mono = mono/label, Silkscreen = accent
+   "pixel" réservé aux moments d'affichage géants, ex. Hero).
    Aucun import Google Fonts ici : tout est chargé via next/font pour
    éviter les conflits de cascade et le flash de police non stylée.
    ═══════════════════════════════════════════════════════════════════ */
@@ -11,21 +15,44 @@
 @tailwind utilities;
 
 :root {
-  /* ── Palette officielle (6 couleurs, aucune autre ne doit être introduite) */
-  --green:  #B8834A;
-  --lime:   #C2693D;
-  --dark:   #2A2118;
-  --card:   #3A2F22;
-  --border: #050505;
-  --muted:  #A89678;
+  /* ── Palette officielle — source de vérité (ex globals-additions.css,
+     jamais importé, fusionné ici). --green/--lime/--dark sont les noms
+     historiques : gardés en alias ci-dessous pour ne rien casser dans
+     les ~40 fichiers qui les référencent encore (Navbar.css, RabbitCard,
+     admin…) — même couleur, nom à jour. */
+  --paper:      #F3E9DA;
+  --paper-deep: #E4D2B4;
+  --ink:        #2A100B;
+  --maroon:     #7C2A1A;
+  --rust:       #C2723D;
+  --caramel:    #B8834A;
+  --card:       #3A2F22;
+  --border:     #050505;
+  --muted:      #A89678;
+
+  /* ── Alias historiques (identiques ou quasi-identiques en hex) ──── */
+  --green: var(--caramel);
+  --lime:  var(--rust);
+  --dark:  var(--ink);
+
+  /* ── Admin (maquette admin.html) — vert de succès distinct de l'alias
+     --green ci-dessus (qui reste = caramel pour compat sitewide) ──── */
+  --admin-green: #7fb069;
+  --panel: #17130e;
 
   /* ── Variantes RGB (pour rgba() dans dégradés/transparences) ────── */
-  --green-rgb:  184, 131, 74;
-  --lime-rgb:   194, 105, 61;
-  --dark-rgb:   42, 33, 24;
+  --paper-rgb:  243, 233, 218;
+  --ink-rgb:    42, 16, 11;
+  --maroon-rgb: 124, 42, 26;
+  --rust-rgb:   194, 114, 61;
+  --caramel-rgb: 184, 131, 74;
   --card-rgb:   58, 47, 34;
   --border-rgb: 5, 5, 5;
   --muted-rgb:  168, 150, 120;
+
+  --green-rgb: var(--caramel-rgb);
+  --lime-rgb:  var(--rust-rgb);
+  --dark-rgb:  var(--ink-rgb);
 
   /* ── Typographies ─────────────────────────────────────────────────
      --font-display / --font-body / --font-mono sont injectées par
@@ -80,7 +107,11 @@ body {
 /* Bouton principal */
 .btn-neon {
   background: var(--green);
-  color: var(--muted);
+  /* Texte foncé sur fond ambre : même logique de contraste que
+     bg-caramel/text-espresso ailleurs dans le projet (admin, RabbitCard…).
+     var(--muted) sur var(--green) était un ratio trop faible (deux tons
+     moyens proches) — quasi illisible sur Hero/Contact. */
+  color: var(--dark);
   font-weight: 700;
   font-family: var(--font-display);
   letter-spacing: 0.02em;
@@ -208,3 +239,127 @@ body {
 .animate-fade-in-up {
   animation: fadeInUp 0.6s ease-out both;
 }
+
+/* ── RainbowText (components/RainbowText.tsx) — typographie commune aux 5
+   intros de la home (Garanties/Races/Tarifs/Nos Lapins/Contact) : chaque
+   instance ne fixe plus que son positionnement (voir home-cinematic.css /
+   ContactSection). .rainbow-word/.rainbow-char : structure seulement, la
+   couleur/ombre de chaque lettre est pilotée en JS au scroll. Non scopée
+   .home-cinema : utilisée aussi par ContactSection (.home-kept-sections)
+   et par les pages d'aide/légales (Aide, Confidentialité, Conditions). */
+.rainbow-reveal {
+  display: block;
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: clamp(2.2rem, 4vw, 4.5rem);
+  line-height: 1.15;
+  text-align: center;
+}
+.rainbow-word {
+  display: inline-block;
+  white-space: nowrap;
+  margin-right: 0.22em;
+}
+.rainbow-char {
+  display: inline-block;
+}
+
+/* Variante compacte : les intros de la home sont pensées pour cohabiter
+   avec un .giant-heading (clamp jusqu'à 8rem) — bien plus grand qu'elles.
+   Les pages Aide/Confidentialité/Conditions utilisent un h1 Tailwind fixe
+   (text-4xl/text-5xl, ≈36-48px) : la taille par défaut de .rainbow-reveal
+   (jusqu'à 4.5rem/72px) dépasserait leur propre h1. .info-intro réduit la
+   taille et desserre l'interligne pour rester un sous-titre, pas un titre. */
+.info-intro.rainbow-reveal {
+  font-size: clamp(1.05rem, 2.2vw, 1.4rem);
+  line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Typo partagée — titres et intros, MÊME taille/police/centrage sur
+   TOUTE page (home, conditions, confidentialite, aide). Remplace les
+   tailles différentes qu'avait chaque page (.section-title en 4vw sur
+   la home, h2 d'article en 1.1rem sur les pages légales, etc.)
+   ═══════════════════════════════════════════════════════════════════ */
+
+.cf-title {
+  font-family: var(--font-pixel);
+  font-size: clamp(2.1rem, 4.5vw, 4rem);
+  line-height: 1.05;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--paper);
+}
+.cf-lead {
+  font-family: var(--font-body);
+  font-size: clamp(1.05rem, 2vw, 1.4rem);
+  line-height: 1.5;
+  text-align: center;
+  color: var(--paper);
+  opacity: 0.75;
+  max-width: 42rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Bouton flèche — port du hover .cf-card-link-arrow / .cf-mobile-item-
+   arrow (ancien StaggeredMenu) : flèche diagonale, légèrement tournée
+   au repos, qui pivote et se remplit au survol. UN seul composant
+   partagé (components/ArrowButton.tsx) pour tous les CTA du site.
+   ═══════════════════════════════════════════════════════════════════ */
+
+.cf-arrow-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
+  color: var(--paper);
+  text-decoration: none;
+  border: 1px solid rgba(243,233,218,0.3);
+  border-radius: 999px;
+  padding: 12px 18px 12px 22px;
+  transition: border-color 0.25s ease, background-color 0.25s ease, color 0.25s ease;
+}
+.cf-arrow-btn:hover {
+  border-color: var(--rust);
+  background-color: var(--rust);
+  color: var(--ink);
+}
+.cf-arrow-btn-circle {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(243,233,218,0.4);
+  transition: border-color 0.25s ease, background-color 0.25s ease, transform 0.35s cubic-bezier(0.175,0.885,0.32,1.275);
+}
+.cf-arrow-btn-circle svg {
+  width: 13px;
+  height: 13px;
+  transform: rotate(25deg);
+  transition: transform 0.35s cubic-bezier(0.175,0.885,0.32,1.275);
+}
+.cf-arrow-btn:hover .cf-arrow-btn-circle {
+  border-color: var(--ink);
+  background-color: var(--ink);
+  transform: rotate(45deg);
+}
+.cf-arrow-btn:hover .cf-arrow-btn-circle svg { transform: rotate(45deg); color: var(--paper); }
+
+.cf-arrow-btn.cf-arrow-btn--solid {
+  background-color: var(--rust);
+  color: var(--ink);
+  border-color: var(--rust);
+}
+.cf-arrow-btn.cf-arrow-btn--solid .cf-arrow-btn-circle { border-color: rgba(42,16,11,0.3); }
+.cf-arrow-btn.cf-arrow-btn--solid:hover { background-color: var(--ink); color: var(--paper); border-color: var(--ink); }
+.cf-arrow-btn.cf-arrow-btn--solid:hover .cf-arrow-btn-circle { border-color: var(--paper); background-color: var(--paper); }
+.cf-arrow-btn.cf-arrow-btn--solid:hover .cf-arrow-btn-circle svg { color: var(--ink); }

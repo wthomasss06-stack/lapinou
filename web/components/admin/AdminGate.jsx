@@ -51,7 +51,7 @@ export default function AdminGate({ children }) {
         >
           <div className="flex flex-col items-center mb-8">
             <Logo showText={false} size={48} />
-            <h1 className="font-display text-xl font-bold text-white mt-4">Espace Admin</h1>
+            <h1 className="text-xl font-bold text-white mt-4 uppercase" style={{ fontFamily: 'var(--font-pixel)' }}>Espace Admin</h1>
             <p className="text-white/40 text-xs mt-1">CHEZ FLORENCE — gestion des lapins</p>
           </div>
 

@@ -1,15 +1,14 @@
 import MagneticButton from './MagneticButton'
-import RainbowText from './RainbowText'
-import './Footer.css'
+import './HomeFooter.css'
 
 const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP?.replace(/\D/g, '') || ''
 const waHref = WHATSAPP ? `https://wa.me/${WHATSAPP}` : '#'
 
-// Footer unique du site — utilisé sur TOUTES les pages (home, détail
-// lapin, aide, conditions, confidentialité). Plus de liste de liens :
-// toute la navigation vit maintenant dans <Navbar /> (CardNav desktop /
-// StaggeredMenu mobile), ne reste ici que l'identité + le contact.
-export default function Footer() {
+// Port direct de <footer id="contact"> (index.html). Remplace
+// AdoptSection/ContactSection — pas de formulaire ici, la maquette est
+// volontairement WhatsApp-first (cohérent avec les CGV : "la commande
+// s'effectue exclusivement via WhatsApp").
+export default function HomeFooter() {
   return (
     <footer id="contact">
       <div className="footer-main">
@@ -49,7 +48,15 @@ export default function Footer() {
       </div>
 
       <div className="footer-bottom">
-        <RainbowText text="© 2026 Chez Florence — Tous droits réservés" variant="white" className="footer-copyright" />
+        <div>© 2026 CHEZ FLORENCE — TOUS DROITS RÉSERVÉS</div>
+        <div className="footer-links">
+          <a href="/#faq" className="hover-target">FAQ</a>
+          <a href="/#tarifs" className="hover-target">Tarifs</a>
+          <a href="/aide" className="hover-target">Aide</a>
+          <a href="/confidentialite" className="hover-target">Confidentialité</a>
+          <a href="/conditions" className="hover-target">Conditions</a>
+          <a href={waHref} target="_blank" rel="noopener noreferrer" className="hover-target">WhatsApp</a>
+        </div>
       </div>
     </footer>
   )

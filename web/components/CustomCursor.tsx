@@ -5,12 +5,16 @@ import { gsap } from 'gsap'
 
 gsap.registerPlugin(useGSAP)
 
+// Curseur custom + détection .hover-target / .hover-view (délégation sur
+// document — couvre aussi les éléments ajoutés dynamiquement, ex. grille
+// RabbitCard). .hover-target : grossit, orange, blend normal. .hover-view
+// (grille "Nos Lapins") : pareil + libellé "VOIR" (::after en CSS, voir
+// home-cinematic.css) — reprend le comportement de chaque maquette HTML,
+// en gardant la distorsion skew/scale liée à la vitesse déjà en place.
 export default function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null)
 
   useGSAP(() => {
-    // Le curseur custom est de toute façon masqué en CSS sur tactile —
-    // on évite juste de faire tourner la boucle pour rien sur mobile.
     if (!window.matchMedia('(pointer: fine)').matches) return
 
     const c = cursorRef.current
@@ -26,6 +30,25 @@ export default function CustomCursor() {
       my = e.clientY
     }
     window.addEventListener('mousemove', onMove)
+
+    const onOver = (e: MouseEvent) => {
+      const t = e.target as HTMLElement
+      if (t?.closest('.hover-view')) {
+        c.classList.add('is-hovering', 'is-view')
+      } else if (t?.closest('.hover-target')) {
+        c.classList.add('is-hovering')
+      }
+    }
+    const onOut = (e: MouseEvent) => {
+      const t = e.target as HTMLElement
+      if (t?.closest('.hover-view')) {
+        c.classList.remove('is-hovering', 'is-view')
+      } else if (t?.closest('.hover-target')) {
+        c.classList.remove('is-hovering')
+      }
+    }
+    document.addEventListener('mouseover', onOver)
+    document.addEventListener('mouseout', onOut)
 
     const xTo = gsap.quickTo(c, 'x', { duration: 0.7, ease: 'power4.out' })
     const yTo = gsap.quickTo(c, 'y', { duration: 0.7, ease: 'power4.out' })
@@ -54,6 +77,8 @@ export default function CustomCursor() {
 
     return () => {
       window.removeEventListener('mousemove', onMove)
+      document.removeEventListener('mouseover', onOver)
+      document.removeEventListener('mouseout', onOut)
       gsap.ticker.remove(tick)
     }
   }, [])

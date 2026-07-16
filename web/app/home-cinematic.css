@@ -1,18 +1,28 @@
 /* ═══════════════════════════════════════════════════════════════════
-   CHEZ FLORENCE — Home cinématique
-   Port fidèle de index.html (v3) → composants Next.js / GSAP.
-   Toutes les règles sont scopées sous .home-cinema pour ne jamais
-   impacter les autres pages du site (/rabbits, /about, /contact…).
-   Variables (--green, --lime, --dark, --card, --border, --muted,
-   --font-*, --grain, --radius-plate) et .plate-mark / .marquee-track
-   sont déjà globales dans globals.css — non redéfinies ici.
+   CHEZ FLORENCE — Home cinématique (v3 — port fidèle de index.html)
+   Port direct des classes de la maquette (.hero-section, .section-title,
+   .garanties-grid, .pricing-grid, .projects-grid, .testimonials-grid,
+   .faq-grid…) — plus de namespace cf-* inventé. Couleurs/polices via les
+   tokens du projet (--paper/--ink/--rust/--caramel, --font-*), mêmes
+   valeurs que --bg-light/--bg-dark/--accent-orange/--font-pixel/
+   --font-main de la maquette. Tout est scopé .home-cinema, sauf le
+   chrome déjà partagé ailleurs (.giant-heading n'existe plus : la
+   maquette n'a pas cette classe, ContactSection/AdoptSection qui
+   l'utilisaient ont été remplacés par HomeFooter/InnerFooter).
    ═══════════════════════════════════════════════════════════════════ */
 
 .home-cinema {
   width: 100%;
   overflow-x: hidden;
-  background-color: var(--dark);
-  font-family: var(--font-label);
+  font-family: var(--font-body);
+  background-color: var(--maroon);
+  color: var(--paper);
+}
+
+.home-cinema section {
+  min-height: 100vh;
+  padding: 140px 50px 80px;
+  position: relative;
 }
 
 /* ---------------------------------------------------------------
@@ -31,520 +41,49 @@
 }
 
 /* ---------------------------------------------------------------
-   Section backdrops
-   --------------------------------------------------------------- */
-
-.home-cinema #page2 {
-  width: 100%;
-  height: 350vh;
-  position: relative;
-  overflow: hidden;
-  background-color: var(--dark);
-}
-
-.home-cinema #page3 {
-  width: 100%;
-  height: 400vh;
-  overflow: hidden;
-  position: relative;
-  background-color: var(--dark);
-}
-
-.home-cinema #page4 {
-  position: relative;
-  width: 100%;
-  padding: 12vh 4vw 10vh;
-  overflow: hidden;
-  background-color: var(--muted);
-  z-index: 10;
-}
-
-/* ---------------------------------------------------------------
-   Curseur custom (indépendant du hero)
+   Curseur custom — grossit + orange au survol .hover-target,
+   libellé "VOIR" en plus sur .hover-view (grille Nos Lapins)
    --------------------------------------------------------------- */
 
 .home-cinema #cursor {
-  width: 21px;
-  height: 21px;
+  width: 12px;
+  height: 12px;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 100;
   pointer-events: none;
+  margin-left: -6px;
+  margin-top: -6px;
+  background-color: var(--ink);
+  border-radius: 50%;
   mix-blend-mode: difference;
-  background-color: var(--muted);
-  border-radius: 50%;
+  transition: width 0.3s, height 0.3s, background-color 0.3s, margin 0.3s;
 }
-
-/* ---------------------------------------------------------------
-   Page 2 — Notre Histoire / Nos Garanties
-   --------------------------------------------------------------- */
-
-.home-cinema #page2-heading-1 {
-  position: absolute;
-  top: 2.5%;
-  left: 2%;
-  transform: translateY(-50%);
-  white-space: nowrap;
-  font-size: 1.05vw;
-  font-family: var(--font-label);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  pointer-events: none;
-  color: var(--muted);
-  opacity: 0.6;
+.home-cinema #cursor.is-hovering {
+  width: 60px;
+  height: 60px;
+  margin-left: -30px;
+  margin-top: -30px;
+  background-color: var(--rust);
+  mix-blend-mode: normal;
 }
-
-.home-cinema #page2-heading-1::before {
-  content: "No. 02 — ";
-  opacity: 0.6;
-}
-
-.home-cinema #page2-heading-wrap {
-  position: absolute;
-  top: 51%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0 0.28em;
-  width: 90%;
-  pointer-events: none;
-  will-change: transform;
-}
-
-.home-cinema #page2-heading-2,
-.home-cinema #page2-heading-3 {
-  white-space: nowrap;
-}
-
-.home-cinema #page2-small-heading {
-  font-size: 1vw;
-  font-family: var(--font-label);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--muted);
-  opacity: 0.4;
-  position: absolute;
-  top: 70.5%;
-  left: 1.5%;
-  transform: translateY(-50%);
-  pointer-events: none;
-}
-
-.home-cinema #page2-small-heading-2 {
-  font-size: 0.95vw;
-  font-family: var(--font-label);
-  color: rgba(var(--lime-rgb, 194, 105, 61), 0.65);
-  position: absolute;
-  top: 18.5%;
-  left: 1.5%;
-  transform: translateY(-50%);
-  pointer-events: none;
-  letter-spacing: 0.04em;
-}
-
-.home-cinema #intro-container {
-  position: relative;
-  top: 12%;
-  left: 1.5%;
-  transform: translateY(-50%);
-  width: 90%;
-  pointer-events: none;
-}
-
-.home-cinema #behind-intro,
-.home-cinema #above-intro {
-  font-size: clamp(2.2rem, 4vw, 4.5rem);
-  line-height: 1.15;
-  font-weight: 400;
-  font-style: italic;
-  font-family: var(--font-body);
-}
-
-.home-cinema #behind-intro {
-  color: rgba(var(--muted-rgb, 168, 150, 120), 0.22);
-}
-
-.home-cinema #above-intro {
-  position: absolute;
-  top: 0;
-  left: 0;
-  color: var(--muted);
-  clip-path: inset(0 100% 0 0);
-}
-
-.home-cinema #scroll-line {
-  display: block;
-  width: 100%;
-  position: absolute;
-  top: 35%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.home-cinema #scroll-line line {
-  stroke: var(--lime) !important;
-}
-
-.home-cinema #skills-container {
-  width: 97vw;
-  height: 95vh;
-  overflow: hidden;
-  position: absolute;
-  top: 85%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+.home-cinema #cursor.is-view {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
-  border-bottom: 1px solid rgba(var(--muted-rgb, 168, 150, 120), 0.3);
-}
-
-.home-cinema #skills-container-1,
-.home-cinema #skills-container-2,
-.home-cinema #skills-container-3,
-.home-cinema #skills-container-4 {
-  width: 100%;
-  height: 23.75vh;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-top: 1px solid rgba(var(--muted-rgb, 168, 150, 120), 0.3);
-}
-
-.home-cinema #skill-1a,
-.home-cinema #skill-2a,
-.home-cinema #skill-3a,
-.home-cinema #skill-4a {
-  font-size: 1.7vw;
+  color: var(--ink);
   font-family: var(--font-label);
-  letter-spacing: 0.02em;
-  color: var(--muted);
-  pointer-events: none;
-}
-
-.home-cinema #skill-1b,
-.home-cinema #skill-2b,
-.home-cinema #skill-3b,
-.home-cinema #skill-4b {
-  font-size: 1.4vw;
-  font-family: var(--font-body);
-  font-style: italic;
-  width: 30%;
-  color: var(--muted);
-  opacity: 0.62;
-  pointer-events: none;
-}
-
-/* Desktop : le wrapper accordéon mobile est transparent au layout —
-   #skill-Nb garde exactement la même position flex qu'avant, l'image
-   inline reste masquée (l'aperçu desktop passe par #hover-img). */
-.home-cinema .hover-item-content {
-  display: contents;
-}
-.home-cinema .hover-item-image {
-  display: none;
-}
-
-/* ---------------------------------------------------------------
-   Page 3 — Nos Races
-   --------------------------------------------------------------- */
-
-.home-cinema #page3-heading-1 {
-  font-size: 1.1vw;
-  color: rgba(var(--muted-rgb, 168, 150, 120), 0.45);
-  font-family: var(--font-label);
-  letter-spacing: 0.08em;
+  font-size: 0.7rem;
+  font-weight: 700;
   text-transform: uppercase;
-  pointer-events: none;
-  position: absolute;
-  top: 5%;
-  left: 2%;
-  transform: translateY(-50%);
+}
+.home-cinema #cursor.is-view::after {
+  content: 'VOIR';
 }
 
-.home-cinema #page3-heading-1::before {
-  content: "No. 03 — ";
-}
-
-.home-cinema #intro-container-1 {
-  position: absolute;
-  top: 11%;
-  left: 2%;
-  transform: translateY(-50%);
-  width: 80%;
-  pointer-events: none;
-}
-
-.home-cinema #behind-intro-1,
-.home-cinema #above-intro-1 {
-  font-size: clamp(2.2rem, 3.5vw, 4.5rem);
-  line-height: 1.15;
-  font-weight: 400;
-  font-style: italic;
-  font-family: var(--font-body);
-}
-
-.home-cinema #behind-intro-1 {
-  color: rgba(var(--muted-rgb, 168, 150, 120), 0.22);
-}
-
-.home-cinema #above-intro-1 {
-  position: absolute;
-  top: 0;
-  left: 0;
-  color: var(--muted);
-  clip-path: inset(0 100% 0 0);
-}
-
-.home-cinema #page3-img {
-  width: 97vw;
-  height: 135vh;
-  overflow: hidden;
-  pointer-events: none;
-  position: absolute;
-  top: 33%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  will-change: transform;
-  border-radius: var(--radius-plate);
-}
-
-.home-cinema #page3-img-2 {
-  width: 48vw;
-  height: 135vh;
-  overflow: hidden;
-  pointer-events: none;
-  position: absolute;
-  top: 68%;
-  left: 1.5%;
-  transform: translateY(-50%);
-  will-change: transform;
-  border-radius: var(--radius-plate);
-}
-
-.home-cinema #page3-img-3 {
-  width: 48vw;
-  height: 135vh;
-  overflow: hidden;
-  pointer-events: none;
-  position: absolute;
-  top: 68%;
-  right: 1.5%;
-  transform: translateY(-50%);
-  will-change: transform;
-  border-radius: var(--radius-plate);
-}
-
-/* ---------------------------------------------------------------
-   Page 4 — Nos Lapins (carousel 1x3)
-   --------------------------------------------------------------- */
-
-.home-cinema .lapins-head {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 2vw;
-  max-width: 1400px;
-  margin: 0 auto 4vw;
-}
-
-.home-cinema .lapins-eyebrow {
-  font-family: var(--font-label);
-  font-size: 0.9vw;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(var(--dark-rgb, 42, 33, 24), 0.5);
-  margin-bottom: 0.8vw;
-}
-
-.home-cinema .lapins-title {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-style: italic;
-  font-size: clamp(2.4rem, 5vw, 4.5rem);
-  color: var(--lime);
-  line-height: 1;
-}
-
-.home-cinema .lapins-sub {
-  font-family: var(--font-body);
-  font-style: italic;
-  font-size: clamp(2.2rem, 4vw, 4.5rem);
-  line-height: 1.15;
-  color: rgba(var(--dark-rgb, 42, 33, 24), 0.55);
-  margin-top: 0.7vw;
-}
-
-.home-cinema .lapins-nav-btns {
-  display: flex;
-  gap: 0.8vw;
-  flex-shrink: 0;
-}
-
-.home-cinema .lapins-nav-btn {
-  width: 3vw;
-  min-width: 46px;
-  height: 3vw;
-  min-height: 46px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(var(--dark-rgb, 42, 33, 24), 0.25);
-  background: transparent;
-  color: var(--dark);
-  cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
-}
-
-.home-cinema .lapins-nav-btn--active {
-  border-color: var(--lime);
-  color: var(--lime);
-}
-
-.home-cinema .lapins-nav-btn:hover:not(:disabled) {
-  background-color: var(--dark);
-  color: var(--muted);
-  border-color: var(--dark);
-}
-
-.home-cinema .lapins-nav-btn:disabled {
-  opacity: 0.3;
-  cursor: default;
-}
-
-.home-cinema .lapins-viewport {
-  display: flex;
-  align-items: stretch;
-  gap: 1.6vw;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0.5vw 0.5vw 1vw;
-  scrollbar-width: none;
-}
-
-.home-cinema .lapins-viewport::-webkit-scrollbar {
-  display: none;
-}
-
-.home-cinema .lapins-card {
-  flex: 0 0 calc((100% - 2 * 1.6vw) / 3);
-  scroll-snap-align: start;
-}
-
-.home-cinema .lapins-card-skeleton {
-  aspect-ratio: 4 / 3;
-  border-radius: 1rem;
-  background: rgba(var(--dark-rgb, 42, 33, 24), 0.08);
-  animation: lapins-pulse 1.6s ease-in-out infinite;
-}
-
-@keyframes lapins-pulse {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
-}
-
-.home-cinema .lapins-empty {
-  text-align: center;
-  font-family: var(--font-body);
-  font-style: italic;
-  color: rgba(var(--dark-rgb, 42, 33, 24), 0.5);
-  padding: 4vw 0;
-}
-
-.home-cinema .price-tag {
-  position: absolute;
-  top: 1vw;
-  right: 1vw;
-  z-index: 2;
-  background: rgba(var(--dark-rgb, 42, 33, 24), 0.82);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  color: var(--muted);
-  font-family: var(--font-label);
-  font-size: 0.8vw;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  padding: 0.5vw 1vw;
-  border-radius: 999px;
-  border: 1px solid rgba(var(--muted-rgb, 168, 150, 120), 0.25);
-  pointer-events: none;
-}
-
-.home-cinema #page4-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: fit-content;
-  margin: 4vw auto 0;
-}
-
-/* ---------------------------------------------------------------
-   Bandeau horizontal pinné
-   --------------------------------------------------------------- */
-
-.home-cinema .Horizontal {
-  overflow: hidden;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  background-color: var(--dark);
-  z-index: 100;
-}
-
-.home-cinema .Horizontal__text {
-  display: flex;
-  width: max-content;
-  white-space: nowrap;
-  gap: 4vw;
-  padding-left: 100vw;
-  font-family: var(--font-display);
-  font-style: italic;
-  pointer-events: none;
-}
-
-.home-cinema .heading-xl {
-  font-size: clamp(2rem, 14vw, 12rem);
-  font-weight: 600;
-  line-height: 1.1;
-  color: var(--muted);
-}
-
-/* ---------------------------------------------------------------
-   Aperçu flottant au survol (Nos Garanties)
-   --------------------------------------------------------------- */
-
-.home-cinema #hover-img {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 350px;
-  height: 400px;
-  opacity: 0;
-  pointer-events: none;
-  background-size: cover;
-  background-position: center;
-  transform: translate(-50%, -50%);
-  transition: opacity 0.2s ease, transform 0.1s ease;
-  border: 1px solid rgba(var(--muted-rgb, 168, 150, 120), 0.25);
-  border-radius: 4px;
-  z-index: 1000;
-}
-
-.home-cinema #hover-img::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: var(--grain);
-  background-size: 220px 220px;
-  opacity: 0.5;
-  mix-blend-mode: overlay;
+@media (pointer: coarse) and (min-width: 481px) {
+  .home-cinema #cursor { display: none !important; }
 }
 
 /* ---------------------------------------------------------------
@@ -565,13 +104,11 @@
   pointer-events: none;
   overflow: hidden;
 }
-
 .home-cinema .stair {
   width: 10vw;
   height: 100vh;
   background-color: var(--muted);
 }
-
 .home-cinema #loader-counter {
   font-size: 15vw;
   font-family: var(--font-label);
@@ -588,7 +125,6 @@
   overflow: hidden;
   white-space: nowrap;
 }
-
 .home-cinema #loader-line {
   position: absolute;
   top: 90%;
@@ -596,650 +132,374 @@
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
-
-.home-cinema #loader-line line {
-  stroke: var(--dark) !important;
+.home-cinema #loader-line line { stroke: var(--dark) !important; }
+@media (hover: hover) and (pointer: fine) {
+  .home-cinema #loader-line { top: 93.5%; }
 }
 
 /* ---------------------------------------------------------------
-   Vraie photo/vidéo — remplit les plates + grain
-   --------------------------------------------------------------- */
-
-.home-cinema #page3-img img,
-.home-cinema #page3-img-2 img,
-.home-cinema #page3-img-3 img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: filter 0.5s ease, transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
-}
-
-.home-cinema #page3-img::after,
-.home-cinema #page3-img-2::after,
-.home-cinema #page3-img-3::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: var(--grain);
-  background-size: 220px 220px;
-  opacity: 0.35;
-  mix-blend-mode: overlay;
-  pointer-events: none;
-}
-
-/* ---------------------------------------------------------------
-   Eyebrow partagé (No. 0X — (Label))
+   Eyebrow / section-head — motif partagé par toutes les sections
    --------------------------------------------------------------- */
 
 .home-cinema .eyebrow {
-  position: absolute;
-  top: 5%;
-  left: 2%;
-  transform: translateY(-50%);
-  font-size: 1.05vw;
-  font-family: var(--font-label);
-  letter-spacing: 0.08em;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 2px;
   text-transform: uppercase;
-  color: rgba(var(--muted-rgb, 168, 150, 120), 0.45);
-  pointer-events: none;
-  z-index: 5;
+  opacity: 0.6;
+  margin-bottom: 16px;
+  text-align: center;
+  color: var(--rust);
 }
-
-.home-cinema .eyebrow::before {
-  content: attr(data-no) " — ";
+.home-cinema .section-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+  margin-bottom: 50px;
+  max-width: 46rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+.home-cinema .section-title {
+  font-family: var(--font-pixel);
+  font-size: clamp(2.1rem, 4.5vw, 4rem);
+  line-height: 1.05;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--paper);
+}
+.home-cinema .section-desc {
+  max-width: 42rem;
+  opacity: 0.75;
+  font-size: clamp(1.05rem, 2vw, 1.4rem);
+  line-height: 1.5;
+  text-align: center;
+  color: var(--paper);
 }
 
 /* ---------------------------------------------------------------
-   Base partagée des sections plein écran (Portrait)
+   HERO — vidéo webm (3 slides) + voile marron, demandé en dernier :
+   remplace le fond photo "jellyfish" de la maquette statique.
    --------------------------------------------------------------- */
 
-.home-cinema .fx-section {
-  width: 100%;
-  height: 100vh;
-  position: relative;
+.home-cinema .hero-section {
+  min-height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
+  padding: 140px 24px 60px;
+  position: relative;
   overflow: hidden;
-  background-color: var(--dark);
+  background-color: var(--maroon);
 }
-
-/* ---------------------------------------------------------------
-   No. 04 — Portrait (iris cinématique)
-   --------------------------------------------------------------- */
-
-.home-cinema #sec-iris .iris-word {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-weight: 700;
-  font-size: 4.3vw;
-  color: rgba(var(--muted-rgb, 168, 150, 120), 0.12);
-  letter-spacing: 0.01em;
-  text-transform: uppercase;
-}
-
-.home-cinema .takeover-layer {
+.home-cinema .hero-video-slide {
   position: absolute;
-  width: 100vw;
-  height: 100vh;
-  top: 0;
-  left: 0;
+  inset: 0;
+  transition: opacity 0.7s ease-in-out;
 }
-
-.home-cinema .takeover-layer img {
+.home-cinema .hero-video {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
+  opacity: 0.55;
 }
-
-.home-cinema .takeover-layer::after {
-  content: "";
+.home-cinema .hero-scrim {
   position: absolute;
   inset: 0;
-  background-image: var(--grain);
-  background-size: 220px 220px;
-  opacity: 0.35;
-  mix-blend-mode: overlay;
-  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(124,42,26,0.35) 0%, rgba(42,16,11,0.55) 55%, var(--maroon) 100%);
 }
-
-.home-cinema .iris-mask {
-  clip-path: circle(0% at 50% 50%);
-  will-change: clip-path;
-}
-
-/* ---------------------------------------------------------------
-   No. 05 — Tarifs
-   --------------------------------------------------------------- */
-
-.home-cinema #sec-pricing {
-  position: relative;
-  width: 100%;
-  padding: 14vh 4vw 12vh;
-  background-color: var(--dark);
-  overflow: hidden;
-}
-
-.home-cinema .pricing-title {
-  text-align: center;
-  max-width: 20ch;
-  margin: 0 auto 1.2vw;
-}
-
-.home-cinema #intro-container-2 {
-  position: relative;
-  max-width: 70ch;
-  margin: 0 auto 6vw;
-}
-
-.home-cinema #behind-intro-2,
-.home-cinema #above-intro-2 {
-  font-family: var(--font-body);
-  font-style: italic;
-  font-size: clamp(2.2rem, 4vw, 4.5rem);
-  line-height: 1.15;
-  text-align: center;
-}
-
-.home-cinema #behind-intro-2 {
-  color: rgba(var(--muted-rgb, 168, 150, 120), 0.25);
-}
-
-.home-cinema #above-intro-2 {
+.home-cinema .hero-dots {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  color: rgba(var(--muted-rgb, 168, 150, 120), 0.6);
-  clip-path: inset(0 100% 0 0);
-}
-
-.home-cinema .pricing-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.6vw;
-  max-width: 1180px;
-  margin: 0 auto;
-  align-items: center;
-}
-
-.home-cinema .price-card {
-  position: relative;
-  background: linear-gradient(165deg, rgba(var(--muted-rgb, 168, 150, 120), 0.06), rgba(var(--dark-rgb, 42, 33, 24), 0.4));
-  border: 1px solid rgba(var(--muted-rgb, 168, 150, 120), 0.14);
-  border-radius: 20px;
-  padding: 2.2vw 1.8vw;
-}
-
-.home-cinema .price-card--featured {
-  background: linear-gradient(165deg, var(--lime), var(--dark) 85%);
-  border-color: rgba(var(--lime-rgb, 194, 105, 61), 0.5);
-  transform: scale(1.05);
-  box-shadow: 0 30px 70px rgba(var(--dark-rgb, 42, 33, 24), 0.5);
-  z-index: 2;
-}
-
-.home-cinema .price-card-label {
-  font-family: var(--font-label);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-size: 0.85vw;
-  color: rgba(var(--muted-rgb, 168, 150, 120), 0.6);
-  margin-bottom: 1vw;
-}
-
-.home-cinema .price-card-amount {
-  font-family: var(--font-label);
-  font-weight: 600;
-  font-size: 2.6vw;
-  color: var(--muted);
-  margin-bottom: 0.5vw;
-}
-
-.home-cinema .price-card-amount span {
-  font-size: 0.5em;
-  font-weight: 500;
-  color: rgba(var(--muted-rgb, 168, 150, 120), 0.55);
-  margin-left: 0.4em;
-}
-
-.home-cinema .price-card-desc {
-  font-family: var(--font-body);
-  font-style: italic;
-  font-size: 0.95vw;
-  color: rgba(var(--muted-rgb, 168, 150, 120), 0.6);
-  margin-bottom: 1.6vw;
-}
-
-.home-cinema .price-card-btn {
-  display: block;
-  text-align: center;
-  width: 100%;
-  padding: 0.85vw 0;
-  border-radius: 999px;
-  border: 1px solid rgba(var(--muted-rgb, 168, 150, 120), 0.5);
-  color: var(--muted);
-  text-decoration: none;
-  font-family: var(--font-label);
-  font-size: 0.85vw;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease;
-}
-
-.home-cinema .price-card-btn:hover {
-  background-color: var(--muted);
-  color: var(--dark);
-  border-color: var(--muted);
-}
-
-.home-cinema .price-card--featured .price-card-btn {
-  background-color: var(--muted);
-  color: var(--dark);
-  border-color: var(--muted);
-}
-
-.home-cinema .price-card--featured .price-card-btn:hover {
-  background-color: transparent;
-  color: var(--muted);
-  border-color: rgba(var(--muted-rgb, 168, 150, 120), 0.5);
-}
-
-.home-cinema .price-card-divider {
-  height: 1px;
-  background: rgba(var(--muted-rgb, 168, 150, 120), 0.16);
-  margin: 1.8vw 0 1.4vw;
-}
-
-.home-cinema .price-card-features {
-  list-style: none;
-}
-
-.home-cinema .price-card-features li {
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
   display: flex;
-  align-items: center;
-  gap: 0.6vw;
-  font-family: var(--font-label);
-  font-size: 0.85vw;
-  color: rgba(var(--muted-rgb, 168, 150, 120), 0.85);
-  margin-bottom: 0.9vw;
+  gap: 8px;
 }
-
-.home-cinema .price-card-features i {
-  color: var(--lime);
-  font-size: 1.1em;
-  flex-shrink: 0;
+.home-cinema .hero-dot {
+  height: 6px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
-
-/* ===================================================================
-   Mobile
-   =================================================================== */
-
-@media (max-width: 767px) {
-  .home-cinema #cursor {
-    display: none;
-  }
-  .home-cinema #page2 {
-    height: 250vh;
-  }
-  .home-cinema #page2-heading-1 {
-    font-size: 3.4vw;
-    top: 3.5%;
-    left: 2.5%;
-  }
-  .home-cinema #intro-container {
-    top: 15%;
-    left: 2.5%;
-  }
-  .home-cinema #page2-small-heading {
-    font-size: 2.8vw;
-    top: 58.3%;
-    left: 2%;
-  }
-  .home-cinema #page2-small-heading-2 {
-    font-size: 3vw;
-    top: 27.5%;
-    left: 2.5%;
-  }
-  .home-cinema #page3 {
-    margin-top: -1px;
-    display: none;
-  }
-  .home-cinema #skills-container {
-    top: 78%;
-  }
-  .home-cinema #skills-container-1,
-  .home-cinema #skills-container-2,
-  .home-cinema #skills-container-3,
-  .home-cinema #skills-container-4 {
-    justify-content: space-around;
-    flex-direction: column;
-    position: relative;
-    cursor: pointer;
-  }
-  .home-cinema #skill-1a { font-size: 6vw; }
-  .home-cinema #skill-2a,
-  .home-cinema #skill-3a,
-  .home-cinema #skill-4a { font-size: 4.6vw; }
-
-  /* ── Accordéon tap-to-open (image + description), inspiré de
-     gemini-code-…html : header toujours visible, .hover-item-content
-     collapsed par défaut (max-height:0), révélé au tap via .is-open. ── */
-  .home-cinema .hover-item::after {
-    content: '+';
-    position: absolute;
-    top: 0;
-    right: 2vw;
-    font-family: var(--font-label);
-    font-size: 6vw;
-    line-height: 1;
-    color: var(--muted);
-    opacity: 0.5;
-    transition: transform 0.35s ease;
-  }
-  .home-cinema .hover-item.is-open::after {
-    transform: rotate(45deg);
-  }
-  .home-cinema .hover-item-content {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    gap: 4vw;
-    width: 100%;
-    max-height: 0;
-    opacity: 0;
-    overflow: hidden;
-    transition: max-height 0.45s ease-out, opacity 0.3s ease;
-  }
-  .home-cinema .hover-item.is-open .hover-item-content {
-    max-height: 50vw;
-    opacity: 1;
-  }
-  .home-cinema .hover-item-image {
-    display: block;
-    flex-shrink: 0;
-    width: 28vw;
-    height: 28vw;
-    margin-top: 3vw;
-    border-radius: 8px;
-    background-size: cover;
-    background-position: center;
-  }
-  .home-cinema #skill-1b,
-  .home-cinema #skill-2b,
-  .home-cinema #skill-3b,
-  .home-cinema #skill-4b {
-    flex: 1;
-    min-width: 0;
-    font-size: 3.4vw;
-    color: var(--muted);
-    opacity: 0.7;
-    padding-top: 2.5vw;
-  }
-  .home-cinema #page3-heading-1 {
-    top: 3%;
-    left: 2.5%;
-    font-size: 3.4vw;
-    color: rgba(var(--muted-rgb, 168, 150, 120), 0.55);
-  }
-  .home-cinema #intro-container-1 {
-    top: 9.5%;
-    left: 2.5%;
-  }
-  .home-cinema #page3-img-2 {
-    width: 97vw;
-    height: 90vh;
-    top: 61.5%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-  .home-cinema #page3-img-3 {
-    width: 97vw;
-    height: 90vh;
-    top: 84.3%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-  .home-cinema #sec-pricing {
-    padding: 10vh 5vw 8vh;
-  }
-  .home-cinema #intro-container-2 {
-    margin: 0 auto 10vw;
-  }
-  .home-cinema .pricing-grid {
-    grid-template-columns: 1fr;
-    gap: 6vw;
-  }
-  .home-cinema .price-card {
-    padding: 7vw 6vw;
-  }
-  .home-cinema .price-card--featured {
-    transform: none;
-  }
-  .home-cinema .price-card-label {
-    font-size: 3.4vw;
-  }
-  .home-cinema .price-card-amount {
-    font-size: 9vw;
-  }
-  .home-cinema .price-card-desc {
-    font-size: 3.6vw;
-  }
-  .home-cinema .price-card-btn {
-    padding: 3.4vw 0;
-    font-size: 3.4vw;
-  }
-  .home-cinema .price-card-divider {
-    margin: 6vw 0 5vw;
-  }
-  .home-cinema .price-card-features li {
-    font-size: 3.4vw;
-    gap: 2.5vw;
-    margin-bottom: 3vw;
-  }
-  .home-cinema .lapins-head {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4vw;
-  }
-  .home-cinema .lapins-eyebrow { font-size: 3vw; }
-  .home-cinema .lapins-title { font-size: 11vw; }
-  .home-cinema .lapins-nav-btns { align-self: flex-end; }
-  .home-cinema .lapins-nav-btn { width: 11vw; height: 11vw; }
-  .home-cinema .lapins-card { flex: 0 0 82%; }
-  .home-cinema .price-tag {
-    top: 3vw;
-    right: 3vw;
-    font-size: 2.8vw;
-    padding: 1.4vw 2.6vw;
-  }
-  .home-cinema #hover-img { display: none; }
-
-  .home-cinema .fx-section {
-    height: auto;
-    min-height: 55vh;
-    padding: 10vh 0;
-  }
-  .home-cinema .eyebrow {
-    position: static;
-    display: block;
-    text-align: center;
-    font-size: 3vw;
-    margin-bottom: 4vh;
-    transform: none;
-  }
-  .home-cinema #sec-iris {
-    flex-direction: column;
-  }
-  .home-cinema #sec-iris .iris-word {
-    font-size: 7vw;
-    order: 2;
-    margin-top: 4vh;
-  }
-  .home-cinema .takeover-layer.iris-mask {
-    clip-path: none !important;
-    position: relative;
-    width: 92vw;
-    height: 45vh;
-    top: auto; left: auto;
-    border-radius: 10px;
-    overflow: hidden;
-    order: 1;
-  }
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .home-cinema #loader-line {
-    top: 93.5%;
-  }
-}
-
-@media (pointer: coarse) and (min-width: 481px) {
-  .home-cinema #cursor {
-    display: none !important;
-  }
-}
-
-/* ---------------------------------------------------------------
-   Scrollbar masquée uniquement pendant que la home cinématique
-   est montée (classe posée/retirée sur <html> par le hook d'anim)
-   --------------------------------------------------------------- */
-
-html.lp-home-active::-webkit-scrollbar {
-  display: none;
-}
-
-/* ---------------------------------------------------------------
-   Harmonisation — RabbitsSection / ContactSection / Footer
-   Même fond marron (--dark) et mêmes 3 polices que le reste de la
-   home cinématique, sans toucher /rabbits (catalogue complet),
-   /admin, /aide, etc. qui restent sur leur propre charte.
-   --------------------------------------------------------------- */
-
-.home-kept-sections {
-  background-color: var(--dark);
-}
-
-.home-kept-sections h1,
-.home-kept-sections h2,
-.home-kept-sections h3,
-.home-kept-sections h4,
-.home-kept-sections h5,
-.home-kept-sections h6 {
-  font-family: var(--font-display) !important;
-}
-
-.home-kept-sections button,
-.home-kept-sections input,
-.home-kept-sections select,
-.home-kept-sections textarea,
-.home-kept-sections label {
-  font-family: var(--font-label) !important;
-}
-
-.home-kept-sections p,
-.home-kept-sections li,
-.home-kept-sections a,
-.home-kept-sections span,
-.home-kept-sections div {
-  font-family: var(--font-body) !important;
-}
-
-/* ---------------------------------------------------------------
-   AdoptSection — "Commandez", même traitement "gros lettre" que
-   #page2-heading-3 (Garanties), hors scope .home-cinema puisque le
-   footer s'affiche sur toutes les pages, pas seulement la home.
-   .split-heading-1 le fait profiter du même flip 3D scrubé au scroll
-   (lib/useGsapLenis.ts) quand ScrollFX tourne (home uniquement) ;
-   sur les autres pages il reste simplement affiché, déjà stylé.
-
-   RÈGLE PARTAGÉE — .giant-heading est LA typo "gros lettrage" du site :
-   même police, même taille, même couleur, même casse partout où elle
-   est appliquée (Commandez, Nos/Garanties, Un tarif pour chaque besoin,
-   Parlons de Votre Lapin). Volontairement globale (non scopée
-   .home-cinema) puisqu'elle sert aussi bien dans le footer que sur la
-   home. Chaque composant garde sa propre gestion de layout (text-align,
-   max-width, position) à côté de cette classe.
-   --------------------------------------------------------------- */
-
-.giant-heading {
-  font-family: var(--font-display) !important;
+.home-cinema .title-container { position: relative; z-index: 2; }
+.home-cinema .title-small {
+  font-family: var(--font-body);
   font-style: italic;
+  font-size: clamp(1.1rem, 2.2vw, 1.6rem);
+  color: var(--paper);
+}
+.home-cinema .title-main {
+  font-family: var(--font-pixel);
+  font-size: clamp(3.5rem, 13vw, 9rem);
+  line-height: 0.9;
+  text-transform: uppercase;
+  color: var(--paper);
+}
+.home-cinema .hero-sub {
+  position: relative;
+  z-index: 2;
+  max-width: 34rem;
+  margin: 20px auto 0;
+  font-size: clamp(0.9rem, 1.6vw, 1.05rem);
+  line-height: 1.5;
+  opacity: 0.75;
+  color: var(--paper);
+}
+.home-cinema .social-proof-bar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(1.5rem, 4vw, 2.75rem);
+  margin-top: 40px;
+}
+.home-cinema .sp-item { text-align: center; }
+.home-cinema .sp-num { font-family: var(--font-pixel); font-size: 1.3rem; color: var(--rust); }
+.home-cinema .sp-label {
+  font-family: var(--font-label);
+  font-size: 0.65rem;
   font-weight: 600;
   text-transform: uppercase;
-  color: var(--lime);
-  font-size: clamp(3rem, 9vw, 8rem);
-  line-height: 0.95;
-  margin-bottom: 0.3em;
-  overflow-wrap: break-word;
+  letter-spacing: 0.05em;
+  opacity: 0.65;
+  color: var(--paper);
+  margin-top: 4px;
 }
-
-/* word-break: break-word a été retiré ci-dessus : combiné à
-   overflow-wrap, il autorisait le navigateur à couper n'importe où
-   (y compris entre deux lettres d'un même mot en plein milieu) —
-   c'est ce qui produisait "PO/UR", "V/OTRE", "COMMANDE/Z" alors
-   qu'un retour à la ligne avant le mot entier suffisait. overflow-wrap
-   seul ne coupe qu'en dernier recours (mot isolé plus large que son
-   conteneur). */
-
-/* En dessous de ~480px, 9vw touchait déjà le plancher de 3rem et n'y
-   bougeait plus, quelle que soit la largeur réelle de l'écran — la
-   taille continue ici de suivre le viewport au lieu de rester figée,
-   pour laisser assez de place aux mots longs (Commandez, Garanties…)
-   sur les très petits téléphones. */
-@media (max-width: 480px) {
-  .giant-heading {
-    font-size: clamp(2.4rem, 11vw, 8rem);
-  }
-}
-
-/* "Commandez" (footer) est un seul mot sans espace : s'il ne tient
-   pas, il n'y a rien à renvoyer à la ligne suivante — comme pour
-   Nos/Garanties (page2-heading-2/-3, déjà en nowrap plus haut), on le
-   garde sur une seule ligne plutôt que de le laisser se couper. */
-footer .giant-heading {
-  white-space: nowrap;
-}
-
-/* Filet de sécurité pour le split GSAP (words,chars) : chaque mot garde
-   son propre bloc insécable, seule la frontière ENTRE deux .word peut
-   être un point de retour à la ligne — jamais à l'intérieur. */
-.giant-heading .word {
-  display: inline-block;
-  white-space: nowrap;
-}
-
-/* ContactSection — même mécanique above/behind-intro que page2/page3/pricing,
-   globale (non scopée .home-cinema) puisque ContactSection vit dans
-   .home-kept-sections. Le texte hérite font-body via la règle
-   .home-kept-sections p{} déjà en place plus haut ; on ne fixe ici que
-   la taille/l'italique/le centrage propres à cette instance.
-   Taille alignée sur #above-intro-2 (Tarifs) — même gabarit "intro courte
-   centrée au-dessus d'un bloc" que Contact ; l'ancien 0.875rem fixe ne
-   suivait pas le viewport comme les 3 autres instances (toutes en clamp). */
-#intro-container-3 {
+.home-cinema .cards-container {
   position: relative;
-  max-width: 48rem;
-  margin: 0 auto;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 44px;
+  perspective: 1000px;
 }
-#behind-intro-3,
-#above-intro-3 {
-  font-style: italic;
-  font-size: clamp(2.2rem, 4vw, 4.5rem);
-  line-height: 1.15;
+.home-cinema .card {
+  width: 220px;
+  padding: 28px 24px;
+  border-radius: 20px;
+  background: rgba(243,233,218,0.08);
+  border: 1px solid rgba(243,233,218,0.18);
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+  text-decoration: none;
+  color: var(--paper);
+  transform-style: preserve-3d;
+  transition: border-color 0.3s ease;
+}
+.home-cinema .card:hover { border-color: var(--rust); }
+.home-cinema .card-tag { font-family: var(--font-label); font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--rust); }
+.home-cinema .card-price { font-family: var(--font-pixel); font-size: 1.5rem; }
+.home-cinema .card-action { font-family: var(--font-body); font-size: 0.8rem; opacity: 0.65; line-height: 1.4; }
+
+
+/* ---------------------------------------------------------------
+   MISSION (No. 02 — Notre Histoire)
+   --------------------------------------------------------------- */
+
+.home-cinema .mission-section { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+.home-cinema .mission-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  max-width: 46rem;
+}
+.home-cinema .mission-text-huge {
+  font-family: var(--font-pixel);
+  font-size: clamp(2.1rem, 4.5vw, 4rem);
+  line-height: 1.05;
+  text-transform: uppercase;
   text-align: center;
+  color: var(--paper);
 }
-#behind-intro-3 {
-  color: rgba(255, 255, 255, 0.14);
+.home-cinema .mission-description p {
+  font-size: clamp(1.05rem, 2vw, 1.4rem);
+  line-height: 1.5;
+  opacity: 0.75;
+  text-align: center;
+  color: var(--paper);
 }
-#above-intro-3 {
+.home-cinema .marquee-container {
   position: absolute;
-  top: 0;
+  bottom: 5%;
   left: 0;
   width: 100%;
-  color: rgba(255, 255, 255, 0.4);
-  clip-path: inset(0 100% 0 0);
+  overflow: hidden;
+  background: var(--rust);
+  color: var(--ink);
+  padding: 14px 0;
+  transform: rotate(-2deg) scale(1.05);
+}
+.home-cinema .marquee-inner { display: flex; white-space: nowrap; width: max-content; }
+.home-cinema .marquee-inner span {
+  font-family: var(--font-pixel);
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  padding: 0 20px;
 }
 
+/* ---------------------------------------------------------------
+   GARANTIES (No. 03)
+   --------------------------------------------------------------- */
+
+.home-cinema .garanties-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+  margin-top: 20px;
+}
+.home-cinema .garantie-item { border-top: 1px solid rgba(243,233,218,0.18); padding-top: 20px; }
+.home-cinema .garantie-num { font-family: var(--font-pixel); color: var(--rust); font-size: 1rem; margin-bottom: 14px; }
+.home-cinema .garantie-title { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; margin-bottom: 8px; }
+.home-cinema .garantie-desc { font-size: 0.9rem; line-height: 1.55; opacity: 0.7; }
+
+/* ---------------------------------------------------------------
+   TARIFS (No. 05, .pricing-grid)
+   --------------------------------------------------------------- */
+
+.home-cinema .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 10px; perspective: 1200px; }
+.home-cinema .price-card {
+  background: rgba(243,233,218,0.05);
+  border: 1px solid rgba(243,233,218,0.15);
+  border-radius: 24px;
+  padding: 40px 32px;
+  display: flex;
+  flex-direction: column;
+  transform-style: preserve-3d;
+  transition: border-color 0.4s ease;
+  position: relative;
+}
+.home-cinema .price-card:hover { border-color: var(--rust); }
+.home-cinema .price-card.featured { border-color: var(--rust); background: rgba(194,114,61,0.08); transform: scale(1.03); }
+.home-cinema .price-badge {
+  align-self: flex-start;
+  background: var(--rust);
+  color: var(--ink);
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 999px;
+  margin-bottom: 18px;
+}
+.home-cinema .price-tag { font-family: var(--font-label); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.65; margin-bottom: 10px; }
+.home-cinema .price-amount { font-family: var(--font-pixel); font-size: 2.2rem; color: var(--rust); line-height: 1; }
+.home-cinema .price-amount span { font-family: var(--font-label); font-size: 0.9rem; margin-left: 6px; opacity: 0.6; }
+.home-cinema .price-sub { font-size: 0.85rem; opacity: 0.6; margin: 10px 0 24px; }
+.home-cinema .price-cta {
+  text-align: center;
+  padding: 14px;
+  border-radius: 12px;
+  background: var(--paper);
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  transition: opacity 0.3s ease;
+}
+.home-cinema .price-card.featured .price-cta { background: var(--rust); }
+.home-cinema .price-cta:hover { opacity: 0.82; }
+.home-cinema .price-cta-wrap { display: flex; justify-content: center; }
+.home-cinema .price-features { list-style: none; display: flex; flex-direction: column; gap: 11px; flex-grow: 1; margin-top: 24px; padding-top: 24px; border-top: 1px solid rgba(243,233,218,0.15); }
+.home-cinema .price-features li { font-size: 0.85rem; opacity: 0.85; padding-left: 20px; position: relative; }
+.home-cinema .price-features li::before { content: '✓'; position: absolute; left: 0; color: var(--rust); font-weight: 700; }
+
+/* ---------------------------------------------------------------
+   NOS LAPINS (No. 08, .projects-grid)
+   --------------------------------------------------------------- */
+
+.home-cinema .projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.home-cinema .project-item { text-decoration: none; color: inherit; display: block; }
+.home-cinema .project-item.offset { margin-top: 40px; }
+.home-cinema .project-item.unavailable { opacity: 0.55; }
+.home-cinema .project-img-box { position: relative; width: 100%; height: 340px; overflow: hidden; border-radius: 16px; background: rgba(243,233,218,0.06); }
+.home-cinema .project-img-box img { transition: transform 0.6s ease, filter 0.6s ease; }
+.home-cinema .project-item:hover .project-img-box img:not([style*="grayscale"]) { transform: scale(1.06); }
+.home-cinema .project-item.unavailable .project-img-box img { filter: grayscale(1); }
+.home-cinema .project-img-fallback { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0.3; }
+.home-cinema .stock-pill {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: var(--rust);
+  color: var(--ink);
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 999px;
+}
+.home-cinema .stock-pill.low { animation: stockPulse 1s ease-in-out infinite alternate; }
+@keyframes stockPulse { from { transform: scale(1); } to { transform: scale(1.08); } }
+.home-cinema .project-meta { display: flex; justify-content: space-between; margin-top: 16px; font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; }
+.home-cinema .project-sub { font-size: 0.85rem; opacity: 0.6; margin-top: 4px; }
+.home-cinema .project-skeleton { height: 340px; border-radius: 16px; background: linear-gradient(110deg, rgba(243,233,218,0.05) 8%, rgba(243,233,218,0.12) 18%, rgba(243,233,218,0.05) 33%); background-size: 200% 100%; animation: cfShimmer 1.6s linear infinite; }
+@keyframes cfShimmer { to { background-position-x: -200%; } }
+.home-cinema .projects-empty { text-align: center; padding: 60px 0; opacity: 0.6; }
+.home-cinema .projects-cta-row { display: flex; justify-content: center; margin-top: 50px; }
+.home-cinema .btn-line { border-bottom: 2px solid currentColor; padding-bottom: 4px; text-decoration: none; color: inherit; font-weight: 700; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.05em; }
+
+/* ---------------------------------------------------------------
+   TÉMOIGNAGES (No. 09)
+   --------------------------------------------------------------- */
+
+.home-cinema .testimonials-section { padding: 100px 50px; }
+.home-cinema .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 10px; }
+.home-cinema .testimonial-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 24px; padding: 34px; transition: border-color 0.4s; }
+.home-cinema .testimonial-card:hover { border-color: var(--rust); }
+.home-cinema .testimonial-stars { color: var(--rust); font-size: 1rem; margin-bottom: 16px; }
+.home-cinema .testimonial-text { font-size: 1rem; line-height: 1.6; opacity: 0.85; margin-bottom: 20px; }
+.home-cinema .testimonial-author { display: flex; align-items: center; gap: 12px; }
+.home-cinema .testimonial-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--rust); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.85rem; color: var(--ink); flex-shrink: 0; }
+.home-cinema .testimonial-name { font-weight: 700; font-size: 0.9rem; }
+.home-cinema .testimonial-role { font-size: 0.75rem; opacity: 0.5; }
+
+/* ---------------------------------------------------------------
+   FAQ (No. 10)
+   --------------------------------------------------------------- */
+
+.home-cinema .faq-section { padding: 100px 50px; }
+.home-cinema .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 10px; }
+.home-cinema .faq-item { border-bottom: 1px solid rgba(243,233,218,0.15); padding-bottom: 24px; }
+.home-cinema .faq-question { font-weight: 700; font-size: 1.1rem; margin-bottom: 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.home-cinema .faq-question::after { content: '+'; font-family: var(--font-pixel); color: var(--rust); font-size: 1.2rem; flex-shrink: 0; }
+.home-cinema .faq-question.active::after { content: '\2212'; }
+.home-cinema .faq-answer { font-size: 0.95rem; line-height: 1.6; opacity: 0.7; max-height: 0; overflow: hidden; transition: max-height 0.4s ease, opacity 0.4s ease; }
+.home-cinema .faq-answer.open { max-height: 220px; opacity: 0.7; }
+
+/* ---------------------------------------------------------------
+   Responsive
+   --------------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .home-cinema section { padding: 100px 24px 60px; }
+  .home-cinema .mission-layout,
+  .home-cinema .garanties-grid,
+  .home-cinema .pricing-grid,
+  .home-cinema .projects-grid,
+  .home-cinema .testimonials-grid,
+  .home-cinema .faq-grid {
+    grid-template-columns: 1fr;
+  }
+  .home-cinema .project-item.offset { margin-top: 0; }
+  .home-cinema .price-card.featured { transform: none; }
+  .home-cinema .section-title { font-size: 9vw; }
+  .home-cinema .mission-text-huge { font-size: 10vw; }
+}

@@ -5,22 +5,21 @@ import { gsap } from 'gsap'
 import Logo from './Logo'
 import './Navbar.css'
 
-// ── Navbar CHEZ FLORENCE ─────────────────────────────────────────
-// Desktop : pill compacte, le hamburger déploie une grille de 3
-// cartes (Marque / Navigation / Contact) — mécanique reprise de
-// CardNav (AKATech), ré-adaptée à la palette caramel/rust et sans les
-// dépendances propres à AKATech (theme toggle, TransitionLink/Blob,
-// mode Explorer).
-// Mobile : panel plein écran qui glisse depuis la droite avec un
-// balayage de pré-couches — mécanique reprise de StaggeredMenu
-// (AKAFOLIO), simplifiée : pas de GhostParticleText, juste un survol
-// couleur classique.
-// ═══════════════════════════════════════════════════════════════
+// ── Navbar CHEZ FLORENCE — CardNav (desktop) + StaggeredMenu (mobile) ──
+// Restaurée telle quelle depuis la version d'origine du projet : pill
+// compacte desktop → hamburger déploie 3 cartes ; panel plein écran
+// mobile qui glisse depuis la droite. Porte maintenant TOUTE la
+// navigation du site (Nos Lapins/Tarifs/Notre Histoire/FAQ/Contact +
+// Aide/Conditions/Confidentialité) — ces liens ne sont plus dans le
+// footer (voir Footer.tsx), la nav est l'unique endroit où les trouver.
+// ═══════════════════════════════════════════════════════════════════
 
 const navLinks = [
   { label: 'Accueil', href: '/' },
   { label: 'Nos Lapins', href: '/#lapins' },
-  { label: 'À Propos', href: '/#a-propos' },
+  { label: 'Tarifs', href: '/#tarifs' },
+  { label: 'Notre Histoire', href: '/#histoire' },
+  { label: 'FAQ', href: '/#faq' },
   { label: 'Contact', href: '/#contact' },
 ]
 
@@ -96,10 +95,10 @@ function DesktopCardNav() {
         style={{
           '--nav-bg': open ? 'rgba(6,14,9,0.0)' : 'transparent',
           '--nav-blur': open ? 'blur(20px) saturate(160%)' : 'none',
-          '--nav-border': open ? '1px solid rgba(194,105,61,0.18)' : '1px solid transparent',
+          '--nav-border': open ? '1px solid rgba(194,114,61,0.18)' : '1px solid transparent',
           '--nav-shadow': open ? '0 8px 32px rgba(0,0,0,0.35)' : 'none',
           '--nav-hline': '#F3E9DA',
-          background: open ? 'rgba(42,33,24,0.92)' : 'transparent',
+          background: open ? 'rgba(124,42,26,0.92)' : 'transparent',
           backdropFilter: open ? 'blur(16px)' : 'none',
         } as React.CSSProperties}
       >
@@ -150,6 +149,10 @@ function DesktopCardNav() {
                   {link.label}
                 </Link>
               ))}
+              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" onClick={closeNav} className="cf-card-link">
+                <ArrowIcon className="cf-card-link-arrow" />
+                WhatsApp
+              </a>
             </div>
           </div>
         </div>
@@ -211,7 +214,7 @@ function MobileStaggeredNav() {
     if (itemEls.length) {
       tl.to(itemEls, {
         yPercent: 0, rotate: 0, duration: 0.9, ease: 'power4.out',
-        stagger: { each: 0.08, from: 'start' },
+        stagger: { each: 0.06, from: 'start' },
       }, panelInsertTime + 0.15)
     }
     tl.play(0)
@@ -268,6 +271,8 @@ function MobileStaggeredNav() {
     animateText(false)
   }
 
+  const allLinks = [...navLinks, ...infoLinks]
+
   return (
     <>
       <div className={'cf-mobile-nav' + (open ? ' is-open' : '')}>
@@ -292,7 +297,7 @@ function MobileStaggeredNav() {
       </div>
 
       <div ref={preLayersRef} className="cf-mobile-prelayers" aria-hidden="true">
-        <div className="cf-mobile-prelayer" style={{ background: 'var(--lime)' }} />
+        <div className="cf-mobile-prelayer" style={{ background: 'var(--rust)' }} />
         <div className="cf-mobile-prelayer cf-mobile-prelayer--bg" />
       </div>
 
@@ -312,7 +317,7 @@ function MobileStaggeredNav() {
           </div>
 
           <ul className="cf-mobile-list">
-            {navLinks.map((link) => (
+            {allLinks.map((link) => (
               <li className="cf-mobile-itemWrap" key={link.href}>
                 <Link href={link.href} className="cf-mobile-item" onClick={closeMenu}>
                   {link.label}
