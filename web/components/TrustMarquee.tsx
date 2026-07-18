@@ -59,7 +59,7 @@ function PricingBand() {
     </div>
   )
   return (
-    <div className="tm-band tm-band--pricing" id="tarifs">
+    <div className="tm-band tm-band--pricing">
       <div className="tm-band-track tm-band-track--right">
         {set(false)}
         {set(true)}

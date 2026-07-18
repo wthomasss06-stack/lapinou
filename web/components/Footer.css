@@ -13,7 +13,6 @@ footer#contact {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   flex-grow: 1;
 }
 .footer-title {
@@ -31,19 +30,31 @@ footer#contact {
   font-size: clamp(1.05rem, 2vw, 1.4rem);
   line-height: 1.5;
   opacity: 0.75;
-  margin-bottom: 50px;
+  margin-bottom: 4rem;
 }
+
+.footer-grid {
+  width: 100%;
+  max-width: 1100px;
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+/* ── Colonne info ────────────────────────────────────────────── */
+.footer-info-col { display: flex; flex-direction: column; align-items: center; gap: 2.5rem; }
 .magnetic-btn-wrapper {
   position: relative;
-  width: 250px;
-  height: 250px;
+  width: 220px;
+  height: 220px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .magnetic-btn {
-  width: 180px;
-  height: 180px;
+  width: 160px;
+  height: 160px;
   background-color: var(--rust);
   border-radius: 50%;
   display: flex;
@@ -52,34 +63,107 @@ footer#contact {
   color: var(--ink);
   font-weight: 800;
   text-transform: uppercase;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   letter-spacing: 1px;
   text-decoration: none;
   text-align: center;
 }
 .contact-details {
+  width: 100%;
   display: flex;
-  gap: 50px;
-  justify-content: center;
-  margin-top: 60px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 1rem;
 }
-.contact-item { text-align: center; }
-.contact-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; opacity: 0.5; margin-bottom: 8px; }
-.contact-value { font-size: 1rem; }
+.contact-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px solid rgba(243,233,218,0.12);
+  padding-bottom: 0.85rem;
+  gap: 1rem;
+}
+.contact-label { font-family: var(--font-label); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; opacity: 0.5; flex-shrink: 0; }
+.contact-value { font-size: 0.95rem; text-align: right; }
 .contact-value a { color: var(--paper); text-decoration: none; }
 .contact-value a:hover { color: var(--rust); }
+
+/* ── Formulaire minimaliste — adapté de contact_section_variants.html
+   [PRENUM 4 : MONOCHROME], porté sur paper/ink/rust ────────────── */
+.footer-form-card {
+  background: rgba(243,233,218,0.04);
+  border: 1px solid rgba(243,233,218,0.15);
+  border-radius: 0;
+  padding: 2.5rem;
+}
+.footer-form { display: flex; flex-direction: column; gap: 1.25rem; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+.field-group { display: flex; flex-direction: column; gap: 0.5rem; }
+.field-label {
+  font-family: var(--font-label);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.6;
+}
+.input-minimal {
+  width: 100%;
+  background: transparent;
+  border: 1px solid rgba(243,233,218,0.22);
+  border-radius: 0;
+  padding: 0.85rem;
+  color: var(--paper);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  resize: none;
+  transition: border-color 0.25s ease;
+}
+.input-minimal::placeholder { color: rgba(243,233,218,0.35); }
+.input-minimal:focus { outline: none; border-color: var(--rust); }
+
+.btn-minimal {
+  width: 100%;
+  padding: 1rem;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--paper);
+  border-radius: 0;
+  font-family: var(--font-label);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+.btn-minimal:hover:not(:disabled) { background: transparent; color: var(--paper); }
+.btn-minimal:disabled { opacity: 0.6; cursor: default; }
+
+.footer-form-error { font-size: 0.82rem; color: var(--rust); text-align: center; }
+.footer-form-success { text-align: center; padding: 2rem 0; display: flex; flex-direction: column; gap: 1.25rem; align-items: center; }
+.footer-form-success p { font-size: 1rem; opacity: 0.85; }
+
 .footer-bottom {
   display: flex;
   justify-content: center;
   border-top: 1px solid rgba(243,233,218,0.15);
   padding-top: 20px;
   text-transform: uppercase;
+  margin-top: 4rem;
 }
 .footer-copyright { opacity: 0.5; font-size: 0.85rem; }
 
+@media (max-width: 900px) {
+  .footer-grid { grid-template-columns: 1fr; }
+}
 @media (max-width: 768px) {
   footer#contact { padding: 80px 24px 30px; }
-  .magnetic-btn-wrapper { width: 200px; height: 200px; }
-  .magnetic-btn { width: 150px; height: 150px; font-size: 1rem; }
+  .magnetic-btn-wrapper { width: 180px; height: 180px; }
+  .magnetic-btn { width: 130px; height: 130px; font-size: 0.95rem; }
+  .form-row { grid-template-columns: 1fr; }
+  .footer-form-card { padding: 1.5rem; }
 }

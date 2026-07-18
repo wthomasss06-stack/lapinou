@@ -3,30 +3,30 @@ import { useState, useLayoutEffect } from 'react'
 import { useGSAP } from '@gsap/react'
 import { gsap } from 'gsap'
 import { SplitText } from 'gsap/SplitText'
+import Image from 'next/image'
 
 gsap.registerPlugin(useGSAP, SplitText)
 
-// Séquence d'entrée : compteur 0→100%, ligne qui se dessine, colonnes
-// ("stairs") qui remontent, puis on démonte le loader. Le hero (slider
-// vidéo) gère sa propre apparition — le loader ne fait plus que le
-// masquer le temps du chargement, comme un rideau générique.
-//
-// Ne joue qu'UNE SEULE fois par session (sessionStorage) : revenir sur
-// "/" en navigation interne, ou recharger la home plusieurs fois dans
-// le même onglet, ne rejoue plus l'intro — seul un nouvel onglet/session
-// la remontre.
+// Séquence d'entrée — adaptée de gemini-code-1784134819405.html : cartes
+// empilées qui s'ouvrent (scale + clip-path) en cascade, titre "FLORENCE"
+// en reveal caractère par caractère, compteur 000→100 posé à côté du
+// titre, puis rideau (clip-path) qui remonte pour révéler le Hero.
+// Garde la logique "une fois par session" (sessionStorage) de l'ancienne
+// version — pas de raison de la perdre en changeant l'habillage visuel.
 const LOADER_SEEN_KEY = 'lapinou_loader_seen'
 
+const CARDS = [
+  { kind: 'photo', src: '/IMAGES/eleveur-soin.jpg', rotate: 7 },
+  { kind: 'solid', bg: 'var(--rust)', rotate: -3 },
+  { kind: 'photo', src: '/IMAGES/vente-lapins-affiche.jpg', rotate: -9 },
+  { kind: 'solid', bg: 'var(--paper)', rotate: 5 },
+]
+
 export default function Loader() {
-  // IMPORTANT : cette valeur doit être identique au premier rendu serveur
-  // ET au premier rendu client, sinon React lève une erreur d'hydratation
-  // (le serveur n'a jamais accès à sessionStorage, donc il rendrait
-  // toujours false — lire sessionStorage ici dans l'initializer du
-  // useState faisait diverger le client dès le premier rendu si le
-  // loader avait déjà été vu). On démarre donc toujours à false, et on
-  // resynchronise avec sessionStorage juste après, en layout effect
-  // (avant peinture), pour qu'un retour dans la même session saute le
-  // loader sans qu'il ne soit jamais visible à l'écran.
+  // Doit être identique au 1er rendu serveur et client (sessionStorage
+  // n'existe pas côté serveur) — on démarre à false puis on resynchronise
+  // juste après, avant peinture, pour qu'un retour dans la même session
+  // ne montre jamais le loader à l'écran.
   const [done, setDone] = useState(false)
 
   useLayoutEffect(() => {
@@ -40,92 +40,110 @@ export default function Loader() {
     let cancelled = false
 
     const start = contextSafe(() => {
-      const mm = gsap.matchMedia()
-      mm.add('(min-width: 768px)', () => initLoader())
-      mm.add('(max-width: 767px)', () => initLoader())
+      const cards = gsap.utils.toArray<HTMLElement>('.loader-card')
+      const titleSplit = SplitText.create('#loader-title', { type: 'chars' })
+      const counterEl = document.querySelector<HTMLElement>('#loader-counter')
 
-      function initLoader() {
-        const counterEl = document.querySelector<HTMLElement>('#loader-counter')
-        const stairs = document.querySelectorAll('#loader .stair')
-        const line2 = document.querySelector<SVGLineElement>('#loader-line line')
-        if (!counterEl || !line2) return
+      gsap.set(cards, { scale: 0, clipPath: 'polygon(20% 20%, 80% 20%, 80% 80%, 20% 80%)' })
+      gsap.set(titleSplit.chars, { yPercent: 100 })
+      gsap.set('#loader-counter', { yPercent: 100 })
 
-        const length2 = line2.getTotalLength()
-        const counter = { value: 0 }
+      const tl = gsap.timeline({ delay: 0.3 })
 
-        gsap.set(line2, { strokeDasharray: length2, strokeDashoffset: length2 })
-        gsap.set('#loader-line', { scaleX: -1, transformOrigin: 'center' })
+      tl.to(cards, {
+        scale: 1,
+        clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
+        duration: 1,
+        ease: 'power4.out',
+        stagger: 0.15,
+      })
 
-        const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
+      tl.to(titleSplit.chars, {
+        yPercent: 0,
+        duration: 1,
+        ease: 'power4.out',
+        stagger: { each: 0.05, from: 'random' },
+      }, '<0.3')
 
-        tl.to(counter, {
-          value: 100,
-          duration: 2.2,
-          ease: 'sine.out',
-          onUpdate: () => {
-            counterEl.textContent = `${Math.floor(counter.value)}%`
-          },
-        }, 'start')
-
-        tl.to(line2, {
-          strokeDashoffset: 0,
-          duration: 2.2,
-          ease: 'none',
-        }, 'start')
-
-        tl.call(() => {
-          const split = new SplitText(counterEl, { type: 'chars' })
-          gsap.to(split.chars, {
-            xPercent: 80,
-            autoAlpha: 0,
-            stagger: { amount: 0.35, from: 'end' },
-            duration: 0.8,
-            ease: 'expo.inOut',
+      tl.to('#loader-counter', {
+        yPercent: 0,
+        duration: 1,
+        ease: 'power4.out',
+        onStart: () => {
+          const counter = { value: 0 }
+          gsap.to(counter, {
+            value: 100,
+            duration: 1.9,
+            delay: 0.3,
+            ease: 'power2.inOut',
+            onUpdate: () => {
+              if (counterEl) counterEl.textContent = String(Math.round(counter.value)).padStart(3, '0')
+            },
           })
-        }, null, 'start+=2.25')
+        },
+      }, '<')
 
-        tl.to(line2, {
-          autoAlpha: 0,
-          duration: 0.45,
-          ease: 'sine.out',
-        }, 'start+=2.4')
+      tl.to('#loader-counter', { yPercent: -100, duration: 0.6, ease: 'power3.in' }, '+=2.1')
+      tl.to(titleSplit.chars, {
+        yPercent: -100,
+        duration: 0.6,
+        ease: 'power3.in',
+        stagger: { each: 0.04, from: 'random' },
+      }, '<')
 
-        tl.to(stairs, {
-          y: '-110%',
-          duration: 1.25,
-          stagger: { amount: 0.4, from: 'center' },
-          ease: 'power3.inOut',
-        }, 'start+=2.7')
+      tl.to(cards, {
+        scale: 0,
+        clipPath: 'polygon(20% 20%, 80% 20%, 80% 80%, 20% 80%)',
+        duration: 0.8,
+        ease: 'power3.in',
+        stagger: -0.06,
+      }, '<0.1')
 
-        tl.call(() => {
-          if (!cancelled) {
-            setDone(true)
-            try { sessionStorage.setItem(LOADER_SEEN_KEY, '1') } catch (_) {}
-          }
-        }, null, 'start+=3.6')
-      }
+      tl.to('#loader', {
+        clipPath: 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)',
+        duration: 0.9,
+        ease: 'power3.inOut',
+      }, '+=0.15')
+
+      tl.call(() => {
+        if (!cancelled) {
+          setDone(true)
+          try { sessionStorage.setItem(LOADER_SEEN_KEY, '1') } catch (_) {}
+        }
+      })
     })
 
     document.fonts.ready.then(() => {
       if (!cancelled) start()
     })
 
-    return () => {
-      cancelled = true
-    }
+    return () => { cancelled = true }
   }, [])
 
   if (done) return null
 
   return (
     <div id="loader">
-      {Array.from({ length: 10 }).map((_, i) => (
-        <div className="stair" key={i} />
-      ))}
-      <div id="loader-counter">0%</div>
-      <svg id="loader-line" width="97%" height="4" viewBox="0 0 1000 2" preserveAspectRatio="none">
-        <line x1="0" y1="1" x2="1000" y2="1" stroke="var(--border)" strokeWidth={50} strokeLinecap="round" />
-      </svg>
+      <div className="loader-cards">
+        {CARDS.map((c, i) => (
+          <div className="loader-card" key={i} style={{ '--rotate': `${c.rotate}deg` } as React.CSSProperties}>
+            {c.kind === 'photo' ? (
+              <Image src={c.src!} alt="" fill sizes="220px" style={{ objectFit: 'cover' }} />
+            ) : (
+              <div className="loader-card-solid" style={{ background: c.bg }}>
+                <Image src="/logo-icon.png" alt="" width={44} height={44} />
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      <div className="loader-title-row">
+        <h1 id="loader-title">FLORENCE</h1>
+        <div className="loader-counter-wrap">
+          <span id="loader-counter">000</span>
+        </div>
+      </div>
     </div>
   )
 }

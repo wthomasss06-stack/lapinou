@@ -1,16 +1,15 @@
 'use client'
 import { useRef } from 'react'
 import { useTilt3D } from '@/lib/useTilt3D'
-import ArrowButton from './ArrowButton'
 import RainbowText from './RainbowText'
 
-const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP?.replace(/\D/g, '') || ''
-
-// Port direct de <section id="tarifs"> (index.html).
+// Section Tarifs restaurée en grille (en plus de la Ligne 2 du
+// TrustMarquee, qui garde le résumé en ticker). Les boutons pointent
+// vers le formulaire de contact du footer, pas WhatsApp directement.
 const PLANS = [
-  { id: 'unite', badge: null, label: "À l'Unité", amount: '15 000', desc: '1 lapin, environ 2 kg', features: ['Environ 2 kg', 'Lapin sélectionné et pesé', 'Disponible toute la semaine', 'Retrait ou livraison'], msg: "Bonjour, je suis intéressé par le format à l'unité (15 000 FCFA)." },
-  { id: 'duo', badge: 'Le plus demandé', label: 'Le Duo', amount: '25 000', desc: '2 lapins, environ 1,6 kg chacun', features: ['Environ 1,6 kg par lapin', 'Le format le plus demandé', 'Idéal pour un repas en famille', 'Retrait ou livraison'], msg: 'Bonjour, je suis intéressé par le format Duo (25 000 FCFA).' },
-  { id: 'resto', badge: null, label: 'Format Restaurateur', amount: '80 000', desc: 'Lot de 6 lapins — restaurants & mini-restos', features: ['Lot de 6 lapins', 'Tarif préférentiel volume', 'Pour restaurateurs & mini-restos', 'Livraison possible selon zone'], msg: 'Bonjour, je suis intéressé par le format Restaurateur (lot de 6, 80 000 FCFA).' },
+  { id: 'unite', badge: null, label: "À l'Unité", amount: '15 000', desc: '1 lapin, environ 2 kg', features: ['Environ 2 kg', 'Lapin sélectionné et pesé', 'Disponible toute la semaine', 'Retrait ou livraison'] },
+  { id: 'duo', badge: 'Le plus demandé', label: 'Le Duo', amount: '25 000', desc: '2 lapins, environ 1,6 kg chacun', features: ['Environ 1,6 kg par lapin', 'Le format le plus demandé', 'Idéal pour un repas en famille', 'Retrait ou livraison'] },
+  { id: 'resto', badge: null, label: 'Format Restaurateur', amount: '80 000', desc: 'Lot de 6 lapins — restaurants & mini-restos', features: ['Lot de 6 lapins', 'Tarif préférentiel volume', 'Pour restaurateurs & mini-restos', 'Livraison possible selon zone'] },
 ]
 
 export default function TarifsSection() {
@@ -44,11 +43,9 @@ export default function TarifsSection() {
               {plan.amount}<span>FCFA</span>
             </div>
             <div className="price-sub">{plan.desc}</div>
-            <div className="price-cta-wrap">
-              <ArrowButton href={WHATSAPP ? `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(plan.msg)}` : '#'} external solid={!!plan.badge}>
-                Réserver
-              </ArrowButton>
-            </div>
+            <a href="#contact" className="price-cta hover-target">
+              Commander
+            </a>
             <ul className="price-features">
               {plan.features.map((f) => <li key={f}>{f}</li>)}
             </ul>

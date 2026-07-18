@@ -91,7 +91,7 @@ nav.cf-card-nav {
   transition: box-shadow 0.3s;
 }
 .cf-nav-card:hover { box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
-.cf-nav-card--brand { background: rgba(124,42,26, 0.55); }
+.cf-nav-card--brand { background: rgba(var(--maroon-rgb), 0.55); }
 .cf-nav-card--links { background: rgba(var(--lime-rgb, 194,105,61), 0.14); }
 .cf-nav-card--contact { background: rgba(var(--card-rgb, 58,47,34), 0.7); }
 
@@ -160,7 +160,7 @@ nav.cf-card-nav {
     transition: background-color 0.35s ease, border-color 0.35s ease, backdrop-filter 0.35s ease;
   }
   .cf-mobile-nav.is-open {
-    background: rgba(124,42,26, 0.85);
+    background: rgba(var(--maroon-rgb), 0.9);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border-color: rgba(var(--muted-rgb, 168,150,120), 0.15);

@@ -98,7 +98,7 @@ function DesktopCardNav() {
           '--nav-border': open ? '1px solid rgba(194,114,61,0.18)' : '1px solid transparent',
           '--nav-shadow': open ? '0 8px 32px rgba(0,0,0,0.35)' : 'none',
           '--nav-hline': '#F3E9DA',
-          background: open ? 'rgba(124,42,26,0.92)' : 'transparent',
+          background: open ? 'rgba(var(--maroon-rgb),0.92)' : 'transparent',
           backdropFilter: open ? 'blur(16px)' : 'none',
         } as React.CSSProperties}
       >

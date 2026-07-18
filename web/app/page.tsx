@@ -35,8 +35,10 @@ import HeroSection           from '@/components/HeroSection'
 import TrustMarquee          from '@/components/TrustMarquee'
 import MissionSection        from '@/components/MissionSection'
 import GarantiesSection      from '@/components/GarantiesSection'
+import TarifsSection         from '@/components/TarifsSection'
 import LapinsFeaturedSection from '@/components/LapinsFeaturedSection'
 import TestimonialsSection   from '@/components/TestimonialsSection'
+import PosterSection         from '@/components/PosterSection'
 import FaqSection            from '@/components/FaqSection'
 import Footer                from '@/components/Footer'
 
@@ -56,8 +58,10 @@ export default function HomePage() {
         <TrustMarquee />
         <MissionSection />
         <GarantiesSection />
+        <TarifsSection />
         <LapinsFeaturedSection />
         <TestimonialsSection />
+        <PosterSection />
         <FaqSection />
       </div>
 

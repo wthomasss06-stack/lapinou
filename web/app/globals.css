@@ -20,15 +20,15 @@
      historiques : gardés en alias ci-dessous pour ne rien casser dans
      les ~40 fichiers qui les référencent encore (Navbar.css, RabbitCard,
      admin…) — même couleur, nom à jour. */
-     --paper:      #F3E9DA;
-     --paper-deep: #E4D2B4;
-     --ink:        #3A2F22;
-     --maroon:     #3A2F22;
-     --rust:       #C2723D;
-     --caramel:    #B8834A;
-     --card:       #3A2F22;
-     --border:     #050505;
-     --muted:      #B8834A;
+  --paper:      #F3E9DA;
+  --paper-deep: #E4D2B4;
+  --ink:        #3A2F22;
+  --maroon:     #3A2F22;
+  --rust:       #C2723D;
+  --caramel:    #B8834A;
+  --card:       #3A2F22;
+  --border:     #050505;
+  --muted:      #B8834A;
 
   /* ── Alias historiques (identiques ou quasi-identiques en hex) ──── */
   --green: var(--caramel);
@@ -42,13 +42,13 @@
 
   /* ── Variantes RGB (pour rgba() dans dégradés/transparences) ────── */
   --paper-rgb:  243, 233, 218;
-  --ink-rgb:    42, 16, 11;
-  --maroon-rgb: 124, 42, 26;
+  --ink-rgb:    58, 47, 34;
+  --maroon-rgb: 58, 47, 34;
   --rust-rgb:   194, 114, 61;
   --caramel-rgb: 184, 131, 74;
   --card-rgb:   58, 47, 34;
   --border-rgb: 5, 5, 5;
-  --muted-rgb:  168, 150, 120;
+  --muted-rgb:  184, 131, 74;
 
   --green-rgb: var(--caramel-rgb);
   --lime-rgb:  var(--rust-rgb);
@@ -363,3 +363,51 @@ body {
 .cf-arrow-btn.cf-arrow-btn--solid:hover { background-color: var(--ink); color: var(--paper); border-color: var(--ink); }
 .cf-arrow-btn.cf-arrow-btn--solid:hover .cf-arrow-btn-circle { border-color: var(--paper); background-color: var(--paper); }
 .cf-arrow-btn.cf-arrow-btn--solid:hover .cf-arrow-btn-circle svg { color: var(--ink); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   Curseur custom — désormais global (plus scopé .home-cinema) : rendu
+   par <CustomCursor /> sur home, détail lapin, admin, aide, conditions
+   et confidentialité. Grossit + orange au survol .hover-target,
+   libellé "VOIR" en plus sur .hover-view (grille Nos Lapins).
+   ═══════════════════════════════════════════════════════════════════ */
+
+#cursor {
+  width: 12px;
+  height: 12px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9500;
+  pointer-events: none;
+  margin-left: -6px;
+  margin-top: -6px;
+  background-color: var(--paper);
+  border-radius: 50%;
+  mix-blend-mode: difference;
+  transition: width 0.3s, height 0.3s, background-color 0.3s, margin 0.3s;
+}
+#cursor.is-hovering {
+  width: 60px;
+  height: 60px;
+  margin-left: -30px;
+  margin-top: -30px;
+  background-color: var(--rust);
+  mix-blend-mode: normal;
+}
+#cursor.is-view {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+  font-family: var(--font-label);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+#cursor.is-view::after {
+  content: 'VOIR';
+}
+
+@media (pointer: coarse) and (min-width: 481px) {
+  #cursor { display: none !important; }
+}

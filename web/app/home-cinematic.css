@@ -40,53 +40,8 @@
 }
 
 /* ---------------------------------------------------------------
-   Curseur custom — grossit + orange au survol .hover-target,
-   libellé "VOIR" en plus sur .hover-view (grille Nos Lapins)
-   --------------------------------------------------------------- */
-
-.home-cinema #cursor {
-  width: 12px;
-  height: 12px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 100;
-  pointer-events: none;
-  margin-left: -6px;
-  margin-top: -6px;
-  background-color: var(--ink);
-  border-radius: 50%;
-  mix-blend-mode: difference;
-  transition: width 0.3s, height 0.3s, background-color 0.3s, margin 0.3s;
-}
-.home-cinema #cursor.is-hovering {
-  width: 60px;
-  height: 60px;
-  margin-left: -30px;
-  margin-top: -30px;
-  background-color: var(--rust);
-  mix-blend-mode: normal;
-}
-.home-cinema #cursor.is-view {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--ink);
-  font-family: var(--font-label);
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-.home-cinema #cursor.is-view::after {
-  content: 'VOIR';
-}
-
-@media (pointer: coarse) and (min-width: 481px) {
-  .home-cinema #cursor { display: none !important; }
-}
-
-/* ---------------------------------------------------------------
-   Loader
+   Loader — cartes empilées + rideau clip-path (remplace l'ancien
+   escalier de colonnes). Adapté de gemini-code-1784134819405.html.
    --------------------------------------------------------------- */
 
 .home-cinema #loader {
@@ -102,38 +57,66 @@
   justify-content: center;
   pointer-events: none;
   overflow: hidden;
+  background-color: var(--maroon);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
 }
-.home-cinema .stair {
-  width: 10vw;
-  height: 100vh;
-  background-color: var(--muted);
-}
-.home-cinema #loader-counter {
-  font-size: 15vw;
-  font-family: var(--font-label);
-  pointer-events: none;
-  color: var(--dark);
+
+.home-cinema .loader-cards {
   position: absolute;
-  top: 79%;
-  right: 2%;
-  transform: translateY(-50%);
-  font-variant-numeric: tabular-nums;
-  font-feature-settings: "tnum";
-  line-height: 1;
-  will-change: transform;
-  overflow: hidden;
-  white-space: nowrap;
+  inset: 0;
 }
-.home-cinema #loader-line {
+.home-cinema .loader-card {
   position: absolute;
-  top: 90%;
+  top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
+  width: 180px;
+  height: 230px;
+  transform: translate(-50%, -50%) rotate(var(--rotate, 0deg));
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
 }
-.home-cinema #loader-line line { stroke: var(--dark) !important; }
-@media (hover: hover) and (pointer: fine) {
-  .home-cinema #loader-line { top: 93.5%; }
+.home-cinema .loader-card:nth-child(1) { margin-left: -170px; margin-top: -60px; }
+.home-cinema .loader-card:nth-child(2) { margin-left: -40px; margin-top: 40px; }
+.home-cinema .loader-card:nth-child(3) { margin-left: 60px; margin-top: -80px; }
+.home-cinema .loader-card:nth-child(4) { margin-left: 170px; margin-top: 30px; }
+.home-cinema .loader-card-solid {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.home-cinema .loader-title-row {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+.home-cinema #loader-title {
+  font-family: var(--font-pixel);
+  font-size: clamp(2.4rem, 9vw, 8rem);
+  line-height: 0.9;
+  text-transform: uppercase;
+  color: var(--paper);
+  overflow: hidden;
+}
+.home-cinema .loader-counter-wrap { overflow: hidden; height: 1.2em; margin-top: 0.15em; }
+.home-cinema #loader-counter {
+  display: inline-block;
+  font-family: var(--font-label);
+  font-size: clamp(0.85rem, 1.6vw, 1.3rem);
+  color: var(--rust);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 640px) {
+  .home-cinema .loader-card { width: 120px; height: 155px; }
+  .home-cinema .loader-card:nth-child(1) { margin-left: -95px; margin-top: -50px; }
+  .home-cinema .loader-card:nth-child(2) { margin-left: -25px; margin-top: 30px; }
+  .home-cinema .loader-card:nth-child(3) { margin-left: 35px; margin-top: -60px; }
+  .home-cinema .loader-card:nth-child(4) { margin-left: 95px; margin-top: 20px; }
 }
 
 /* ---------------------------------------------------------------
@@ -211,7 +194,7 @@
 .home-cinema .hero-scrim {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, rgba(124,42,26,0.35) 0%, rgba(42,16,11,0.55) 55%, var(--maroon) 100%);
+  background: linear-gradient(to bottom, rgba(var(--maroon-rgb),0.35) 0%, rgba(var(--ink-rgb),0.55) 55%, var(--maroon) 100%);
 }
 .home-cinema .hero-dots {
   position: absolute;
@@ -286,44 +269,195 @@
    MISSION (No. 02 — Notre Histoire)
    --------------------------------------------------------------- */
 
-.home-cinema .mission-section { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+.home-cinema .mission-section { display: flex; flex-direction: column; justify-content: center; }
 .home-cinema .mission-layout {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 4rem;
   align-items: center;
-  gap: 30px;
-  max-width: 46rem;
+  max-width: 78rem;
+  margin: 0 auto;
+  width: 100%;
 }
+.home-cinema .mission-text-col { text-align: left; }
+.home-cinema .mission-text-col .eyebrow { text-align: left; }
 .home-cinema .mission-text-huge {
   font-family: var(--font-pixel);
-  font-size: clamp(2.1rem, 4.5vw, 4rem);
+  font-size: clamp(2.1rem, 4vw, 3.6rem);
   line-height: 1.05;
   text-transform: uppercase;
-  text-align: center;
+  text-align: left;
   color: var(--paper);
 }
+.home-cinema .mission-description { margin-top: 1.75rem; }
 .home-cinema .mission-description p {
-  font-size: clamp(1.05rem, 2vw, 1.4rem);
-  line-height: 1.5;
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
+  line-height: 1.55;
   opacity: 0.75;
-  text-align: center;
+  text-align: left;
   color: var(--paper);
+  max-width: 32rem;
+  margin: 0;
+}
+.home-cinema .mission-image-col {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.4);
 }
 
 /* ---------------------------------------------------------------
-   GARANTIES (No. 03)
+   GARANTIES (No. 03) — bicamérale : lignes + image au survol du
+   curseur sur desktop, piste horizontale pinnée sur mobile.
+   Adapté de vrai_vraiii.html.
    --------------------------------------------------------------- */
 
-.home-cinema .garanties-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 32px;
-  margin-top: 20px;
+.home-cinema .garanties-section { overflow: hidden; }
+
+/* Desktop — lignes empilées, image flottante au survol */
+.home-cinema .garanties-wrapper { position: relative; }
+.home-cinema .garanties-track {
+  display: flex;
+  flex-direction: column;
 }
-.home-cinema .garantie-item { border-top: 1px solid rgba(243,233,218,0.18); padding-top: 20px; }
-.home-cinema .garantie-num { font-family: var(--font-pixel); color: var(--rust); font-size: 1rem; margin-bottom: 14px; }
-.home-cinema .garantie-title { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; margin-bottom: 8px; }
-.home-cinema .garantie-desc { font-size: 0.9rem; line-height: 1.55; opacity: 0.7; }
+.home-cinema .garantie-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 4rem 1fr 1fr;
+  align-items: baseline;
+  gap: 1.5rem;
+  padding: 1.75rem 0;
+  border-top: 1px solid rgba(243,233,218,0.18);
+  cursor: default;
+}
+.home-cinema .garantie-row:last-child { border-bottom: 1px solid rgba(243,233,218,0.18); }
+.home-cinema .garantie-num { font-family: var(--font-pixel); color: var(--rust); font-size: 1.1rem; }
+.home-cinema .garantie-title { font-family: var(--font-display); font-weight: 700; font-size: 1.4rem; transition: color 0.3s ease; }
+.home-cinema .garantie-row:hover .garantie-title { color: var(--rust); }
+.home-cinema .garantie-desc { font-size: 0.9rem; line-height: 1.55; opacity: 0.7; max-width: 26rem; }
+.home-cinema .garantie-row-mobile-bg { display: none; }
+
+.home-cinema .hover-img {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 220px;
+  height: 280px;
+  border-radius: 14px;
+  background-size: cover;
+  background-position: center;
+  transform: translate(-50%, -50%) scale(0.85);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 60;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.home-cinema .hover-img.active { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+
+@media (min-width: 769px) {
+  .home-cinema .hover-img { display: block; }
+}
+
+/* Mobile — piste horizontale pinnée, cartes plein cadre */
+@media (max-width: 768px) {
+  .home-cinema .garanties-track {
+    flex-direction: row;
+    width: max-content;
+  }
+  .home-cinema .garantie-row {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    width: 78vw;
+    height: 62vh;
+    margin-right: 1.25rem;
+    padding: 1.75rem;
+    border: none;
+    border-radius: 18px;
+    overflow: hidden;
+    color: var(--paper);
+  }
+  .home-cinema .garantie-row-mobile-bg {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  .home-cinema .garantie-row-mobile-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(58,47,34,0.92) 10%, rgba(58,47,34,0.15) 65%);
+  }
+  .home-cinema .garantie-num,
+  .home-cinema .garantie-title,
+  .home-cinema .garantie-desc {
+    position: relative;
+    z-index: 1;
+    color: var(--paper);
+  }
+  .home-cinema .garantie-title { font-size: 1.6rem; margin-top: 0.5rem; }
+  .home-cinema .garantie-desc { max-width: none; opacity: 0.85; }
+  .home-cinema .garantie-row:hover .garantie-title { color: var(--paper); }
+}
+
+/* ---------------------------------------------------------------
+   TARIFS (No. 05, .pricing-grid) — grille dédiée, en plus de la
+   Ligne 2 du TrustMarquee (résumé en ticker, juste après le hero)
+   --------------------------------------------------------------- */
+
+.home-cinema .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 10px; perspective: 1200px; }
+.home-cinema .price-card {
+  background: rgba(243,233,218,0.05);
+  border: 1px solid rgba(243,233,218,0.15);
+  border-radius: 24px;
+  padding: 40px 32px;
+  display: flex;
+  flex-direction: column;
+  transform-style: preserve-3d;
+  transition: border-color 0.4s ease;
+  position: relative;
+}
+.home-cinema .price-card:hover { border-color: var(--rust); }
+.home-cinema .price-card.featured { border-color: var(--rust); background: rgba(194,114,61,0.08); transform: scale(1.03); }
+.home-cinema .price-badge {
+  align-self: flex-start;
+  background: var(--rust);
+  color: var(--ink);
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 999px;
+  margin-bottom: 18px;
+}
+.home-cinema .price-tag { font-family: var(--font-label); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.65; margin-bottom: 10px; }
+.home-cinema .price-amount { font-family: var(--font-pixel); font-size: 2.2rem; color: var(--rust); line-height: 1; }
+.home-cinema .price-amount span { font-family: var(--font-label); font-size: 0.9rem; margin-left: 6px; opacity: 0.6; }
+.home-cinema .price-sub { font-size: 0.85rem; opacity: 0.6; margin: 10px 0 24px; }
+.home-cinema .price-cta {
+  text-align: center;
+  padding: 14px;
+  border-radius: 12px;
+  background: var(--paper);
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  transition: opacity 0.3s ease;
+}
+.home-cinema .price-card.featured .price-cta { background: var(--rust); }
+.home-cinema .price-cta:hover { opacity: 0.82; }
+.home-cinema .price-features { list-style: none; display: flex; flex-direction: column; gap: 11px; flex-grow: 1; margin-top: 24px; padding-top: 24px; border-top: 1px solid rgba(243,233,218,0.15); }
+.home-cinema .price-features li { font-size: 0.85rem; opacity: 0.85; padding-left: 20px; position: relative; }
+.home-cinema .price-features li::before { content: '✓'; position: absolute; left: 0; color: var(--rust); font-weight: 700; }
 
 /* ---------------------------------------------------------------
    NOS LAPINS (No. 08, .projects-grid)
@@ -376,6 +510,20 @@
 .home-cinema .testimonial-role { font-size: 0.75rem; opacity: 0.5; }
 
 /* ---------------------------------------------------------------
+   AFFICHE (visuelle, entre Témoignages et FAQ)
+   --------------------------------------------------------------- */
+
+.home-cinema .poster-section { min-height: 0; padding: 0; }
+.home-cinema .poster-frame {
+  max-width: 78rem;
+  margin: 0 auto;
+  padding: 0 clamp(1.5rem, 5vw, 3.5rem);
+  border-radius: 20px;
+  overflow: hidden;
+}
+.home-cinema .poster-frame img { border-radius: 20px; }
+
+/* ---------------------------------------------------------------
    FAQ (No. 10)
    --------------------------------------------------------------- */
 
@@ -395,13 +543,14 @@
 @media (max-width: 900px) {
   .home-cinema section { padding: 100px 24px 60px; }
   .home-cinema .mission-layout,
-  .home-cinema .garanties-grid,
+  .home-cinema .pricing-grid,
   .home-cinema .projects-grid,
   .home-cinema .testimonials-grid,
   .home-cinema .faq-grid {
     grid-template-columns: 1fr;
   }
   .home-cinema .project-item.offset { margin-top: 0; }
+  .home-cinema .price-card.featured { transform: none; }
   .home-cinema .section-title { font-size: 9vw; }
   .home-cinema .mission-text-huge { font-size: 10vw; }
 }

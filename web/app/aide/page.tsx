@@ -2,6 +2,7 @@
 import { useMemo, useState } from 'react'
 import { Search } from 'lucide-react'
 import Navbar from '@/components/Navbar'
+import CustomCursor from '@/components/CustomCursor'
 import Footer from '@/components/Footer'
 import RainbowText from '@/components/RainbowText'
 import './aide.css'
@@ -53,6 +54,7 @@ export default function AidePage() {
   return (
     <div className="aide-page">
       <Navbar />
+      <CustomCursor />
       <main>
         <section className="page-hero">
           <div className="eyebrow">Centre d&apos;Aide</div>

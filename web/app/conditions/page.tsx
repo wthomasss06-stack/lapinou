@@ -1,4 +1,5 @@
 import Navbar from '@/components/Navbar'
+import CustomCursor from '@/components/CustomCursor'
 import Footer from '@/components/Footer'
 import RainbowText from '@/components/RainbowText'
 import { LegalToc, LegalSectionBlock, type LegalSection } from '@/components/LegalBlocks'
@@ -147,6 +148,7 @@ export default function ConditionsPage() {
   return (
     <div className="legal-page">
       <Navbar />
+      <CustomCursor />
       <main>
         <div className="breadcrumb"><a href="/">Accueil</a> / <span>Conditions Générales</span></div>
         <section className="page-hero">

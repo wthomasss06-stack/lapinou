@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { LayoutDashboard, Rabbit, ClipboardList } from 'lucide-react'
 import AdminGate from '@/components/admin/AdminGate'
+import CustomCursor from '@/components/CustomCursor'
 import DashboardOverview from '@/components/admin/DashboardOverview'
 import RabbitsManager from '@/components/admin/RabbitsManager'
 import ReservationsManager from '@/components/admin/ReservationsManager'
@@ -17,6 +18,7 @@ export default function AdminPage() {
 
   return (
     <AdminGate>
+      <CustomCursor />
       <main
         className="min-h-screen px-4 sm:px-6 py-8 max-w-6xl mx-auto overflow-x-hidden"
         style={{ backgroundColor: 'var(--maroon)' }}

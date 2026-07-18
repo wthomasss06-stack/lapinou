@@ -8,6 +8,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ChevronRight, Sparkles, MessageCircleHeart, ShieldCheck, Stethoscope } from 'lucide-react'
 import Navbar from '@/components/Navbar'
+import CustomCursor from '@/components/CustomCursor'
 import Footer from '@/components/Footer'
 import RabbitGallery from '@/components/RabbitGallery'
 import SharePanel from '@/components/SharePanel'
@@ -71,6 +72,7 @@ export default async function RabbitDetailPage({ params }) {
   return (
     <main className="min-h-screen overflow-x-clip" style={{ backgroundColor: 'var(--maroon)', color: 'var(--paper)' }}>
       <Navbar />
+      <CustomCursor />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-28 pb-10">
 
