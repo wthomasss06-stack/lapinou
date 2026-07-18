@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
-import { ArrowRight } from 'lucide-react'
+import Link from 'next/link'
+import { ArrowRight, MapPin } from 'lucide-react'
 import MagneticButton from './MagneticButton'
 import RainbowText from './RainbowText'
 import { sendContactMessage } from '@/lib/api'
@@ -8,11 +9,26 @@ import './Footer.css'
 
 const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP?.replace(/\D/g, '') || ''
 const waHref = WHATSAPP ? `https://wa.me/${WHATSAPP}` : '#'
+// Coin Lapin · Azaguié Gare — mêmes coordonnées que MapView.jsx (détail lapin)
+const MAPS_URL = 'https://www.google.com/maps?q=5.6315,-4.0805'
 
-// Footer unique du site. Formulaire adapté de contact_section_variants.html
-// [PRENUM 4 : MONOCHROME] — coins nets, libellés mono, input bordé sans
-// remplissage — porté sur la palette du projet (paper/ink/rust) plutôt
-// que le noir/blanc littéral de la référence.
+const NAV_LINKS = [
+  { label: 'Accueil', href: '/' },
+  { label: 'Nos Lapins', href: '/#lapins' },
+  { label: 'Tarifs', href: '/#tarifs' },
+  { label: 'Notre Histoire', href: '/#histoire' },
+  { label: 'FAQ', href: '/#faq' },
+]
+const INFO_LINKS = [
+  { label: 'Aide', href: '/aide' },
+  { label: 'Conditions Générales', href: '/conditions' },
+  { label: 'Confidentialité', href: '/confidentialite' },
+]
+
+// Footer unique du site — structure reprise de footer.html (AKATech) :
+// grille de nav (Navigation/Informations/Action) sur fond dégradé, gros
+// lettrage en dégradé métallique. Les liens Aide/Conditions/Confidentialité
+// vivent ici désormais (déplacés depuis la carte "Informations" de la nav).
 export default function Footer() {
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' })
@@ -44,7 +60,7 @@ export default function Footer() {
         />
 
         <div className="footer-grid">
-          {/* Colonne info + WhatsApp */}
+          {/* Colonne info + WhatsApp + localisation */}
           <div className="footer-info-col">
             <MagneticButton className="magnetic-btn-wrapper hover-target">
               <a href={waHref} target="_blank" rel="noopener noreferrer" className="magnetic-btn">
@@ -66,14 +82,21 @@ export default function Footer() {
                 </div>
               </div>
               <div className="contact-item">
-                <div className="contact-label">Adresse</div>
-                <div className="contact-value">Abidjan, Côte d&apos;Ivoire</div>
-              </div>
-              <div className="contact-item">
                 <div className="contact-label">Horaires</div>
-                <div className="contact-value">Lun–Ven 8h–18h · Sam 9h–14h · Dim fermé</div>
+                <div className="contact-value">Lun–Ven 8h–18h · Sam 9h–14h</div>
               </div>
             </div>
+
+            {/* Carte localisation — même style que la carte réservation
+               (détail lapin) : fond carte, coins arrondis, bordure fine */}
+            <a href={MAPS_URL} target="_blank" rel="noopener noreferrer" className="location-card hover-target">
+              <div className="location-card-icon"><MapPin size={18} /></div>
+              <div>
+                <div className="location-card-title">Coin Lapin · Azaguié Gare</div>
+                <div className="location-card-sub">Retrait sur place — voir l&apos;itinéraire</div>
+              </div>
+              <ArrowRight size={16} className="location-card-arrow" />
+            </a>
           </div>
 
           {/* Formulaire minimaliste */}
@@ -111,6 +134,35 @@ export default function Footer() {
             )}
           </div>
         </div>
+
+        {/* Grille de navigation — port de .nav-grid (footer.html) */}
+        <div className="footer-nav-grid">
+          <div className="footer-nav-col">
+            <h3>Navigation</h3>
+            <ul>
+              {NAV_LINKS.map((l) => (
+                <li key={l.href}><Link href={l.href} className="hover-target">{l.label}</Link></li>
+              ))}
+            </ul>
+          </div>
+          <div className="footer-nav-col">
+            <h3>Informations</h3>
+            <ul>
+              {INFO_LINKS.map((l) => (
+                <li key={l.href}><Link href={l.href} className="hover-target">{l.label}</Link></li>
+              ))}
+            </ul>
+          </div>
+          <div className="footer-nav-col footer-nav-action">
+            <h3>Commander</h3>
+            <p>La commande se fait exclusivement via WhatsApp — réponse sous 30 minutes.</p>
+            <a href={waHref} target="_blank" rel="noopener noreferrer" className="btn-message hover-target">
+              Écrire sur WhatsApp
+            </a>
+          </div>
+        </div>
+
+        <div className="footer-giant-type" aria-hidden="true">CHEZ FLORENCE</div>
       </div>
 
       <div className="footer-bottom">

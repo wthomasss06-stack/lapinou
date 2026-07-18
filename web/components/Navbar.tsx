@@ -23,11 +23,8 @@ const navLinks = [
   { label: 'Contact', href: '/#contact' },
 ]
 
-const infoLinks = [
-  { label: 'Aide', href: '/aide' },
-  { label: 'Conditions', href: '/conditions' },
-  { label: 'Confidentialité', href: '/confidentialite' },
-]
+// Aide/Conditions/Confidentialité vivent maintenant dans le footer
+// (voir Footer.tsx) — plus dans la nav.
 
 const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP?.replace(/\D/g, '') || ''
 const WHATSAPP_URL = WHATSAPP
@@ -141,14 +138,8 @@ function DesktopCardNav() {
           </div>
 
           <div className="cf-nav-card cf-nav-card--contact" ref={el => { cardsRef.current[2] = el }}>
-            <div className="cf-card-label">Informations</div>
+            <div className="cf-card-label">Contact</div>
             <div className="cf-card-links">
-              {infoLinks.map(link => (
-                <Link key={link.href} href={link.href} onClick={closeNav} className="cf-card-link">
-                  <ArrowIcon className="cf-card-link-arrow" />
-                  {link.label}
-                </Link>
-              ))}
               <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" onClick={closeNav} className="cf-card-link">
                 <ArrowIcon className="cf-card-link-arrow" />
                 WhatsApp
@@ -271,7 +262,7 @@ function MobileStaggeredNav() {
     animateText(false)
   }
 
-  const allLinks = [...navLinks, ...infoLinks]
+  const allLinks = navLinks
 
   return (
     <>

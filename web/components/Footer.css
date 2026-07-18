@@ -155,10 +155,106 @@ footer#contact {
   text-transform: uppercase;
   margin-top: 4rem;
 }
-.footer-copyright { opacity: 0.5; font-size: 0.85rem; }
+.footer-copyright { opacity: 1; font-size: 0.85rem; color: var(--paper); }
+
+/* ── Carte localisation — même traitement visuel que la carte
+   réservation (détail lapin) : fond carte, coins arrondis, bordure fine */
+.location-card {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(243,233,218,0.05);
+  border: 1px solid rgba(243,233,218,0.15);
+  border-radius: 16px;
+  padding: 1.1rem 1.25rem;
+  text-decoration: none;
+  color: var(--paper);
+  transition: border-color 0.25s ease, background-color 0.25s ease;
+}
+.location-card:hover { border-color: var(--rust); background: rgba(243,233,218,0.08); }
+.location-card-icon {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(194,114,61,0.18);
+  color: var(--rust);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.location-card-title { font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; }
+.location-card-sub { font-size: 0.8rem; opacity: 0.6; margin-top: 2px; }
+.location-card-arrow { margin-left: auto; opacity: 0.6; flex-shrink: 0; }
+
+/* ── Grille de navigation — port de .nav-grid (footer.html) ─────── */
+.footer-nav-grid {
+  width: 100%;
+  max-width: 1100px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.3fr;
+  gap: 2.5rem;
+  border-top: 1px solid rgba(243,233,218,0.18);
+  padding-top: 2rem;
+  margin-top: 4.5rem;
+}
+.footer-nav-col h3 {
+  font-family: var(--font-label);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 1.1rem;
+  color: var(--paper);
+  opacity: 0.85;
+}
+.footer-nav-col ul { list-style: none; }
+.footer-nav-col ul li { margin-bottom: 0.7rem; }
+.footer-nav-col ul li a {
+  text-decoration: none;
+  color: rgba(243,233,218,0.65);
+  font-size: 0.92rem;
+  transition: color 0.2s ease, padding-left 0.2s ease;
+  display: inline-block;
+}
+.footer-nav-col ul li a:hover { color: var(--paper); padding-left: 4px; }
+.footer-nav-action p { font-size: 0.85rem; opacity: 0.6; line-height: 1.5; margin-bottom: 1.1rem; }
+.btn-message {
+  display: inline-block;
+  background: transparent;
+  color: var(--paper);
+  border: 1px solid rgba(243,233,218,0.35);
+  padding: 0.7rem 1.4rem;
+  border-radius: 30px;
+  font-size: 0.82rem;
+  text-decoration: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+.btn-message:hover { background: rgba(243,233,218,0.1); border-color: var(--paper); }
+
+/* ── Gros lettrage — port de .giant-typography (footer.html), dégradé
+   métallique via background-clip:text, sur la palette du projet ─── */
+.footer-giant-type {
+  width: 100%;
+  margin-top: 2rem;
+  font-family: var(--font-pixel);
+  font-size: clamp(3rem, 13vw, 12rem);
+  line-height: 0.85;
+  text-align: center;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  background: linear-gradient(to bottom, rgba(243,233,218,0.8) 0%, rgba(243,233,218,0.04) 85%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  user-select: none;
+}
 
 @media (max-width: 900px) {
   .footer-grid { grid-template-columns: 1fr; }
+  .footer-nav-grid { grid-template-columns: 1fr 1fr; }
+  .footer-nav-action { grid-column: span 2; }
 }
 @media (max-width: 768px) {
   footer#contact { padding: 80px 24px 30px; }
@@ -166,4 +262,7 @@ footer#contact {
   .magnetic-btn { width: 130px; height: 130px; font-size: 0.95rem; }
   .form-row { grid-template-columns: 1fr; }
   .footer-form-card { padding: 1.5rem; }
+  .footer-nav-grid { grid-template-columns: 1fr; margin-top: 3rem; }
+  .footer-nav-action { grid-column: span 1; }
+  .footer-giant-type { margin-top: 1rem; }
 }
