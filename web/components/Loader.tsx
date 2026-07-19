@@ -1,4 +1,5 @@
 'use client'
+
 import { useState, useLayoutEffect } from 'react'
 import { useGSAP } from '@gsap/react'
 import { gsap } from 'gsap'
@@ -7,32 +8,37 @@ import Image from 'next/image'
 
 gsap.registerPlugin(useGSAP, SplitText)
 
-// Séquence d'entrée — adaptée de gemini-code-1784134819405.html : cartes
-// empilées qui s'ouvrent (scale + clip-path) en cascade, titre "FLORENCE"
-// en reveal caractère par caractère, compteur 000→100 posé à côté du
-// titre, puis rideau (clip-path) qui remonte pour révéler le Hero.
-// Garde la logique "une fois par session" (sessionStorage) de l'ancienne
-// version — pas de raison de la perdre en changeant l'habillage visuel.
 const LOADER_SEEN_KEY = 'lapinou_loader_seen'
 
-const CARDS = [
+// 1. Définition explicite du type pour informer TypeScript des propriétés possibles
+type LoaderCard = {
+  kind: 'photo' | 'solid'
+  rotate: number
+  src?: string // Optionnel pour les cartes "solid"
+  bg?: string  // Optionnel pour les cartes "photo"
+}
+
+// 2. Application du type au tableau
+const CARDS: LoaderCard[] = [
   { kind: 'photo', src: '/IMAGES/Snapchat-908462874.webp', rotate: 7 },
   { kind: 'photo', src: '/IMAGES/Snapchat-956074945.webp', rotate: -3 },
   { kind: 'photo', src: '/IMAGES/Snapchat-1016404691.webp', rotate: -9 },
   { kind: 'photo', src: '/IMAGES/Snapchat-1244423645.webp', rotate: 5 },
+  // Tu peux maintenant ajouter des cartes avec un background sans erreur :
+  // { kind: 'solid', bg: '#ff0000', rotate: 2 },
 ]
 
 export default function Loader() {
-  // Doit être identique au 1er rendu serveur et client (sessionStorage
-  // n'existe pas côté serveur) — on démarre à false puis on resynchronise
-  // juste après, avant peinture, pour qu'un retour dans la même session
-  // ne montre jamais le loader à l'écran.
   const [done, setDone] = useState(false)
 
   useLayoutEffect(() => {
     try {
-      if (sessionStorage.getItem(LOADER_SEEN_KEY) === '1') setDone(true)
-    } catch (_) {}
+      if (sessionStorage.getItem(LOADER_SEEN_KEY) === '1') {
+        setDone(true)
+      }
+    } catch (e) {
+      console.warn('Accès au sessionStorage impossible', e)
+    }
   }, [])
 
   useGSAP((_context, contextSafe) => {
@@ -77,13 +83,16 @@ export default function Loader() {
             delay: 0.3,
             ease: 'power2.inOut',
             onUpdate: () => {
-              if (counterEl) counterEl.textContent = String(Math.round(counter.value)).padStart(3, '0')
+              if (counterEl) {
+                counterEl.textContent = String(Math.round(counter.value)).padStart(3, '0')
+              }
             },
           })
         },
       }, '<')
 
       tl.to('#loader-counter', { yPercent: -100, duration: 0.6, ease: 'power3.in' }, '+=2.1')
+      
       tl.to(titleSplit.chars, {
         yPercent: -100,
         duration: 0.6,
@@ -108,7 +117,9 @@ export default function Loader() {
       tl.call(() => {
         if (!cancelled) {
           setDone(true)
-          try { sessionStorage.setItem(LOADER_SEEN_KEY, '1') } catch (_) {}
+          try { 
+            sessionStorage.setItem(LOADER_SEEN_KEY, '1') 
+          } catch (_) {}
         }
       })
     })
@@ -118,7 +129,7 @@ export default function Loader() {
     })
 
     return () => { cancelled = true }
-  }, [])
+  }, { dependencies: [done] }) // Ajout des dépendances pour useGSAP
 
   if (done) return null
 
@@ -126,12 +137,17 @@ export default function Loader() {
     <div id="loader">
       <div className="loader-cards">
         {CARDS.map((c, i) => (
-          <div className="loader-card" key={i} style={{ '--rotate': `${c.rotate}deg` } as React.CSSProperties}>
-            {c.kind === 'photo' ? (
-              <Image src={c.src!} alt="" fill sizes="220px" style={{ objectFit: 'cover' }} />
+          <div 
+            className="loader-card" 
+            key={i} 
+            style={{ '--rotate': `${c.rotate}deg` } as React.CSSProperties}
+          >
+            {/* Condition plus stricte pour éviter l'usage du bang (!) */}
+            {c.kind === 'photo' && c.src ? (
+              <Image src={c.src} alt="" fill sizes="220px" style={{ objectFit: 'cover' }} />
             ) : (
               <div className="loader-card-solid" style={{ background: c.bg }}>
-                <Image src="/logo-icon.png" alt="" width={44} height={44} />
+                <Image src="/logo-icon.png" alt="Logo" width={44} height={44} />
               </div>
             )}
           </div>
