@@ -13,8 +13,9 @@
   width: 100%;
   overflow-x: hidden;
   font-family: var(--font-body);
-  background-color: var(--maroon);
-  color: var(--paper);
+  background-color: var(--current-bg, var(--maroon));
+  color: var(--current-text, var(--paper));
+  transition: background-color 0.7s cubic-bezier(0.6, 0.01, 0.05, 1), color 0.7s cubic-bezier(0.6, 0.01, 0.05, 1);
 }
 
 .home-cinema section {
@@ -128,10 +129,10 @@
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
-  opacity: 0.6;
+  opacity: 0.75;
   margin-bottom: 16px;
   text-align: center;
-  color: var(--rust);
+  color: var(--current-accent, var(--rust));
 }
 .home-cinema .section-head {
   display: flex;
@@ -150,7 +151,7 @@
   line-height: 1.05;
   text-transform: uppercase;
   text-align: center;
-  color: var(--paper);
+  color: var(--current-text, var(--paper));
 }
 .home-cinema .section-desc {
   max-width: 42rem;
@@ -158,7 +159,7 @@
   font-size: clamp(1.05rem, 2vw, 1.4rem);
   line-height: 1.5;
   text-align: center;
-  color: var(--paper);
+  color: var(--current-text, var(--paper));
 }
 
 /* ---------------------------------------------------------------
@@ -226,6 +227,7 @@
   text-transform: uppercase;
   color: var(--paper);
 }
+.hero-char { display: inline-block; will-change: transform, opacity; }
 .home-cinema .hero-sub {
   position: relative;
   z-index: 2;
@@ -333,7 +335,7 @@
   cursor: default;
 }
 .home-cinema .garantie-row:last-child { border-bottom: 1px solid rgba(243,233,218,0.18); }
-.home-cinema .garantie-num { font-family: var(--font-pixel); color: var(--rust); font-size: 1.1rem; }
+.home-cinema .garantie-num { font-family: var(--font-pixel); color: var(--current-accent, var(--rust)); font-size: 1.1rem; }
 .home-cinema .garantie-title { font-family: var(--font-display); font-weight: 700; font-size: 1.4rem; transition: color 0.3s ease; }
 .home-cinema .garantie-row:hover .garantie-title { color: var(--rust); }
 .home-cinema .garantie-desc { font-size: 0.9rem; line-height: 1.55; opacity: 0.7; max-width: 26rem; }
@@ -463,9 +465,49 @@
    NOS LAPINS (No. 08, .projects-grid)
    --------------------------------------------------------------- */
 
-.home-cinema .projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-.home-cinema .project-item { text-decoration: none; color: inherit; display: block; }
-.home-cinema .project-item.offset { margin-top: 40px; }
+.home-cinema .section-head--carousel { position: relative; }
+.home-cinema .carousel-nav {
+  position: absolute;
+  top: 0.25rem;
+  right: 0;
+  display: flex;
+  gap: 0.6rem;
+}
+.home-cinema .carousel-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(243,233,218,0.1);
+  border: 1px solid rgba(243,233,218,0.15);
+  color: var(--paper);
+  cursor: pointer;
+  transition: border-color 0.25s ease, background-color 0.25s ease, opacity 0.25s ease;
+}
+.home-cinema .carousel-btn--accent { border-color: var(--rust); color: var(--rust); }
+.home-cinema .carousel-btn:hover:not(:disabled) { background: rgba(243,233,218,0.18); }
+.home-cinema .carousel-btn--accent:hover:not(:disabled) { background: rgba(194,114,61,0.15); }
+.home-cinema .carousel-btn:disabled { opacity: 0.3; cursor: default; }
+
+.home-cinema .projects-track {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 0.5rem;
+  scrollbar-width: none;
+}
+.home-cinema .projects-track::-webkit-scrollbar { display: none; }
+.home-cinema .project-item {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  flex: 0 0 320px;
+  scroll-snap-align: start;
+}
 .home-cinema .project-item.unavailable { opacity: 0.55; }
 .home-cinema .project-img-box { position: relative; width: 100%; height: 340px; overflow: hidden; border-radius: 16px; background: rgba(243,233,218,0.06); }
 .home-cinema .project-img-box img { transition: transform 0.6s ease, filter 0.6s ease; }
@@ -499,9 +541,42 @@
    --------------------------------------------------------------- */
 
 .home-cinema .testimonials-section { padding: 100px 50px; }
-.home-cinema .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 10px; }
-.home-cinema .testimonial-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 24px; padding: 34px; transition: border-color 0.4s; }
-.home-cinema .testimonial-card:hover { border-color: var(--rust); }
+.home-cinema .testimonials-track {
+  position: relative;
+  max-width: 42rem;
+  margin: 10px auto 0;
+  min-height: 260px;
+}
+.home-cinema .testimonial-card {
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 24px;
+  padding: 34px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transition: opacity 0.6s ease, transform 0.6s ease, visibility 0s linear 0.6s;
+}
+.home-cinema .testimonial-card.is-active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  position: relative;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.home-cinema .testimonials-dots { display: flex; justify-content: center; gap: 0.5rem; margin-top: 1.75rem; }
+.home-cinema .testimonials-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(243,233,218,0.25);
+  cursor: pointer;
+  transition: background-color 0.3s ease, width 0.3s ease;
+}
+.home-cinema .testimonials-dot.is-active { background: var(--rust); width: 24px; border-radius: 999px; }
 .home-cinema .testimonial-stars { color: var(--rust); font-size: 1rem; margin-bottom: 16px; }
 .home-cinema .testimonial-text { font-size: 1rem; line-height: 1.6; opacity: 0.85; margin-bottom: 20px; }
 .home-cinema .testimonial-author { display: flex; align-items: center; gap: 12px; }
@@ -531,7 +606,7 @@
 .home-cinema .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 10px; }
 .home-cinema .faq-item { border-bottom: 1px solid rgba(243,233,218,0.15); padding-bottom: 24px; }
 .home-cinema .faq-question { font-weight: 700; font-size: 1.1rem; margin-bottom: 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
-.home-cinema .faq-question::after { content: '+'; font-family: var(--font-pixel); color: var(--rust); font-size: 1.2rem; flex-shrink: 0; }
+.home-cinema .faq-question::after { content: '+'; font-family: var(--font-pixel); color: var(--current-accent, var(--rust)); font-size: 1.2rem; flex-shrink: 0; }
 .home-cinema .faq-question.active::after { content: '\2212'; }
 .home-cinema .faq-answer { font-size: 0.95rem; line-height: 1.6; opacity: 0.7; max-height: 0; overflow: hidden; transition: max-height 0.4s ease, opacity 0.4s ease; }
 .home-cinema .faq-answer.open { max-height: 220px; opacity: 0.7; }
@@ -544,12 +619,10 @@
   .home-cinema section { padding: 100px 24px 60px; }
   .home-cinema .mission-layout,
   .home-cinema .pricing-grid,
-  .home-cinema .projects-grid,
-  .home-cinema .testimonials-grid,
   .home-cinema .faq-grid {
     grid-template-columns: 1fr;
   }
-  .home-cinema .project-item.offset { margin-top: 0; }
+  .home-cinema .project-item { flex-basis: 78vw; }
   .home-cinema .price-card.featured { transform: none; }
   .home-cinema .section-title { font-size: 9vw; }
   .home-cinema .mission-text-huge { font-size: 10vw; }

@@ -30,9 +30,17 @@ nav.cf-card-nav {
   border: var(--nav-border);
   box-shadow: var(--nav-shadow);
   height: 64px;
+  color: #fff;
+  /* Port de mix_blend_header_playground.html : inversion chromatique au
+     repos (pill transparente, se lit sur n'importe quel fond en dessous
+     — vidéo hero, section marron, carte claire…). Désactivée à l'ouverture
+     (panneau plein de cartes à fond marron plein) : le blend deviendrait
+     illisible sur un si grand aplat de couleurs superposées. */
+  mix-blend-mode: difference;
   transition: background-color 0.4s ease, border-color 0.4s ease,
               backdrop-filter 0.4s ease, box-shadow 0.4s ease;
 }
+nav.cf-card-nav.is-open { mix-blend-mode: normal; }
 
 .cf-nav-top {
   height: 64px;
@@ -157,11 +165,14 @@ nav.cf-card-nav {
     border: 1px solid transparent;
     border-radius: 999px;
     padding: 8px 8px 8px 18px;
+    color: #fff;
+    mix-blend-mode: difference;
     transition: background-color 0.35s ease, border-color 0.35s ease, backdrop-filter 0.35s ease;
   }
   .cf-mobile-nav.is-open {
     background: rgba(var(--maroon-rgb), 0.9);
     backdrop-filter: blur(16px);
+    mix-blend-mode: normal;
     -webkit-backdrop-filter: blur(16px);
     border-color: rgba(var(--muted-rgb, 168,150,120), 0.15);
   }

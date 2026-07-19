@@ -2,9 +2,10 @@
 import { useGSAP } from '@gsap/react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { SplitText } from 'gsap/SplitText'
 import Lenis from 'lenis'
 
-gsap.registerPlugin(useGSAP, ScrollTrigger)
+gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText)
 ScrollTrigger.config({ ignoreMobileResize: true })
 
 /**
@@ -85,10 +86,45 @@ export default function useGsapLenis() {
       })
     })
 
+    // ── Thème dynamique 2 couleurs (maroon/rust) ──────────────────────
+    // Port de dynamic_theming_matrix_v2.html : chaque section porte
+    // data-theme="maroon|rust", un ScrollTrigger par section bascule
+    // --current-bg/--current-text sur .home-cinema quand son centre
+    // traverse le milieu du viewport. Changement atomique de variables
+    // CSS uniquement (setProperty) — zéro reflow, la transition douce
+    // vient du CSS (.home-cinema { transition: background-color … }),
+    // pas de la boucle scroll. Posé sur .home-cinema (pas documentElement)
+    // pour rester scopé à la home.
+    const homeRoot = document.querySelector<HTMLElement>('.home-cinema')
+    if (homeRoot) {
+      const applyMatrix = (theme: string) => {
+        if (theme === 'rust') {
+          homeRoot.style.setProperty('--current-bg', 'var(--rust)')
+          homeRoot.style.setProperty('--current-text', 'var(--ink)')
+          homeRoot.style.setProperty('--current-accent', 'var(--maroon)')
+        } else {
+          homeRoot.style.setProperty('--current-bg', 'var(--maroon)')
+          homeRoot.style.setProperty('--current-text', 'var(--paper)')
+          homeRoot.style.setProperty('--current-accent', 'var(--rust)')
+        }
+      }
+      homeRoot.querySelectorAll<HTMLElement>('[data-theme]').forEach((section) => {
+        const theme = section.dataset.theme
+        if (!theme) return
+        ScrollTrigger.create({
+          trigger: section,
+          start: 'top 50%',
+          end: 'bottom 50%',
+          onEnter: () => applyMatrix(theme),
+          onEnterBack: () => applyMatrix(theme),
+        })
+      })
+    }
+
     // ── Attend les polices avant de recalculer les zones de déclenchement
     // Tous les ScrollTrigger créés plus haut (.reveal-text, thème
-    // dynamique, parallax images — et ceux, indépendants, de chaque
-    // <RainbowText />) le sont avant que la police body (Space Grotesk)
+    // dynamique maroon/rust, parallax images — et ceux, indépendants, de
+    // chaque <RainbowText />) le sont avant que la police body (Space Grotesk)
     // ait fini de charger — le texte change de hauteur au chargement de
     // la police, ce qui décale leur zone de déclenchement. Sur desktop
     // l'écart passe souvent inaperçu ; sur mobile (viewport plus petit,
@@ -97,6 +133,27 @@ export default function useGsapLenis() {
     // recalcule tous les ScrollTrigger de la page sur le layout final.
     document.fonts.ready.then(() => {
       if (!cancelled) {
+        // ── Titres "élastiques" — port de chez_florence_redesign.html :
+        // mêmes valeurs que le reveal d'entrée du titre "FLORENCE" du
+        // Hero (y:60→0, scale:0.5→1, opacity:0→1, elastic.out(0.75,0.3),
+        // stagger 0.015), mais déclenché au scroll plutôt qu'au montage
+        // — pour Notre Histoire / Nos Garanties / Nos Lapins / Footer.
+        gsap.utils.toArray<HTMLElement>('.elastic-title').forEach((heading) => {
+          const split = SplitText.create(heading, { type: 'chars', charsClass: 'hero-char' })
+          gsap.set(split.chars, { y: 60, opacity: 0, scale: 0.5 })
+          gsap.to(split.chars, {
+            y: 0, opacity: 1, scale: 1,
+            duration: 1.3,
+            stagger: 0.015,
+            ease: 'elastic.out(0.75, 0.3)',
+            scrollTrigger: {
+              trigger: heading,
+              start: 'top 85%',
+              toggleActions: 'play none none reverse',
+            },
+          })
+        })
+
         // Lenis a lui aussi mis en cache la hauteur totale scrollable
         // AVANT le reflow des polices — sur mobile, où le wrapping
         // change beaucoup plus la hauteur (texte réparti sur bien plus

@@ -17,10 +17,13 @@ import './Navbar.css'
 const navLinks = [
   { label: 'Accueil', href: '/' },
   { label: 'Nos Lapins', href: '/#lapins' },
-  { label: 'Tarifs', href: '/#tarifs' },
   { label: 'Notre Histoire', href: '/#histoire' },
-  { label: 'FAQ', href: '/#faq' },
+]
+
+const contactLinks = [
   { label: 'Contact', href: '/#contact' },
+  { label: 'FAQ', href: '/#faq' },
+  { label: 'Tarifs', href: '/#tarifs' },
 ]
 
 // Aide/Conditions/Confidentialité vivent maintenant dans le footer
@@ -140,6 +143,12 @@ function DesktopCardNav() {
           <div className="cf-nav-card cf-nav-card--contact" ref={el => { cardsRef.current[2] = el }}>
             <div className="cf-card-label">Contact</div>
             <div className="cf-card-links">
+              {contactLinks.map(link => (
+                <Link key={link.href} href={link.href} onClick={closeNav} className="cf-card-link">
+                  <ArrowIcon className="cf-card-link-arrow" />
+                  {link.label}
+                </Link>
+              ))}
               <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" onClick={closeNav} className="cf-card-link">
                 <ArrowIcon className="cf-card-link-arrow" />
                 WhatsApp
@@ -262,7 +271,7 @@ function MobileStaggeredNav() {
     animateText(false)
   }
 
-  const allLinks = navLinks
+  const allLinks = [...navLinks, ...contactLinks]
 
   return (
     <>

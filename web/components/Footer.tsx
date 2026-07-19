@@ -1,16 +1,15 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
-import { ArrowRight, MapPin } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import MagneticButton from './MagneticButton'
 import RainbowText from './RainbowText'
+import MapView from './MapView'
 import { sendContactMessage } from '@/lib/api'
 import './Footer.css'
 
 const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP?.replace(/\D/g, '') || ''
 const waHref = WHATSAPP ? `https://wa.me/${WHATSAPP}` : '#'
-// Coin Lapin · Azaguié Gare — mêmes coordonnées que MapView.jsx (détail lapin)
-const MAPS_URL = 'https://www.google.com/maps?q=5.6315,-4.0805'
 
 const NAV_LINKS = [
   { label: 'Accueil', href: '/' },
@@ -52,7 +51,7 @@ export default function Footer() {
   return (
     <footer id="contact">
       <div className="footer-main">
-        <h2 className="footer-title">Parlons de<br />votre lapin.</h2>
+        <h2 className="footer-title elastic-title">Parlons de<br />votre lapin.</h2>
         <RainbowText
           text="Une question sur une race, un prix, une disponibilité ? Écrivez-nous — on vous répond vite."
           variant="white"
@@ -86,17 +85,6 @@ export default function Footer() {
                 <div className="contact-value">Lun–Ven 8h–18h · Sam 9h–14h</div>
               </div>
             </div>
-
-            {/* Carte localisation — même style que la carte réservation
-               (détail lapin) : fond carte, coins arrondis, bordure fine */}
-            <a href={MAPS_URL} target="_blank" rel="noopener noreferrer" className="location-card hover-target">
-              <div className="location-card-icon"><MapPin size={18} /></div>
-              <div>
-                <div className="location-card-title">Coin Lapin · Azaguié Gare</div>
-                <div className="location-card-sub">Retrait sur place — voir l&apos;itinéraire</div>
-              </div>
-              <ArrowRight size={16} className="location-card-arrow" />
-            </a>
           </div>
 
           {/* Formulaire minimaliste */}
@@ -155,10 +143,9 @@ export default function Footer() {
           </div>
           <div className="footer-nav-col footer-nav-action">
             <h3>Commander</h3>
-            <p>La commande se fait exclusivement via WhatsApp — réponse sous 30 minutes.</p>
-            <a href={waHref} target="_blank" rel="noopener noreferrer" className="btn-message hover-target">
-              Écrire sur WhatsApp
-            </a>
+            <div className="footer-map-card">
+              <MapView />
+            </div>
           </div>
         </div>
 

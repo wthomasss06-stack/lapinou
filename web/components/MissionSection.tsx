@@ -5,11 +5,11 @@ import RainbowText from './RainbowText'
 // converti en 2 colonnes : texte à gauche, photo à droite.
 export default function MissionSection() {
   return (
-    <section className="mission-section" id="histoire">
+    <section className="mission-section" id="histoire" data-theme="maroon">
       <div className="mission-layout">
         <div className="mission-text-col">
           <div className="eyebrow">No. 02 — Notre Histoire</div>
-          <div className="mission-text-huge reveal-text">
+          <div className="mission-text-huge elastic-title">
             Nous élevons
             <br />
             avec

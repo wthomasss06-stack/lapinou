@@ -13,14 +13,11 @@ gsap.registerPlugin(useGSAP, ScrollTrigger)
 //     custom sitewide — les deux coexistent).
 //   Mobile (≤768px) — piste horizontale pinnée (scroll-jack), chaque
 //     carte a son image en fond plein cadre, texte empilé verticalement.
-// Deux images disponibles pour l'instant (eleveur-soin / affiche),
-// répétées sur les 4 lignes — à remplacer par des photos dédiées si Aka
-// en fournit plus tard.
 const GARANTIES = [
-  { num: '01.', title: 'Santé Vérifiée', desc: 'Chaque lapin est examiné avant la vente : poids, pelage et comportement contrôlés avec soin. Aucun animal malade ne quitte notre élevage.', img: '/IMAGES/eleveur-soin.jpg' },
-  { num: '02.', title: 'Pesée & Classement', desc: 'Chaque lapin est pesé et classé avec précision — du format simple au lot pour les restaurateurs. Pas de surprise sur le poids.', img: '/IMAGES/vente-lapins-affiche.jpg' },
-  { num: '03.', title: 'Suivi Après-Vente', desc: "Conseils de conservation et d'élevage disponibles après chaque achat. On reste en contact pour vous accompagner.", img: '/IMAGES/eleveur-soin.jpg' },
-  { num: '04.', title: 'Remise en Main Propre', desc: 'Retrait sur place à Azaguié Gare ou livraison encadrée, selon votre disponibilité et votre zone.', img: '/IMAGES/vente-lapins-affiche.jpg' },
+  { num: '01.', title: 'Santé Vérifiée', desc: 'Chaque lapin est examiné avant la vente : poids, pelage et comportement contrôlés avec soin. Aucun animal malade ne quitte notre élevage.', img: '/IMAGES/Snapchat-73962748.webp' },
+  { num: '02.', title: 'Pesée & Classement', desc: 'Chaque lapin est pesé et classé avec précision — du format simple au lot pour les restaurateurs. Pas de surprise sur le poids.', img: '/IMAGES/Snapchat-468138222.webp' },
+  { num: '03.', title: 'Suivi Après-Vente', desc: "Conseils de conservation et d'élevage disponibles après chaque achat. On reste en contact pour vous accompagner.", img: '/IMAGES/Snapchat-533353503.webp' },
+  { num: '04.', title: 'Remise en Main Propre', desc: 'Retrait sur place à Azaguié Gare ou livraison encadrée, selon votre disponibilité et votre zone.', img: '/IMAGES/Snapchat-763078288.webp' },
 ]
 
 export default function GarantiesSection() {
@@ -93,11 +90,11 @@ export default function GarantiesSection() {
   }, { scope: sectionRef })
 
   return (
-    <section id="garanties" ref={sectionRef} className="garanties-section">
+    <section id="garanties" ref={sectionRef} className="garanties-section" data-theme="rust">
       <div className="section-head">
         <div>
           <div className="eyebrow">Nos Engagements — Santé · Race · Suivi</div>
-          <h2 className="section-title reveal-text">
+          <h2 className="section-title elastic-title">
             Nos
             <br />
             Garanties

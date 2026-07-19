@@ -18,7 +18,7 @@ export default function FaqSection() {
   const [open, setOpen] = useState<number | null>(0)
 
   return (
-    <section id="faq" className="faq-section">
+    <section id="faq" className="faq-section" data-theme="rust">
       <div className="section-head">
         <div>
           <div className="eyebrow">No. 10 — Questions Fréquentes</div>

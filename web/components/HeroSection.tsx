@@ -1,6 +1,11 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
+import { useGSAP } from '@gsap/react'
+import { gsap } from 'gsap'
+import { SplitText } from 'gsap/SplitText'
 import RainbowText from './RainbowText'
+
+gsap.registerPlugin(useGSAP, SplitText)
 
 // HERO — plein écran, volontairement épuré : vidéo + titre + sous-titre.
 // Stats et cartes tarifs retirées (elles créaient un hero à rallonge qui
@@ -21,6 +26,25 @@ export default function HeroSection() {
 
   useEffect(() => { curRef.current = cur }, [cur])
   useEffect(() => { vidRefs.current[0]?.play().catch(() => {}) }, [])
+
+  // Titre "élastique" — port de chez_florence_redesign.html : y:60→0,
+  // scale:0.5→1, opacity:0→1, elastic.out(0.75,0.3), stagger 0.015.
+  // Joué une fois au montage (pas au scroll : le hero est déjà visible
+  // au chargement) — les autres grands titres (.elastic-title) reprennent
+  // les mêmes valeurs mais déclenchées au scroll (voir useGsapLenis.ts).
+  useGSAP(() => {
+    document.fonts.ready.then(() => {
+      const split = SplitText.create('#hero-title', { type: 'chars', charsClass: 'hero-char' })
+      gsap.set(split.chars, { y: 60, opacity: 0, scale: 0.5 })
+      gsap.to(split.chars, {
+        y: 0, opacity: 1, scale: 1,
+        duration: 1.3,
+        delay: 0.2,
+        stagger: 0.015,
+        ease: 'elastic.out(0.75, 0.3)',
+      })
+    })
+  }, [])
 
   const goTo = (n: number) => {
     if (busy.current || n === curRef.current) return
@@ -51,7 +75,7 @@ export default function HeroSection() {
 
       <div className="title-container">
         <div className="title-small">Chez</div>
-        <h1 className="title-main">FLORENCE</h1>
+        <h1 id="hero-title" className="title-main">FLORENCE</h1>
       </div>
 
       <RainbowText

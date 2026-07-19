@@ -1,27 +1,28 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { PawPrint } from 'lucide-react'
+import { PawPrint, ChevronLeft, ChevronRight } from 'lucide-react'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { rabbitsApi } from '@/lib/api'
 import { isUnavailable, formatPrice, resolvePhotoUrl } from '@/lib/status'
-import ArrowButton from './ArrowButton'
 import RainbowText from './RainbowText'
 
-// Port direct de <section id="lapins"> (index.html, .projects-grid /
-// .project-item) — les 3 cartes mock (Unsplash, "5 en stock" en dur) sont
-// remplacées par les vraies fiches (rabbitsApi, même source que
-// /rabbits/[slug] et SimilarRabbits) : tout ajout côté admin apparaît
-// ici automatiquement.
+// "Nos Lapins" — carousel horizontal (scroll-snap natif, donc tactile sur
+// mobile sans rien à coder en plus) + boutons précédent/suivant sur
+// desktop. Vraies fiches (rabbitsApi, même source que /rabbits/[slug] et
+// SimilarRabbits) : tout ajout côté admin apparaît ici automatiquement.
 export default function LapinsFeaturedSection() {
   const [rabbits, setRabbits] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
+  const trackRef = useRef<HTMLDivElement>(null)
+  const [canPrev, setCanPrev] = useState(false)
+  const [canNext, setCanNext] = useState(false)
 
   useEffect(() => {
     rabbitsApi.list({})
-      .then((r: any) => setRabbits((r.results || []).slice(0, 6)))
+      .then((r: any) => setRabbits((r.results || []).slice(0, 8)))
       .catch(() => setError(true))
       .finally(() => {
         setLoading(false)
@@ -31,18 +32,56 @@ export default function LapinsFeaturedSection() {
       })
   }, [])
 
+  const updateArrows = () => {
+    const el = trackRef.current
+    if (!el) return
+    setCanPrev(el.scrollLeft > 8)
+    setCanNext(el.scrollLeft < el.scrollWidth - el.clientWidth - 8)
+  }
+
+  useEffect(() => {
+    updateArrows()
+    const el = trackRef.current
+    if (!el) return
+    el.addEventListener('scroll', updateArrows, { passive: true })
+    window.addEventListener('resize', updateArrows)
+    return () => {
+      el.removeEventListener('scroll', updateArrows)
+      window.removeEventListener('resize', updateArrows)
+    }
+  }, [rabbits])
+
+  const slide = (dir: 1 | -1) => {
+    const el = trackRef.current
+    if (!el) return
+    const card = el.querySelector<HTMLElement>('.project-item')
+    const step = card ? card.offsetWidth + 24 : el.clientWidth * 0.8
+    el.scrollBy({ left: dir * step, behavior: 'smooth' })
+  }
+
   return (
-    <section id="lapins">
-      <div className="section-head">
+    <section id="lapins" data-theme="rust">
+      <div className="section-head section-head--carousel">
         <div>
           <div className="eyebrow">No. 08 — Nos Lapins</div>
-          <h2 className="section-title reveal-text">En Vedette</h2>
+          <h2 className="section-title elastic-title">En Vedette</h2>
         </div>
         <RainbowText text="Ajoutés par notre équipe, prêts à la vente. Azaguié Gare." variant="white" className="section-desc" />
+
+        {!loading && !error && rabbits.length > 0 && (
+          <div className="carousel-nav">
+            <button type="button" className="carousel-btn" onClick={() => slide(-1)} disabled={!canPrev} aria-label="Précédent">
+              <ChevronLeft size={18} />
+            </button>
+            <button type="button" className="carousel-btn carousel-btn--accent" onClick={() => slide(1)} disabled={!canNext} aria-label="Suivant">
+              <ChevronRight size={18} />
+            </button>
+          </div>
+        )}
       </div>
 
       {loading ? (
-        <div className="projects-grid" aria-hidden="true">
+        <div className="projects-track" aria-hidden="true">
           {[0, 1, 2].map((i) => <div className="project-skeleton" key={i} />)}
         </div>
       ) : error ? (
@@ -53,8 +92,8 @@ export default function LapinsFeaturedSection() {
           Aucun lapin disponible pour le moment.
         </p>
       ) : (
-        <div className="projects-grid">
-          {rabbits.map((rabbit, i) => {
+        <div className="projects-track" ref={trackRef}>
+          {rabbits.map((rabbit) => {
             const unavailable = isUnavailable(rabbit)
             const mainPhoto = rabbit.photos?.find((p: any) => p.isMain) || rabbit.photos?.[0]
             const src = mainPhoto ? resolvePhotoUrl(mainPhoto.url) : null
@@ -62,12 +101,12 @@ export default function LapinsFeaturedSection() {
               <Link
                 href={`/rabbits/${rabbit.slug}`}
                 key={rabbit.id}
-                className={`project-item reveal-text hover-view${i % 2 === 1 ? ' offset' : ''}${unavailable ? ' unavailable' : ''}`}
+                className={`project-item reveal-text hover-view${unavailable ? ' unavailable' : ''}`}
                 aria-disabled={unavailable}
               >
                 <div className="project-img-box">
                   {src ? (
-                    <Image src={src} alt={rabbit.name} fill sizes="(max-width: 768px) 100vw, 33vw" style={{ objectFit: 'cover' }} />
+                    <Image src={src} alt={rabbit.name} fill sizes="(max-width: 768px) 78vw, 320px" style={{ objectFit: 'cover' }} />
                   ) : (
                     <div className="project-img-fallback"><PawPrint size={32} /></div>
                   )}
@@ -83,14 +122,6 @@ export default function LapinsFeaturedSection() {
               </Link>
             )
           })}
-        </div>
-      )}
-
-      {process.env.NEXT_PUBLIC_WHATSAPP && (
-        <div className="projects-cta-row">
-          <ArrowButton href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP.replace(/\D/g, '')}`} external>
-            Voir tout le catalogue
-          </ArrowButton>
         </div>
       )}
     </section>

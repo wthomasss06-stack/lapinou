@@ -16,10 +16,10 @@ gsap.registerPlugin(useGSAP, SplitText)
 const LOADER_SEEN_KEY = 'lapinou_loader_seen'
 
 const CARDS = [
-  { kind: 'photo', src: '/IMAGES/eleveur-soin.jpg', rotate: 7 },
-  { kind: 'solid', bg: 'var(--rust)', rotate: -3 },
-  { kind: 'photo', src: '/IMAGES/vente-lapins-affiche.jpg', rotate: -9 },
-  { kind: 'solid', bg: 'var(--paper)', rotate: 5 },
+  { kind: 'photo', src: '/IMAGES/Snapchat-908462874.webp', rotate: 7 },
+  { kind: 'photo', src: '/IMAGES/Snapchat-956074945.webp', rotate: -3 },
+  { kind: 'photo', src: '/IMAGES/Snapchat-1016404691.webp', rotate: -9 },
+  { kind: 'photo', src: '/IMAGES/Snapchat-1244423645.webp', rotate: 5 },
 ]
 
 export default function Loader() {
