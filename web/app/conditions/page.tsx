@@ -70,9 +70,9 @@ const SECTIONS: LegalSection[] = [
         'Les horaires de retrait sont du lundi au samedi, de 8h à 18h. Tout retrait en dehors de ces horaires doit être convenu préalablement.',
       ] },
       { title: '5.2 Livraison à domicile', body: [
-        'Chez Florence assure la livraison dans la commune d\u2019Abidjan et ses environs immédiats (Cocody, Plateau, Marcory, Yopougon, Port-Bouët, Bingerville, Anyama).',
+        'Chez Florence assure la livraison à Abidjan, à Azaguié et ses environs (Agboville, Adzopé), ainsi que dans le reste de la Côte d\u2019Ivoire.',
         'Les frais de livraison varient selon la zone :',
-      ], items: ['Cocody, Plateau, Marcory : 2 000 FCFA', 'Yopougon, Port-Bouët : 3 000 FCFA', 'Bingerville, Anyama : 3 500 FCFA', 'Autres zones : sur devis'] },
+      ], items: ['Abidjan : 2 000 FCFA', 'Azaguié & environs (Agboville, Adzopé) : 1 000 FCFA', 'Autres villes : 3 000 FCFA'] },
       { title: '5.3 Délais de livraison', body: [
         'Retrait Azaguié Gare : le jour même si commande avant 14h, sinon le lendemain.',
         'Livraison Abidjan : sous 24 à 48 heures selon la zone et le volume de commandes.',
@@ -159,7 +159,7 @@ export default function ConditionsPage() {
             variant="white"
             className="page-sub"
           />
-          <p className="last-update">En vigueur depuis le 12 juillet 2026</p>
+          <p className="last-update">En vigueur depuis le 23 juillet 2026</p>
         </section>
         <div className="legal-content">
           <LegalToc sections={SECTIONS} />

@@ -31,16 +31,16 @@ nav.cf-card-nav {
   box-shadow: var(--nav-shadow);
   height: 64px;
   color: #fff;
-  /* Port de mix_blend_header_playground.html : inversion chromatique au
-     repos (pill transparente, se lit sur n'importe quel fond en dessous
-     — vidéo hero, section marron, carte claire…). Désactivée à l'ouverture
-     (panneau plein de cartes à fond marron plein) : le blend deviendrait
-     illisible sur un si grand aplat de couleurs superposées. */
+  /* Port de mix_blend_header_playground.html : inversion chromatique,
+     y compris à l'ouverture (pill transparente ou grille de cartes
+     déployée, se lit sur n'importe quel fond en dessous — vidéo hero,
+     section marron, carte claire…). Reste active volontairement sur
+     .is-open : c'est justement là que l'effet doit se voir le plus. */
   mix-blend-mode: difference;
   transition: background-color 0.4s ease, border-color 0.4s ease,
               backdrop-filter 0.4s ease, box-shadow 0.4s ease;
 }
-nav.cf-card-nav.is-open { mix-blend-mode: normal; }
+nav.cf-card-nav.is-open { mix-blend-mode: difference; }
 
 .cf-nav-top {
   height: 64px;
@@ -172,7 +172,7 @@ nav.cf-card-nav.is-open { mix-blend-mode: normal; }
   .cf-mobile-nav.is-open {
     background: rgba(var(--maroon-rgb), 0.9);
     backdrop-filter: blur(16px);
-    mix-blend-mode: normal;
+    mix-blend-mode: difference;
     -webkit-backdrop-filter: blur(16px);
     border-color: rgba(var(--muted-rgb, 168,150,120), 0.15);
   }
