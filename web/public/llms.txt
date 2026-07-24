@@ -1,0 +1,31 @@
+# Chez Florence
+
+> Élevage et vente de lapins de race (Hollandais, Angora Français, Rex) à Azaguié Gare, à 30 minutes d'Abidjan, Côte d'Ivoire. Commande exclusivement par WhatsApp ; retrait sur place ou livraison à Abidjan et dans le reste du pays.
+
+Chez Florence est un élevage artisanal ivoirien. Chaque lapin est pesé et examiné individuellement avant la vente (poids, pelage, comportement). La commande se fait par WhatsApp au +225 01 42 50 77 50. Le paiement s'effectue en espèces au retrait, ou par Mobile Money (Orange Money, MTN Mobile Money, Wave) — jamais de paiement intégral exigé à l'avance pour un particulier.
+
+## Tarifs indicatifs
+
+- À l'unité (environ 2 kg) : 15 000 FCFA
+- Le Duo (2 lapins, 1,6 kg chacun) : 25 000 FCFA
+- Format Restaurateur (lot de 6) : 80 000 FCFA
+- Prix de départ pour un lapin Hollandais : à partir de 8 500 FCFA selon le poids
+
+Les tarifs ci-dessus sont ceux affichés sur le site à la date de cette page. La disponibilité par race change en continu — se référer aux fiches individuelles (/rabbits/{slug}) pour le stock en temps réel.
+
+## Livraison et retrait
+
+- Retrait sur place à Azaguié Gare, du lundi au samedi.
+- Livraison à Abidjan : 2 000 FCFA. Azaguié et environs (Agboville, Adzopé) : 1 000 FCFA. Reste de la Côte d'Ivoire : 3 000 FCFA.
+- Garantie santé de 48h à compter de la livraison ou du retrait (remplacement gratuit ou remboursement intégral en cas de problème préexistant à la vente).
+
+## Pages
+
+- [Accueil](https://chez-florence.vercel.app/): présentation de l'élevage, races disponibles, tarifs, garanties, avis clients, FAQ courte.
+- [Centre d'aide](https://chez-florence.vercel.app/aide): FAQ complète classée par catégorie (Commande, Livraison, Paiement, Élevage).
+- [Conditions générales de vente](https://chez-florence.vercel.app/conditions): tarifs détaillés, modalités de paiement et de livraison, garantie santé, droit de rétractation.
+- [Politique de confidentialité](https://chez-florence.vercel.app/confidentialite): données collectées, durée de conservation, droits des utilisateurs.
+
+## Optional
+
+- Fiches lapin individuelles : https://chez-florence.vercel.app/rabbits/{slug} — une page par lapin actuellement en vente, générée dynamiquement. Non énumérées ici car le catalogue change au fil des ventes ; voir /sitemap.xml pour la liste à jour.

@@ -106,7 +106,7 @@ export default function LapinsFeaturedSection() {
               >
                 <div className="project-img-box">
                   {src ? (
-                    <Image src={src} alt={rabbit.name} fill sizes="(max-width: 768px) 78vw, 320px" style={{ objectFit: 'cover' }} />
+                    <Image src={src} alt={`${rabbit.name} — lapin ${rabbit.breed} à vendre à Abidjan`} fill sizes="(max-width: 768px) 78vw, 320px" style={{ objectFit: 'cover' }} />
                   ) : (
                     <div className="project-img-fallback"><PawPrint size={32} /></div>
                   )}

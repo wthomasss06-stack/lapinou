@@ -4,6 +4,7 @@ import './globals.css'
 import { Toaster } from 'react-hot-toast'
 import CookieBanner from '@/components/CookieBanner'
 import ServiceWorkerRegister from '@/components/ServiceWorkerRegister'
+import { SITE_URL, SITE_NAME, SITE_DESCRIPTION, jsonLdScript, getOrganizationJsonLd, getWebsiteJsonLd } from '@/lib/seo'
 
 const syne = Syne({
   subsets: ['latin'],
@@ -33,17 +34,30 @@ const jetbrainsMono = JetBrains_Mono({
   weight: ['400', '500'],
 })
 
+const TITLE = 'CHEZ FLORENCE — Vente de Lapins de Race à Abidjan'
+const DESCRIPTION = SITE_DESCRIPTION
+
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://lapinou.vercel.app'),
-  title: 'CHEZ FLORENCE — Vente de Lapins à Abidjan',
-  description: 'Découvrez et réservez nos lapins de race élevés à Abidjan, Côte d\'Ivoire.',
-  keywords: ['lapin', 'vente lapin', 'élevage', 'Abidjan', 'Côte d\'Ivoire', 'chez florence'],
+  metadataBase: new URL(SITE_URL),
+  title: { default: TITLE, template: '%s | CHEZ FLORENCE' },
+  description: DESCRIPTION,
+  keywords: [
+    'lapin', 'vente lapin Abidjan', 'prix lapin Côte d\'Ivoire', 'élevage lapin',
+    'lapin Hollandais', 'lapin Rex', 'lapin Angora', 'Azaguié', 'Abidjan',
+    'Côte d\'Ivoire', 'chez florence', 'acheter lapin vivant',
+  ],
   manifest: '/manifest.json',
   applicationName: 'CHEZ FLORENCE',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
     title: 'CHEZ FLORENCE',
+  },
+  alternates: { canonical: '/' },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 },
   },
   icons: {
     icon: [
@@ -57,10 +71,19 @@ export const metadata: Metadata = {
     apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
   },
   openGraph: {
-    title: 'CHEZ FLORENCE — Vente de Lapins à Abidjan',
-    description: 'Découvrez et réservez nos lapins de race élevés à Abidjan, Côte d\'Ivoire.',
+    title: TITLE,
+    description: DESCRIPTION,
+    url: SITE_URL,
+    siteName: SITE_NAME,
     type: 'website',
-    images: ['/icon-512.png'],
+    locale: 'fr_FR',
+    images: [{ url: '/IMAGES/vente-lapins-affiche.jpg', width: 1376, height: 768, alt: 'Chez Florence — Vente de lapins à Azaguié, Côte d\'Ivoire' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: TITLE,
+    description: DESCRIPTION,
+    images: ['/IMAGES/vente-lapins-affiche.jpg'],
   },
 }
 
@@ -75,6 +98,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="fr" className={`${syne.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} ${silkscreen.variable}`}>
       <body className="bg-brand-dark text-white font-body antialiased">
+        {/* JSON-LD sitewide — lu par Google (rich results) et par les
+            answer engines (ChatGPT, Perplexity, Gemini) pour l'AEO/GEO.
+            Une seule fois pour tout le site, pas par page. */}
+        <script
+          type="application/ld+json"
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: jsonLdScript(getOrganizationJsonLd()) }}
+        />
+        <script
+          type="application/ld+json"
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: jsonLdScript(getWebsiteJsonLd()) }}
+        />
         <Toaster
           position="top-right"
           toastOptions={{

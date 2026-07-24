@@ -15,12 +15,16 @@ import SharePanel from '@/components/SharePanel'
 import SimilarRabbits from '@/components/SimilarRabbits'
 import ReserveButton from '@/components/ReserveButton'
 import { isUnavailable, formatPrice, GENDER_LABEL, resolvePhotoUrl } from '@/lib/status'
+import { SITE_URL, jsonLdScript } from '@/lib/seo'
 import dynamic from 'next/dynamic'
 
 const MapView = dynamic(() => import('@/components/MapView'), { ssr: false })
 
-const API_URL  = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || ''
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'
+// SITE_URL vient désormais de lib/seo.js (une seule source de vérité pour le
+// domaine — avant, ce fichier avait son propre fallback '' différent de celui
+// du layout, ce qui pouvait produire des URLs cassées en cas de variable
+// d'environnement manquante).
 
 // SSR — revalidation toutes les 60s pour avoir le statut frais
 export const revalidate = 60
@@ -35,9 +39,34 @@ async function getRabbit(slug) {
 export async function generateMetadata({ params }) {
   const rabbit = await getRabbit(params.slug)
   if (!rabbit) return { title: 'Introuvable' }
+
+  const title = `${rabbit.name} — ${rabbit.breed} | CHEZ FLORENCE`
+  const rawDescription = rabbit.description
+    || `${rabbit.name}, ${rabbit.breed} à ${formatPrice(rabbit.price)} — Azaguié Gare, Côte d'Ivoire. Réservation par WhatsApp.`
+  const description = rawDescription.length > 160 ? `${rawDescription.slice(0, 157)}...` : rawDescription
+
+  const mainPhoto = rabbit.photos?.find((p) => p.isMain) || rabbit.photos?.[0]
+  const image = mainPhoto ? resolvePhotoUrl(mainPhoto.url) : undefined
+  const url = `${SITE_URL}/rabbits/${rabbit.slug}`
+
   return {
-    title:       `${rabbit.name} — ${rabbit.breed} | CHEZ FLORENCE`,
-    description: rabbit.description || `${rabbit.name}, ${rabbit.breed} à ${formatPrice(rabbit.price)}`,
+    title,
+    description,
+    keywords: [rabbit.name, rabbit.breed, 'lapin Abidjan', 'lapin Azaguié', 'acheter lapin'].filter(Boolean),
+    alternates: { canonical: url },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: 'website',
+      ...(image ? { images: [{ url: image, alt: rabbit.name }] } : {}),
+    },
+    twitter: {
+      card: image ? 'summary_large_image' : 'summary',
+      title,
+      description,
+      ...(image ? { images: [image] } : {}),
+    },
   }
 }
 
@@ -69,8 +98,48 @@ export default async function RabbitDetailPage({ params }) {
     rabbit.birthDate && { label: 'Naissance', value: new Date(rabbit.birthDate).toLocaleDateString('fr-FR') },
   ].filter(Boolean)
 
+  // JSON-LD — reflète exactement ce qui est affiché ci-dessous (même nom,
+  // même prix, même stock, mêmes photos) : pas de champ inventé.
+  const productJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: rabbit.name,
+    description: rabbit.description || `${rabbit.name}, ${rabbit.breed} à ${formatPrice(rabbit.price)}`,
+    category: rabbit.breed,
+    ...(photos.length ? { image: photos } : {}),
+    ...(rabbit.weight ? { weight: { '@type': 'QuantitativeValue', value: rabbit.weight, unitCode: 'KGM' } } : {}),
+    offers: {
+      '@type': 'Offer',
+      url: `${SITE_URL}/rabbits/${rabbit.slug}`,
+      priceCurrency: 'XOF',
+      price: rabbit.price,
+      availability: unavailable ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock',
+      areaServed: "Côte d'Ivoire",
+    },
+  }
+
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Accueil', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: 'Lapins', item: `${SITE_URL}/#lapins` },
+      { '@type': 'ListItem', position: 3, name: rabbit.name, item: `${SITE_URL}/rabbits/${rabbit.slug}` },
+    ],
+  }
+
   return (
     <main className="min-h-screen overflow-x-clip" style={{ backgroundColor: 'var(--maroon)', color: 'var(--paper)' }}>
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(productJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(breadcrumbJsonLd) }}
+      />
       <Navbar />
       <CustomCursor />
 

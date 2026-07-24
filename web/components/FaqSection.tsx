@@ -1,18 +1,13 @@
 'use client'
 import { useState } from 'react'
 import ArrowButton from './ArrowButton'
+import { HOME_FAQS as FAQS } from '@/lib/faq-data'
 
 // Port direct de <section id="faq"> (index.html). Version complète et
 // catégorisée sur /aide — cette section reste volontairement courte (les
 // 6 questions de la maquette) pour ne pas dupliquer /aide sur la home.
-const FAQS = [
-  { q: "Quel est le prix d'un lapin à Abidjan ?", a: "Chez Florence, les prix commencent à 8 500 FCFA pour un lapin Hollandais et atteignent 15 000 FCFA pour un lapin de 2 kg. Le format Duo (2 lapins) est à 25 000 FCFA. Les restaurateurs bénéficient d'un tarif préférentiel à 80 000 FCFA le lot de 6." },
-  { q: 'Comment commander un lapin ?', a: 'La commande se fait exclusivement via WhatsApp au +225 01 42 50 77 50. Envoyez-nous un message avec la race et le format souhaité. Nous confirmons la disponibilité et organisons le retrait ou la livraison.' },
-  { q: 'Les lapins sont-ils sains ?', a: 'Oui. Chaque lapin est examiné avant la vente : poids vérifié, pelage contrôlé, comportement observé. Nous ne vendons aucun animal malade. Un suivi après-vente est également proposé.' },
-  { q: 'Où puis-je retirer ma commande ?', a: 'Le retrait se fait sur place à Azaguié Gare. La livraison est également possible selon votre zone à Abidjan. Contactez-nous sur WhatsApp pour organiser la livraison.' },
-  { q: 'Quels modes de paiement acceptez-vous ?', a: 'Nous acceptons le paiement en espèces au retrait, ainsi que les transferts Mobile Money (Orange Money, MTN Mobile Money, Wave). Le paiement se fait à la livraison ou au retrait.' },
-  { q: "Proposez-vous des conseils d'élevage ?", a: 'Oui, nous proposons un suivi après-vente avec des conseils de conservation et d\u2019élevage. Nous accompagnons également les éleveurs débutants dans la mise en place de leur élevage.' },
-]
+// Données dans lib/faq-data.js — réutilisées par le schema JSON-LD FAQPage
+// (app/page.tsx) pour l'AEO/GEO (ChatGPT, Perplexity, Gemini).
 
 export default function FaqSection() {
   const [open, setOpen] = useState<number | null>(0)
