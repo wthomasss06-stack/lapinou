@@ -2,6 +2,7 @@
 import { useState, useCallback, useRef } from 'react'
 import { ChevronLeft, ChevronRight, Maximize2, Images } from 'lucide-react'
 import Lightbox from './Lightbox'
+import HoverFadeText from './HoverFadeText'
 
 export default function RabbitGallery({ photos, title, unavailable, stock }) {
   const [cur, setCur] = useState(0)
@@ -109,7 +110,7 @@ export default function RabbitGallery({ photos, title, unavailable, stock }) {
               className="shrink-0 w-[68px] h-[50px] rounded-lg border-2 border-brand-border flex flex-col items-center justify-center gap-0.5 text-white/40 text-[10px] font-semibold"
             >
               <Images size={14} />
-              +{total - 8}
+              <HoverFadeText>{`+${total - 8}`}</HoverFadeText>
             </button>
           )}
         </div>

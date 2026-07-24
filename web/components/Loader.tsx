@@ -7,10 +7,13 @@ import Image from 'next/image'
 
 gsap.registerPlugin(useGSAP, SplitText)
 
-// Séquence d'entrée — adaptée de gemini-code-1784134819405.html : cartes
-// empilées qui s'ouvrent (scale + clip-path) en cascade, titre "FLORENCE"
-// en reveal caractère par caractère, compteur 000→100 posé à côté du
-// titre, puis rideau (clip-path) qui remonte pour révéler le Hero.
+// Séquence d'entrée — chorégraphie portée de la variante « 5. Gravité »
+// de gemini-code-1784715349867.html : les cartes tombent du haut de
+// l'écran et atterrissent en rebond élastique (au lieu de scale+clip-path
+// sur place), titre "FLORENCE" en reveal caractère par caractère, compteur
+// 000→100 posé à côté du titre, sortie où les cartes continuent leur
+// chute (accélération type gravité) au lieu de rétrécir sur place, puis
+// rideau (clip-path) qui remonte pour révéler le Hero.
 // Garde la logique "une fois par session" (sessionStorage) de l'ancienne
 // version — pas de raison de la perdre en changeant l'habillage visuel.
 const LOADER_SEEN_KEY = 'lapinou_loader_seen'
@@ -44,18 +47,26 @@ export default function Loader() {
       const titleSplit = SplitText.create('#loader-title', { type: 'chars' })
       const counterEl = document.querySelector<HTMLElement>('#loader-counter')
 
-      gsap.set(cards, { scale: 0, clipPath: 'polygon(20% 20%, 80% 20%, 80% 80%, 20% 80%)' })
+      // xPercent/yPercent recentrent la carte (remplace le translate(-50%,-50%)
+      // qui vivait avant dans la CSS) — GSAP doit posséder tout le transform
+      // pour composer la chute (y) et la rotation d'atterrissage sans écraser
+      // le centrage. Chaque carte démarre au-dessus de l'écran, légèrement
+      // réduite, prête à "tomber".
+      gsap.set(cards, { xPercent: -50, yPercent: -50, y: '-70vh', rotation: 0, scale: 0.72 })
       gsap.set(titleSplit.chars, { yPercent: 100 })
       gsap.set('#loader-counter', { yPercent: 100 })
 
       const tl = gsap.timeline({ delay: 0.3 })
 
+      // Chute + atterrissage élastique (variante "5. Gravité") : chaque
+      // carte tombe du haut de l'écran et rebondit sur sa position finale.
       tl.to(cards, {
+        y: 0,
         scale: 1,
-        clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
-        duration: 1,
-        ease: 'power4.out',
-        stagger: 0.15,
+        rotation: (i: number) => CARDS[i]?.rotate ?? 0,
+        duration: 1.5,
+        ease: 'elastic.out(1, 0.55)',
+        stagger: 0.12,
       })
 
       tl.to(titleSplit.chars, {
@@ -63,7 +74,7 @@ export default function Loader() {
         duration: 1,
         ease: 'power4.out',
         stagger: { each: 0.05, from: 'random' },
-      }, '<0.3')
+      }, '<0.4')
 
       tl.to('#loader-counter', {
         yPercent: 0,
@@ -83,19 +94,23 @@ export default function Loader() {
         },
       }, '<')
 
-      tl.to('#loader-counter', { yPercent: -100, duration: 0.6, ease: 'power3.in' }, '+=2.1')
+      // Sortie : le texte descend (au lieu de remonter) pour rester dans la
+      // logique "gravité" ; les cartes ne rétrécissent plus sur place, elles
+      // continuent leur chute et accélèrent, comme si rien ne les retenait.
+      tl.to('#loader-counter', { yPercent: 100, duration: 0.6, ease: 'power3.in' }, '+=2.1')
       tl.to(titleSplit.chars, {
-        yPercent: -100,
+        yPercent: 100,
         duration: 0.6,
         ease: 'power3.in',
         stagger: { each: 0.04, from: 'random' },
       }, '<')
 
       tl.to(cards, {
-        scale: 0,
-        clipPath: 'polygon(20% 20%, 80% 20%, 80% 80%, 20% 80%)',
-        duration: 0.8,
-        ease: 'power3.in',
+        y: '+=70vh',
+        rotation: '+=25',
+        opacity: 0,
+        duration: 0.9,
+        ease: 'power2.in',
         stagger: -0.06,
       }, '<0.1')
 
@@ -126,7 +141,7 @@ export default function Loader() {
     <div id="loader">
       <div className="loader-cards">
         {CARDS.map((c, i) => (
-          <div className="loader-card" key={i} style={{ '--rotate': `${c.rotate}deg` } as React.CSSProperties}>
+          <div className="loader-card" key={i}>
             {c.kind === 'photo' ? (
               <Image src={c.src!} alt="" fill sizes="220px" style={{ objectFit: 'cover' }} />
             ) : (

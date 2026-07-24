@@ -1,11 +1,9 @@
 'use client'
-import { useState } from 'react'
 import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
-import MagneticButton from './MagneticButton'
 import RainbowText from './RainbowText'
 import MapView from './MapView'
-import { sendContactMessage } from '@/lib/api'
+import ContactMorphButton from './ContactMorphButton'
+import HoverFadeText from './HoverFadeText'
 import './Footer.css'
 
 const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP?.replace(/\D/g, '') || ''
@@ -29,25 +27,6 @@ const INFO_LINKS = [
 // lettrage en dégradé métallique. Les liens Aide/Conditions/Confidentialité
 // vivent ici désormais (déplacés depuis la carte "Informations" de la nav).
 export default function Footer() {
-  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
-  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' })
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setForm((f) => ({ ...f, [e.target.name]: e.target.value }))
-  }
-
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setStatus('sending')
-    try {
-      await sendContactMessage(form)
-      setStatus('sent')
-      setForm({ name: '', email: '', subject: '', message: '' })
-    } catch {
-      setStatus('error')
-    }
-  }
-
   return (
     <footer id="contact">
       <div className="footer-main">
@@ -59,14 +38,9 @@ export default function Footer() {
         />
 
         <div className="footer-grid">
-          {/* Colonne info + WhatsApp + localisation */}
+          {/* Colonne info + localisation — le bouton WhatsApp qui vivait ici
+              est parti en colonne droite, devenu ContactMorphButton */}
           <div className="footer-info-col">
-            <MagneticButton className="magnetic-btn-wrapper hover-target">
-              <a href={waHref} target="_blank" rel="noopener noreferrer" className="magnetic-btn">
-                WhatsApp
-              </a>
-            </MagneticButton>
-
             <div className="contact-details">
               <div className="contact-item">
                 <div className="contact-label">Email</div>
@@ -87,39 +61,10 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Formulaire minimaliste */}
-          <div className="footer-form-card">
-            {status === 'sent' ? (
-              <div className="footer-form-success">
-                <p>Message envoyé — on vous répond très vite.</p>
-                <button type="button" className="btn-minimal" onClick={() => setStatus('idle')}>Écrire un autre message</button>
-              </div>
-            ) : (
-              <form onSubmit={onSubmit} className="footer-form">
-                <div className="form-row">
-                  <div className="field-group">
-                    <label className="field-label" htmlFor="f-name">Nom complet *</label>
-                    <input id="f-name" name="name" type="text" required className="input-minimal" placeholder="Votre nom" value={form.name} onChange={onChange} />
-                  </div>
-                  <div className="field-group">
-                    <label className="field-label" htmlFor="f-email">Email *</label>
-                    <input id="f-email" name="email" type="email" required className="input-minimal" placeholder="vous@email.com" value={form.email} onChange={onChange} />
-                  </div>
-                </div>
-                <div className="field-group">
-                  <label className="field-label" htmlFor="f-subject">Sujet</label>
-                  <input id="f-subject" name="subject" type="text" className="input-minimal" placeholder="Race, prix, disponibilité..." value={form.subject} onChange={onChange} />
-                </div>
-                <div className="field-group">
-                  <label className="field-label" htmlFor="f-message">Message *</label>
-                  <textarea id="f-message" name="message" required rows={4} className="input-minimal" placeholder="Votre message..." value={form.message} onChange={onChange} />
-                </div>
-                <button type="submit" className="btn-minimal" disabled={status === 'sending'}>
-                  {status === 'sending' ? 'Envoi...' : 'Envoyer'} <ArrowRight size={15} />
-                </button>
-                {status === 'error' && <p className="footer-form-error">Un souci est survenu — écrivez-nous plutôt sur WhatsApp.</p>}
-              </form>
-            )}
+          {/* Bouton magnétique → formulaire de contact, en face des
+              coordonnées de la colonne gauche. Ex-bouton WhatsApp. */}
+          <div className="footer-contact-col">
+            <ContactMorphButton />
           </div>
         </div>
 
@@ -129,7 +74,7 @@ export default function Footer() {
             <h3>Navigation</h3>
             <ul>
               {NAV_LINKS.map((l) => (
-                <li key={l.href}><Link href={l.href} className="hover-target">{l.label}</Link></li>
+                <li key={l.href}><Link href={l.href} className="hover-target"><HoverFadeText>{l.label}</HoverFadeText></Link></li>
               ))}
             </ul>
           </div>
@@ -137,7 +82,7 @@ export default function Footer() {
             <h3>Informations</h3>
             <ul>
               {INFO_LINKS.map((l) => (
-                <li key={l.href}><Link href={l.href} className="hover-target">{l.label}</Link></li>
+                <li key={l.href}><Link href={l.href} className="hover-target"><HoverFadeText>{l.label}</HoverFadeText></Link></li>
               ))}
             </ul>
           </div>

@@ -2,6 +2,7 @@
 import { useRef } from 'react'
 import { useTilt3D } from '@/lib/useTilt3D'
 import RainbowText from './RainbowText'
+import HoverFadeText from './HoverFadeText'
 
 // Section Tarifs restaurée en grille (en plus de la Ligne 2 du
 // TrustMarquee, qui garde le résumé en ticker).
@@ -57,7 +58,7 @@ export default function TarifsSection() {
             </div>
             <div className="price-sub">{plan.desc}</div>
             <a href={waHrefForPlan(plan)} target="_blank" rel="noopener noreferrer" className="price-cta hover-target">
-              Commander
+              <HoverFadeText>Commander</HoverFadeText>
             </a>
             <ul className="price-features">
               {plan.features.map((f) => <li key={f}>{f}</li>)}

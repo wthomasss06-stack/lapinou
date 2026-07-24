@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { Navigation2, MapPin, Locate, AlertTriangle, X } from 'lucide-react'
+import HoverFadeText from './HoverFadeText'
 
 // Token Mapbox (déjà utilisé dans le projet)
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || ''
@@ -252,7 +253,7 @@ export default function MapView() {
             ) : (
               <>
                 <Locate size={11} />
-                Voir mon itinéraire
+                <HoverFadeText>Voir mon itinéraire</HoverFadeText>
               </>
             )}
           </button>
@@ -263,7 +264,7 @@ export default function MapView() {
                        bg-brand-card border border-brand-border text-white/30 text-[10px]
                        hover:text-white/60 hover:border-white/20 transition-all duration-150"
           >
-            <X size={9} /> Réinitialiser
+            <X size={9} /> <HoverFadeText>Réinitialiser</HoverFadeText>
           </button>
         )}
       </div>

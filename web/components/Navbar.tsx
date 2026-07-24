@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { gsap } from 'gsap'
 import Logo from './Logo'
+import HoverFadeText from './HoverFadeText'
 import './Navbar.css'
 
 // ── Navbar CHEZ FLORENCE — CardNav (desktop) + StaggeredMenu (mobile) ──
@@ -112,7 +113,7 @@ function DesktopCardNav() {
 
           <div className="cf-nav-right">
             <Link href="/#lapins" className="cf-nav-cta" onClick={closeNav}>
-              Voir les lapins
+              <HoverFadeText>Voir les lapins</HoverFadeText>
             </Link>
           </div>
         </div>
@@ -134,7 +135,7 @@ function DesktopCardNav() {
               {navLinks.map(link => (
                 <Link key={link.href} href={link.href} onClick={closeNav} className="cf-card-link">
                   <ArrowIcon className="cf-card-link-arrow" />
-                  {link.label}
+                  <HoverFadeText>{link.label}</HoverFadeText>
                 </Link>
               ))}
             </div>
@@ -146,12 +147,12 @@ function DesktopCardNav() {
               {contactLinks.map(link => (
                 <Link key={link.href} href={link.href} onClick={closeNav} className="cf-card-link">
                   <ArrowIcon className="cf-card-link-arrow" />
-                  {link.label}
+                  <HoverFadeText>{link.label}</HoverFadeText>
                 </Link>
               ))}
               <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" onClick={closeNav} className="cf-card-link">
                 <ArrowIcon className="cf-card-link-arrow" />
-                WhatsApp
+                <HoverFadeText>WhatsApp</HoverFadeText>
               </a>
             </div>
           </div>
@@ -320,7 +321,7 @@ function MobileStaggeredNav() {
             {allLinks.map((link) => (
               <li className="cf-mobile-itemWrap" key={link.href}>
                 <Link href={link.href} className="cf-mobile-item" onClick={closeMenu}>
-                  {link.label}
+                  <HoverFadeText>{link.label}</HoverFadeText>
                   <span className="cf-mobile-item-arrow">
                     <ArrowIcon />
                   </span>
@@ -331,7 +332,7 @@ function MobileStaggeredNav() {
 
           <div className="cf-mobile-panel-footer">
             <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="cf-mobile-cta" onClick={closeMenu}>
-              WhatsApp
+              <HoverFadeText>WhatsApp</HoverFadeText>
             </a>
           </div>
         </div>

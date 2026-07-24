@@ -1,0 +1,18 @@
+/* ── Microinteraction bouton (V-FADE-X, même texte des 2 côtés) ──────
+   Empile les deux copies du libellé dans la même cellule de grille —
+   port direct de .hover-text-wrap / .word dans
+   PROOOtypography-hover-12-variants.html. Pas d'overflow:hidden ici :
+   la démo laisse les caractères déborder légèrement pendant le
+   travelling, c'est voulu. ──────────────────────────────────────────── */
+.hfx-wrap {
+  display: inline-grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  vertical-align: middle;
+}
+.hfx-word {
+  grid-area: 1 / 1 / 2 / 2;
+  display: inline-flex;
+  white-space: nowrap;
+}
+.hfx-word .char { display: inline-block; will-change: transform, opacity; }

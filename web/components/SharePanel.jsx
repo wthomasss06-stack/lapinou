@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
 import { Share2, Link as LinkIcon, Check, ChevronDown, X } from 'lucide-react'
+import HoverFadeText from './HoverFadeText'
 
 export default function SharePanel({ rabbit, siteUrl }) {
   const [open, setOpen] = useState(false)
@@ -48,11 +49,11 @@ export default function SharePanel({ rabbit, siteUrl }) {
       <div className="flex flex-col gap-2">
         <button onClick={() => share('whatsapp')} className="flex items-center justify-center gap-2 py-3 px-2 rounded-xl text-sm font-bold bg-[rgba(var(--green-rgb),0.1)] border border-[rgba(var(--green-rgb),0.25)] text-[var(--green)] hover:opacity-75 transition-opacity">
           <svg width="16" height="16" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="16" fill="rgba(var(--green-rgb),.15)" /><path d="M22.5 19.3c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.1-.7.1s-.8 1-1 1.2c-.2.2-.3.2-.6.1s-1.2-.4-2.3-1.4c-.8-.7-1.4-1.6-1.6-1.9s0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5s0-.4-.1-.5-.7-1.7-1-2.3c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4s-1 1-1 2.4 1 2.8 1.2 3c.2.2 2 3 4.8 4.2.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.8-.7 2-1.4s.2-1.3.2-1.4c0-.1-.3-.2-.6-.4z" fill="var(--green)" /></svg>
-          WhatsApp
+          <HoverFadeText>WhatsApp</HoverFadeText>
         </button>
         <button onClick={() => share('facebook')} className="flex items-center justify-center gap-2 py-3 px-2 rounded-xl text-sm font-bold bg-[rgba(var(--lime-rgb),0.1)] border border-[rgba(var(--lime-rgb),0.25)] text-[var(--lime)] hover:opacity-75 transition-opacity">
           <svg width="16" height="16" viewBox="0 0 32 32" fill="var(--lime)"><path d="M29 16C29 8.82 23.18 3 16 3S3 8.82 3 16c0 6.49 4.75 11.87 10.97 12.85V19.8h-3.3V16h3.3v-2.86c0-3.26 1.94-5.06 4.92-5.06 1.43 0 2.92.25 2.92.25v3.2h-1.65c-1.62 0-2.12 1.01-2.12 2.03V16h3.61l-.58 3.8h-3.03v9.05C24.25 27.87 29 22.49 29 16z" /></svg>
-          Facebook
+          <HoverFadeText>Facebook</HoverFadeText>
         </button>
       </div>
 
@@ -61,12 +62,12 @@ export default function SharePanel({ rabbit, siteUrl }) {
         <span className="text-[11px] text-white/40 flex-1 truncate">{url.replace('https://', '')}</span>
         <button onClick={copyLink} className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold shrink-0 transition-colors ${copied ? 'bg-sage text-espresso' : 'bg-white text-espresso'}`}>
           {copied ? <Check size={12} /> : <LinkIcon size={12} />}
-          {copied ? 'Copié !' : 'Copier'}
+          <HoverFadeText>{copied ? 'Copié !' : 'Copier'}</HoverFadeText>
         </button>
       </div>
 
       <button onClick={nativeShare} className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold bg-brand-card border border-brand-border text-white/60 hover:text-white transition-colors">
-        <Share2 size={13} /> Autres applications…
+        <Share2 size={13} /> <HoverFadeText>Autres applications…</HoverFadeText>
       </button>
     </div>
   )
@@ -79,7 +80,7 @@ export default function SharePanel({ rabbit, siteUrl }) {
           className="w-full flex items-center justify-center gap-2 py-2.5 px-3.5 rounded-xl text-sm font-semibold bg-brand-card border border-brand-border text-white/60 hover:text-white transition-colors"
         >
           <Share2 size={14} />
-          Partager cette fiche
+          <HoverFadeText>Partager cette fiche</HoverFadeText>
           <ChevronDown size={14} className={`ml-auto transition-transform ${open ? 'rotate-180' : ''}`} />
         </button>
 

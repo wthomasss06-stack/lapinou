@@ -14,6 +14,7 @@ import RabbitGallery from '@/components/RabbitGallery'
 import SharePanel from '@/components/SharePanel'
 import SimilarRabbits from '@/components/SimilarRabbits'
 import ReserveButton from '@/components/ReserveButton'
+import HoverFadeText from '@/components/HoverFadeText'
 import { isUnavailable, formatPrice, GENDER_LABEL, resolvePhotoUrl } from '@/lib/status'
 import { SITE_URL, jsonLdScript } from '@/lib/seo'
 import dynamic from 'next/dynamic'
@@ -147,9 +148,9 @@ export default async function RabbitDetailPage({ params }) {
 
         {/* Breadcrumb */}
         <div className="flex items-center gap-1.5 text-[11px] text-white/35 mb-6 flex-wrap">
-          <Link href="/" className="hover:text-white/60 transition-colors">Accueil</Link>
+          <Link href="/" className="hover:text-white/60 transition-colors"><HoverFadeText>Accueil</HoverFadeText></Link>
           <ChevronRight size={12} className="text-white/20" />
-          <Link href="/#lapins" className="hover:text-white/60 transition-colors">Lapins</Link>
+          <Link href="/#lapins" className="hover:text-white/60 transition-colors"><HoverFadeText>Lapins</HoverFadeText></Link>
           <ChevronRight size={12} className="text-white/20" />
           <span className="text-white/65 font-semibold truncate max-w-[160px]">{rabbit.name}</span>
         </div>

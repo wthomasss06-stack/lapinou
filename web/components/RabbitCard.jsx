@@ -7,6 +7,7 @@ import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { MapPin, PawPrint } from 'lucide-react'
 import { isUnavailable, formatPrice, GENDER_LABEL, resolvePhotoUrl } from '@/lib/status'
+import HoverFadeText from './HoverFadeText'
 
 function RabbitImage({ rabbit, unavailable }) {
   const mainPhoto = rabbit.photos?.find(p => p.isMain) || rabbit.photos?.[0]
@@ -184,7 +185,7 @@ export default function RabbitCard({ rabbit, index = 0, layout = 'grid' }) {
                 className="text-xs text-caramel font-medium opacity-0 group-hover:opacity-100 flex items-center gap-1"
                 transition={{ duration: 0.2 }}
               >
-                Voir détails →
+                <HoverFadeText>Voir détails</HoverFadeText> →
               </motion.span>
             </div>
           </div>

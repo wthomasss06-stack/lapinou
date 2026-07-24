@@ -67,12 +67,15 @@
   inset: 0;
 }
 .home-cinema .loader-card {
+  /* Le transform (centrage -50%/-50%, rotation d'atterrissage) est
+     entièrement piloté par GSAP (xPercent/yPercent/rotation) — voir
+     Loader.tsx, chorégraphie "Gravité" — pour pouvoir composer la chute
+     (y) et le rebond élastique sans écraser un transform CSS statique. */
   position: absolute;
   top: 50%;
   left: 50%;
   width: 180px;
   height: 230px;
-  transform: translate(-50%, -50%) rotate(var(--rotate, 0deg));
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 20px 50px rgba(0,0,0,0.5);

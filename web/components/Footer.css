@@ -44,30 +44,6 @@ footer#contact {
 
 /* ── Colonne info ────────────────────────────────────────────── */
 .footer-info-col { display: flex; flex-direction: column; align-items: center; gap: 2.5rem; }
-.magnetic-btn-wrapper {
-  position: relative;
-  width: 220px;
-  height: 220px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.magnetic-btn {
-  width: 160px;
-  height: 160px;
-  background-color: var(--rust);
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: var(--ink);
-  font-weight: 800;
-  text-transform: uppercase;
-  font-size: 1.1rem;
-  letter-spacing: 1px;
-  text-decoration: none;
-  text-align: center;
-}
 .contact-details {
   width: 100%;
   display: flex;
@@ -235,8 +211,6 @@ footer#contact {
 }
 @media (max-width: 768px) {
   footer#contact { padding: 80px 24px 30px; }
-  .magnetic-btn-wrapper { width: 180px; height: 180px; }
-  .magnetic-btn { width: 130px; height: 130px; font-size: 0.95rem; }
   .form-row { grid-template-columns: 1fr; }
   .footer-form-card { padding: 1.5rem; }
   .footer-nav-grid { grid-template-columns: 1fr; margin-top: 3rem; }

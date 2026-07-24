@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { rabbitsApi } from '@/lib/api'
 import { formatPrice } from '@/lib/status'
 import { MessageCircle, Check, AlertCircle, Minus, Plus } from 'lucide-react'
+import HoverFadeText from './HoverFadeText'
 
 const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP || '2250142507750'
 
@@ -21,6 +22,47 @@ export default function ReserveButton({ slug, rabbitName, rabbitPrice, breed, st
   const [quantity, setQuantity] = useState(1)
   const [fullName, setFullName] = useState('')
   const [whatsapp, setWhatsapp] = useState('+225 ')
+
+  // Morph "un peu le même délire" que le bouton contact du footer : bouton
+  // fermé = juste "Réserver ce lapin" ; un clic déplie (ressort hauteur +
+  // opacité, portée de contact_lapin.html) le sélecteur de quantité + les
+  // champs d'identité ; le clic suivant sur le même bouton déclenche la
+  // vraie réservation (handleReserve, logique inchangée plus bas).
+  const [isExpanded, setIsExpanded] = useState(false)
+  const fieldsWrapRef = useRef<HTMLDivElement>(null)
+  const panelAnim = useRef({ currentH: 0, currentOpacity: 0, targetH: 0, targetOpacity: 0, vxH: 0, vxO: 0 })
+
+  useEffect(() => {
+    let raf = 0
+    const STIFFNESS = 0.18
+    const FRICTION = 0.65
+    const tick = () => {
+      const p = panelAnim.current
+      p.vxH += (p.targetH - p.currentH) * STIFFNESS; p.vxH *= FRICTION; p.currentH += p.vxH
+      p.vxO += (p.targetOpacity - p.currentOpacity) * STIFFNESS; p.vxO *= FRICTION; p.currentOpacity += p.vxO
+      if (fieldsWrapRef.current) {
+        fieldsWrapRef.current.style.height = `${Math.max(0, p.currentH)}px`
+        fieldsWrapRef.current.style.opacity = String(p.currentOpacity)
+      }
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [])
+
+  // Re-mesure la cible quand le contenu peut changer de hauteur pendant que
+  // c'est ouvert (ex. la ligne "Stock max atteint" qui apparaît/disparaît).
+  useEffect(() => {
+    if (isExpanded && fieldsWrapRef.current) {
+      panelAnim.current.targetH = fieldsWrapRef.current.scrollHeight
+    }
+  }, [isExpanded, quantity])
+
+  function expandPanel() {
+    if (fieldsWrapRef.current) panelAnim.current.targetH = fieldsWrapRef.current.scrollHeight
+    panelAnim.current.targetOpacity = 1
+    setIsExpanded(true)
+  }
 
   const maxQty = Math.max(1, Math.min(stock ?? 1, 50))
 
@@ -135,60 +177,62 @@ export default function ReserveButton({ slug, rabbitName, rabbitPrice, breed, st
 
   return (
     <div className="w-full">
-      {/* Sélecteur de quantité */}
-      <div className="flex items-center justify-between mb-2 bg-brand-darker/60 border border-brand-border/60 rounded-xl px-3 py-2">
-        <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">Quantité</span>
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={decrement}
-            disabled={quantity <= 1 || state === 'loading'}
-            aria-label="Diminuer la quantité"
-            className="w-7 h-7 rounded-lg bg-brand-card border border-brand-border flex items-center justify-center text-white/70 hover:text-white hover:border-caramel/40 disabled:opacity-30 disabled:hover:border-brand-border transition-colors"
-          >
-            <Minus size={13} />
-          </button>
-          <span className="font-display font-bold text-white text-sm w-6 text-center">{quantity}</span>
-          <button
-            type="button"
-            onClick={increment}
-            disabled={quantity >= maxQty || state === 'loading'}
-            aria-label="Augmenter la quantité"
-            className="w-7 h-7 rounded-lg bg-brand-card border border-brand-border flex items-center justify-center text-white/70 hover:text-white hover:border-caramel/40 disabled:opacity-30 disabled:hover:border-brand-border transition-colors"
-          >
-            <Plus size={13} />
-          </button>
+      <div ref={fieldsWrapRef} className="overflow-hidden h-0 opacity-0">
+        {/* Sélecteur de quantité */}
+        <div className="flex items-center justify-between mb-2 bg-brand-darker/60 border border-brand-border/60 rounded-xl px-3 py-2">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">Quantité</span>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={decrement}
+              disabled={quantity <= 1 || state === 'loading'}
+              aria-label="Diminuer la quantité"
+              className="w-7 h-7 rounded-lg bg-brand-card border border-brand-border flex items-center justify-center text-white/70 hover:text-white hover:border-caramel/40 disabled:opacity-30 disabled:hover:border-brand-border transition-colors"
+            >
+              <Minus size={13} />
+            </button>
+            <span className="font-display font-bold text-white text-sm w-6 text-center">{quantity}</span>
+            <button
+              type="button"
+              onClick={increment}
+              disabled={quantity >= maxQty || state === 'loading'}
+              aria-label="Augmenter la quantité"
+              className="w-7 h-7 rounded-lg bg-brand-card border border-brand-border flex items-center justify-center text-white/70 hover:text-white hover:border-caramel/40 disabled:opacity-30 disabled:hover:border-brand-border transition-colors"
+            >
+              <Plus size={13} />
+            </button>
+          </div>
         </div>
-      </div>
-      {quantity >= maxQty && (
-        <p className="text-[10px] text-white/30 mb-2 text-right">Stock max atteint ({stock})</p>
-      )}
+        {quantity >= maxQty && (
+          <p className="text-[10px] text-white/30 mb-2 text-right">Stock max atteint ({stock})</p>
+        )}
 
-      {/* Identité — nécessaire pour la notification vendeur + le message WhatsApp */}
-      <div className="space-y-2 mb-2">
-        <input
-          type="text"
-          value={fullName}
-          onChange={(e) => setFullName(e.target.value)}
-          placeholder="Nom complet"
-          disabled={state === 'loading'}
-          className="w-full bg-brand-darker/60 border border-brand-border/60 rounded-xl px-3 py-2.5
-                     text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-caramel/50 transition-colors"
-        />
-        <input
-          type="tel"
-          value={whatsapp}
-          onChange={handleWhatsappChange}
-          placeholder="+225 07 00 00 00 00"
-          disabled={state === 'loading'}
-          className="w-full bg-brand-darker/60 border border-brand-border/60 rounded-xl px-3 py-2.5
-                     text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-caramel/50 transition-colors"
-        />
+        {/* Identité — nécessaire pour la notification vendeur + le message WhatsApp */}
+        <div className="space-y-2 mb-2">
+          <input
+            type="text"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            placeholder="Nom complet"
+            disabled={state === 'loading'}
+            className="w-full bg-brand-darker/60 border border-brand-border/60 rounded-xl px-3 py-2.5
+                       text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-caramel/50 transition-colors"
+          />
+          <input
+            type="tel"
+            value={whatsapp}
+            onChange={handleWhatsappChange}
+            placeholder="+225 07 00 00 00 00"
+            disabled={state === 'loading'}
+            className="w-full bg-brand-darker/60 border border-brand-border/60 rounded-xl px-3 py-2.5
+                       text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-caramel/50 transition-colors"
+          />
+        </div>
       </div>
 
       <button
-        onClick={handleReserve}
-        disabled={state === 'loading' || !isFormValid}
+        onClick={() => (isExpanded ? handleReserve() : expandPanel())}
+        disabled={state === 'loading' || (isExpanded && !isFormValid)}
         className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl
                    bg-[var(--green)] hover:brightness-110 active:scale-95
                    text-white font-bold text-sm transition-all duration-200
@@ -205,7 +249,7 @@ export default function ReserveButton({ slug, rabbitName, rabbitPrice, breed, st
         ) : (
           <>
             <MessageCircle size={16} className="shrink-0" />
-            Réserver {quantity > 1 ? `(${quantity})` : ''}
+            <HoverFadeText>{isExpanded ? `Réserver ${quantity > 1 ? `(${quantity})` : ''}` : 'Réserver ce lapin'}</HoverFadeText>
           </>
         )}
       </button>

@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import HoverFadeText from './HoverFadeText'
 
 // Port du hover .cf-card-link-arrow / .cf-mobile-item-arrow de l'ancien
 // StaggeredMenu — un seul composant, tous les CTA du site l'utilisent
@@ -15,7 +16,7 @@ function Arrow() {
 
 type Props = {
   href: string
-  children: React.ReactNode
+  children: string
   solid?: boolean
   external?: boolean
   className?: string
@@ -27,7 +28,7 @@ export default function ArrowButton({ href, children, solid, external, className
   if (external || href.startsWith('http') || href.startsWith('#')) {
     return (
       <a href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined} className={cls}>
-        {children}
+        <HoverFadeText>{children}</HoverFadeText>
         <Arrow />
       </a>
     )
@@ -35,7 +36,7 @@ export default function ArrowButton({ href, children, solid, external, className
 
   return (
     <Link href={href} className={cls}>
-      {children}
+      <HoverFadeText>{children}</HoverFadeText>
       <Arrow />
     </Link>
   )

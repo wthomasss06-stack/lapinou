@@ -1,0 +1,97 @@
+/* ── Bouton magnétique → formulaire de contact (morph) ───────────────
+   Remplace l'ancien bouton "WhatsApp magnétique" (colonne gauche) et
+   l'ancienne carte de formulaire toujours ouverte (colonne droite).
+   Le ressort width/height/opacity est piloté en JS dans
+   ContactMorphButton.tsx (port de contact_lapin.html) ; ce fichier ne
+   fait que l'habiller aux couleurs du projet. ──────────────────────── */
+.footer-contact-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.cm-wrap {
+  position: relative;
+  min-width: 210px;
+  min-height: 56px;
+}
+
+.cm-panel {
+  position: relative;
+  background: rgba(243, 233, 218, 0.04);
+  border: 1px solid rgba(243, 233, 218, 0.15);
+  border-radius: 22px;
+  overflow: hidden;
+  width: 0px;
+  height: 56px;
+  opacity: 0;
+}
+
+.cm-panel-inner { padding: 1.75rem; box-sizing: border-box; }
+
+.cm-form-title {
+  font-family: var(--font-pixel);
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  color: var(--paper);
+  margin-bottom: 1.1rem;
+  line-height: 1.1;
+}
+
+/* Réserve la place du petit rond flèche ancré en bas à droite du panneau,
+   pour que le dernier champ ne se fasse pas recouvrir. */
+.cm-arrow-clearance { height: 56px; }
+
+.cm-btn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 999px;
+  background: var(--rust);
+  border: none;
+  cursor: pointer;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  will-change: transform, width, height;
+}
+
+.cm-state {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  font-family: var(--font-label);
+  font-weight: 800;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.cm-state-closed { opacity: 1; transform: scale(1); }
+.cm-state-closed.is-hidden { opacity: 0; transform: scale(0.85); pointer-events: none; }
+.cm-state-open { opacity: 0; transform: scale(0.4); pointer-events: none; }
+.cm-state-open.is-visible { opacity: 1; transform: scale(1); pointer-events: auto; }
+
+.cm-spinner {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid rgba(58, 47, 34, 0.35);
+  border-top-color: var(--ink);
+  animation: cm-spin 0.7s linear infinite;
+}
+@keyframes cm-spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 900px) {
+  .footer-contact-col { align-items: center; }
+  .cm-wrap { min-width: 190px; }
+}

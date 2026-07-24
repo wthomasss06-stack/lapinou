@@ -4,6 +4,7 @@ import { Search } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import CustomCursor from '@/components/CustomCursor'
 import Footer from '@/components/Footer'
+import HoverFadeText from '@/components/HoverFadeText'
 import RainbowText from '@/components/RainbowText'
 import { CATEGORIES, AIDE_FAQS as FAQS } from '@/lib/aide-faq-data'
 import '@/app/aide/aide.css'
@@ -67,7 +68,7 @@ export default function AideContent() {
                 className={`cat-pill${category === cat ? ' active' : ''}`}
                 onClick={() => setCategory(cat)}
               >
-                {cat}
+                <HoverFadeText>{cat}</HoverFadeText>
               </button>
             ))}
           </div>
@@ -91,7 +92,7 @@ export default function AideContent() {
                         onClick={() => setOpenKey(isOpen ? null : key)}
                         aria-expanded={isOpen}
                       >
-                        {item.q}
+                        <HoverFadeText>{item.q}</HoverFadeText>
                         <span className="faq-icon">{isOpen ? '\u2212' : '+'}</span>
                       </button>
                       <div className={`faq-answer${isOpen ? ' open' : ''}`}>{item.a}</div>

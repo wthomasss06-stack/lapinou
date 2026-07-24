@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import ArrowButton from './ArrowButton'
+import HoverFadeText from './HoverFadeText'
 import { HOME_FAQS as FAQS } from '@/lib/faq-data'
 
 // Port direct de <section id="faq"> (index.html). Version complète et
@@ -37,7 +38,7 @@ export default function FaqSection() {
                 tabIndex={0}
                 onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setOpen(isOpen ? null : i) }}
               >
-                {item.q}
+                <HoverFadeText>{item.q}</HoverFadeText>
               </div>
               <div className={`faq-answer${isOpen ? ' open' : ''}`}>{item.a}</div>
             </div>

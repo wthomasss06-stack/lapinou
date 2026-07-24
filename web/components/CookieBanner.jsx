@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { ShieldCheck } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import HoverFadeText from './HoverFadeText'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'
 const CONSENT_KEY = 'lapinou_cookie_consent'
@@ -63,13 +64,13 @@ export default function CookieBanner() {
                 onClick={() => saveConsent(false)}
                 className="flex-1 px-4 py-2.5 rounded-xl border border-white/15 text-white/60 hover:text-white hover:bg-white/5 transition-colors font-medium text-center"
               >
-                Refuser
+                <HoverFadeText>Refuser</HoverFadeText>
               </button>
               <button
                 onClick={() => saveConsent(true)}
                 className="flex-1 px-4 py-2.5 rounded-xl bg-caramel hover:bg-caramel-hover text-brand-darker font-bold text-center transition-all duration-300 shadow-lg shadow-caramel/20"
               >
-                Accepter
+                <HoverFadeText>Accepter</HoverFadeText>
               </button>
             </div>
           </div>
