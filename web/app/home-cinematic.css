@@ -164,6 +164,7 @@
   line-height: 1.05;
   text-transform: uppercase;
   text-align: center;
+  width: 100%;
   color: var(--current-text, var(--paper));
 }
 .home-cinema .section-desc {
@@ -181,7 +182,7 @@
    --------------------------------------------------------------- */
 
 .home-cinema .hero-section {
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -192,39 +193,66 @@
   overflow: hidden;
   background-color: var(--maroon);
 }
-.home-cinema .hero-video-slide {
+
+/* Fond webp — peint instantanément derrière la grille (visible dans les
+   interstices pendant le zoom-out, et avant que vidéos/images de la
+   grille aient fini de charger). */
+.home-cinema .hero-bg {
   position: absolute;
   inset: 0;
-  transition: opacity 0.7s ease-in-out;
+  z-index: 0;
+  background-image: url('/IMAGES/Snapchat-908462874.webp');
+  background-size: cover;
+  background-position: center;
 }
-.home-cinema .hero-video {
+
+/* Grille spotlight — port de .hero-spotlight-gallery/-col/-item de
+   vrai_hero_pour_akatech.html (variante "01 — L'Original") : surdimensionnée
+   (300%) au repos, se réduit au scroll (voir HeroSection.tsx, scale
+   1→0.5 sur la grille, 1.25→1 sur chaque média) pendant que la section
+   reste pinnée. Remplace l'ancien carousel vidéo plein écran + dots. */
+.home-cinema .hero-spotlight-gallery {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(300% + 2rem);
+  height: calc(300vh + 2rem);
+  display: flex;
+  gap: 1rem;
+  z-index: 1;
+  will-change: transform;
+}
+.home-cinema .hero-spotlight-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: calc(300vh + 2rem);
+  gap: 1rem;
+}
+.home-cinema .hero-spotlight-item {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  border-radius: 14px;
+  background-color: var(--ink);
+}
+.home-cinema .hero-spotlight-item img,
+.home-cinema .hero-spotlight-item video {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.55;
+  will-change: transform;
 }
+
 .home-cinema .hero-scrim {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, rgba(var(--maroon-rgb),0.35) 0%, rgba(var(--ink-rgb),0.55) 55%, var(--maroon) 100%);
-}
-.home-cinema .hero-dots {
-  position: absolute;
-  bottom: 28px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 3;
-  display: flex;
-  gap: 8px;
-}
-.home-cinema .hero-dot {
-  height: 6px;
-  border-radius: 999px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  z-index: 1;
+  background: linear-gradient(to bottom, rgba(var(--maroon-rgb),0.4) 0%, rgba(var(--ink-rgb),0.6) 55%, var(--maroon) 100%);
+  pointer-events: none;
 }
 .home-cinema .title-container { position: relative; z-index: 2; }
 .home-cinema .title-small {
@@ -678,4 +706,5 @@
   .home-cinema .price-card.featured { transform: none; }
   .home-cinema .section-title { font-size: 10vw; }
   .home-cinema .mission-text-huge { font-size: 10vw; }
+  .home-cinema .faq-section { padding: 100px 24px 60px; }
 }

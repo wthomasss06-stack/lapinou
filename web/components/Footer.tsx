@@ -98,7 +98,7 @@ export default function Footer() {
       </div>
 
       <div className="footer-bottom">
-        <RainbowText text="© 2026 Chez Florence — Tous droits réservés" variant="white" className="footer-copyright" />
+        <p className="footer-copyright">© 2026 Chez Florence — Tous droits réservés</p>
       </div>
     </footer>
   )
