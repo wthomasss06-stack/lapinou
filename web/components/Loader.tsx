@@ -172,7 +172,7 @@ export default function Loader() {
     <div id="loader">
       <div id="loader-pre">
         <div className="loader-title-row">
-          <h1 id="loader-title">FLORENCE</h1>
+          <h1 id="loader-title">CHEZ FLORENCE</h1>
           <div className="loader-counter-wrap">
             <span id="loader-counter">000</span>
           </div>
