@@ -18,10 +18,10 @@ gsap.registerPlugin(useGSAP, ScrollTrigger)
 //   Mobile (≤768px) — piste horizontale pinnée (scroll-jack), chaque
 //     carte a son image en fond plein cadre, texte empilé verticalement.
 const GARANTIES = [
-  { num: '01.', title: 'Santé Vérifiée', desc: 'Chaque lapin est examiné avant la vente : poids, pelage et comportement contrôlés avec soin. Aucun animal malade ne quitte notre élevage.', img: '/IMAGES/Snapchat-73962748.webp' },
-  { num: '02.', title: 'Pesée & Classement', desc: 'Chaque lapin est pesé et classé avec précision — du format simple au lot pour les restaurateurs. Pas de surprise sur le poids.', img: '/IMAGES/Snapchat-468138222.webp' },
-  { num: '03.', title: 'Suivi Après-Vente', desc: "Conseils de conservation et d'élevage disponibles après chaque achat. On reste en contact pour vous accompagner.", img: '/IMAGES/Snapchat-533353503.webp' },
-  { num: '04.', title: 'Remise en Main Propre', desc: 'Retrait sur place à Azaguié Gare ou livraison encadrée, selon votre disponibilité et votre zone.', img: '/IMAGES/Snapchat-763078288.webp' },
+  { num: '01.', title: 'Santé Vérifiée', desc: 'Chaque lapin est examiné avant la vente : poids, pelage et comportement contrôlés avec soin. Aucun animal malade ne quitte notre élevage.', img: '/IMAGES/1.webp' },
+  { num: '02.', title: 'Pesée & Classement', desc: 'Chaque lapin est pesé et classé avec précision — du format simple au lot pour les restaurateurs. Pas de surprise sur le poids.', img: '/IMAGES/2.webp' },
+  { num: '03.', title: 'Suivi Après-Vente', desc: "Conseils de conservation et d'élevage disponibles après chaque achat. On reste en contact pour vous accompagner.", img: '/IMAGES/4.webp' },
+  { num: '04.', title: 'Remise en Main Propre', desc: 'Retrait sur place à Azaguié Gare ou livraison encadrée, selon votre disponibilité et votre zone.', img: '/IMAGES/3.webp' },
 ]
 
 // Offset + amortissement — repris tels quels de hover_video.html.

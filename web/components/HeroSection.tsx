@@ -13,9 +13,11 @@ gsap.registerPlugin(useGSAP, SplitText)
 // juste en dessous, dans <TrustMarquee /> (3 bandes défilantes), visibles
 // dès qu'on scrolle d'un cran.
 const SLIDES = [
-  '/IMAGES/Snapchat-1680052335_001.webm',
-  '/IMAGES/Snapchat-1344115952_001.webm',
-  '/IMAGES/Snapchat-1448875183_001.webm',
+  '/IMAGES/1.webm',
+  '/IMAGES/2.webm',
+  '/IMAGES/3.webm',
+  '/IMAGES/4.webm',
+  '/IMAGES/5.webm',
 ]
 
 export default function HeroSection() {
