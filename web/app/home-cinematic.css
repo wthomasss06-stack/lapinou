@@ -41,8 +41,10 @@
 }
 
 /* ---------------------------------------------------------------
-   Loader — cartes empilées + rideau clip-path (remplace l'ancien
-   escalier de colonnes). Adapté de gemini-code-1784134819405.html.
+   Loader — 3 phases fidèles à la variante « 5. Gravité » de
+   gemini-code-1784715349867.html : préchargement (titre+compteur) →
+   rideau 4 bandes en rebond → 5 lapins qui tombent en rebond élastique
+   + logo → rideau final qui remonte pour révéler le Hero.
    --------------------------------------------------------------- */
 
 .home-cinema #loader {
@@ -53,45 +55,23 @@
   top: 0;
   left: 0;
   z-index: 99999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   pointer-events: none;
   overflow: hidden;
   background-color: var(--maroon);
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
 }
 
-.home-cinema .loader-cards {
+/* Phase 1 — préchargement : couvre tout le reste jusqu'à ce qu'il
+   glisse vers le haut (yPercent -100). */
+.home-cinema #loader-pre {
   position: absolute;
   inset: 0;
-}
-.home-cinema .loader-card {
-  /* Le transform (centrage -50%/-50%, rotation d'atterrissage) est
-     entièrement piloté par GSAP (xPercent/yPercent/rotation) — voir
-     Loader.tsx, chorégraphie "Gravité" — pour pouvoir composer la chute
-     (y) et le rebond élastique sans écraser un transform CSS statique. */
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 180px;
-  height: 230px;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-}
-.home-cinema .loader-card:nth-child(1) { margin-left: -170px; margin-top: -60px; }
-.home-cinema .loader-card:nth-child(2) { margin-left: -40px; margin-top: 40px; }
-.home-cinema .loader-card:nth-child(3) { margin-left: 60px; margin-top: -80px; }
-.home-cinema .loader-card:nth-child(4) { margin-left: 170px; margin-top: 30px; }
-.home-cinema .loader-card-solid {
-  width: 100%;
-  height: 100%;
+  z-index: 10;
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: var(--maroon);
 }
-
 .home-cinema .loader-title-row {
   position: relative;
   display: flex;
@@ -115,12 +95,42 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* Phase 2 — rideau : 4 bandes qui se déploient en rebond (bounce.out),
+   du plus clair (dessus) au plus sombre (dessous). */
+.home-cinema .loader-revealer { position: absolute; inset: 0; will-change: clip-path; }
+.home-cinema .loader-revealer-1 { background-color: var(--paper); z-index: 5; }
+.home-cinema .loader-revealer-2 { background-color: var(--caramel); z-index: 4; }
+.home-cinema .loader-revealer-3 { background-color: var(--rust); z-index: 3; }
+.home-cinema .loader-revealer-4 { background-color: var(--maroon); z-index: 2; }
+
+/* Phase 2 — les 5 lapins (rendus détourés, sans cadre photo) + le logo,
+   au-dessus du rideau. Transform entièrement piloté par GSAP
+   (xPercent/yPercent pour le centrage, x/y pour la chute, rotation pour
+   l'atterrissage) — voir Loader.tsx. */
+.home-cinema .loader-items { position: absolute; inset: 0; z-index: 6; }
+.home-cinema .loader-item {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 15vw;
+  min-width: 90px;
+  max-width: 170px;
+  aspect-ratio: 1 / 1;
+  will-change: transform, opacity;
+}
+.home-cinema .loader-logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 130px;
+  height: 130px;
+  z-index: 7;
+  will-change: transform, opacity;
+}
+
 @media (max-width: 640px) {
-  .home-cinema .loader-card { width: 120px; height: 155px; }
-  .home-cinema .loader-card:nth-child(1) { margin-left: -95px; margin-top: -50px; }
-  .home-cinema .loader-card:nth-child(2) { margin-left: -25px; margin-top: 30px; }
-  .home-cinema .loader-card:nth-child(3) { margin-left: 35px; margin-top: -60px; }
-  .home-cinema .loader-card:nth-child(4) { margin-left: 95px; margin-top: 20px; }
+  .home-cinema .loader-item { width: 22vw; min-width: 78px; }
+  .home-cinema .loader-logo { width: 100px; height: 100px; }
 }
 
 /* ---------------------------------------------------------------
@@ -150,7 +160,7 @@
 }
 .home-cinema .section-title {
   font-family: var(--font-pixel);
-  font-size: clamp(2.1rem, 4.5vw, 4rem);
+  font-size: clamp(2.5rem, 5.5vw, 4.8rem);
   line-height: 1.05;
   text-transform: uppercase;
   text-align: center;
@@ -339,32 +349,69 @@
 }
 .home-cinema .garantie-row:last-child { border-bottom: 1px solid rgba(243,233,218,0.18); }
 .home-cinema .garantie-num { font-family: var(--font-pixel); color: var(--current-accent, var(--rust)); font-size: 1.1rem; }
-.home-cinema .garantie-title { font-family: var(--font-display); font-weight: 700; font-size: 1.4rem; transition: color 0.3s ease; }
-.home-cinema .garantie-row:hover .garantie-title { color: var(--rust); }
+
+/* Titre : glisse verticalement et révèle une copie identique qui monte du
+   bas (port de .text-wrapper/.reveal-text dans hover_video.html) ; les
+   autres lignes s'assourdissent tant que la liste est survolée. */
+.home-cinema .garantie-title-wrap {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  line-height: 1.2;
+}
+.home-cinema .garantie-title {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.4rem;
+  transform: translateY(0%);
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), color 0.3s ease;
+}
+.home-cinema .garantie-title.sub {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+}
+.home-cinema .garantie-row:hover .garantie-title { transform: translateY(-100%); color: var(--maroon); }
+.home-cinema .garanties-wrapper.any-active .garantie-title { opacity: 0.4; }
+.home-cinema .garanties-wrapper .garantie-row:hover .garantie-title { opacity: 1; }
+
 .home-cinema .garantie-desc { font-size: 0.9rem; line-height: 1.55; opacity: 0.7; max-width: 26rem; }
 .home-cinema .garantie-row-mobile-bg { display: none; }
 
-.home-cinema .hover-img {
+/* Fenêtre flottante à tranches empilées (port .image-float-window /
+   .image-slice de hover_video.html) — remplace l'ancien crossfade
+   opacité par un défilement directionnel selon l'index survolé. */
+.home-cinema .garantie-image-window {
   display: none;
   position: fixed;
   top: 0;
   left: 0;
-  width: 220px;
-  height: 280px;
-  border-radius: 14px;
-  background-size: cover;
-  background-position: center;
-  transform: translate(-50%, -50%) scale(0.85);
-  opacity: 0;
+  width: 260px;
+  height: 330px;
+  border-radius: 16px;
+  overflow: hidden;
   pointer-events: none;
   z-index: 60;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.85);
   box-shadow: 0 24px 60px rgba(0,0,0,0.5);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1), transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
-.home-cinema .hover-img.active { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.home-cinema .garantie-image-window.active { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.home-cinema .garantie-image-slice {
+  position: absolute;
+  inset: 0;
+  transform: translateY(100%);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.home-cinema .garantie-image-slice.gis-active { transform: translateY(0%); }
+.home-cinema .garantie-image-slice.gis-above { transform: translateY(-100%); }
+.home-cinema .garantie-image-slice.gis-below { transform: translateY(100%); }
 
 @media (min-width: 769px) {
-  .home-cinema .hover-img { display: block; }
+  .home-cinema .garantie-image-window { display: block; }
 }
 
 /* Mobile — piste horizontale pinnée, cartes plein cadre */
@@ -385,7 +432,7 @@
     border: none;
     border-radius: 18px;
     overflow: hidden;
-    color: var(--paper);
+    color: var(--maroon);
   }
   .home-cinema .garantie-row-mobile-bg {
     display: block;
@@ -406,9 +453,11 @@
     z-index: 1;
     color: var(--paper);
   }
-  .home-cinema .garantie-title { font-size: 1.6rem; margin-top: 0.5rem; }
+  .home-cinema .garantie-title-wrap { overflow: visible; }
+  .home-cinema .garantie-title { transform: none; transition: none; opacity: 1 !important; font-size: 1.6rem; margin-top: 0.5rem; }
+  .home-cinema .garantie-title.sub { display: none; }
   .home-cinema .garantie-desc { max-width: none; opacity: 0.85; }
-  .home-cinema .garantie-row:hover .garantie-title { color: var(--paper); }
+  .home-cinema .garantie-row:hover .garantie-title { color: var(--paper); transform: none; }
 }
 
 /* ---------------------------------------------------------------
@@ -627,6 +676,6 @@
   }
   .home-cinema .project-item { flex-basis: 78vw; }
   .home-cinema .price-card.featured { transform: none; }
-  .home-cinema .section-title { font-size: 9vw; }
+  .home-cinema .section-title { font-size: 10vw; }
   .home-cinema .mission-text-huge { font-size: 10vw; }
 }

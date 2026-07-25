@@ -15,7 +15,7 @@ export default function Logo({ size = 56, showText = true, className = '', onCli
   // showText=true  → logo complet (tête + bandeau texte intégré au visuel)
   //                  ratio réel ≈ 0.966:1 (nouveau visuel, quasi carré)
   // showText=false → icône compacte (tête de lapin seule), carrée (1:1)
-  const src = showText ? '/logo.png' : '/logo-icon.png'
+  const src = showText ? '/logo.webp' : '/logo-icon.webp'
   const width = showText ? Math.round(size * 0.966) : size
 
   return (

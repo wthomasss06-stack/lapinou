@@ -83,6 +83,10 @@ nav.cf-card-nav.is-open { mix-blend-mode: difference; }
   box-shadow: 0 4px 16px rgba(var(--lime-rgb, 194,105,61), 0.3);
   transition: transform 0.25s, box-shadow 0.25s;
   text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+  /* Manquait ici : le reste du nav s'inverse en mix-blend-mode mais ce
+     bouton a son propre fond (gradient) donc ne suivait pas — ajouté
+     pour qu'il se fonde comme le reste au lieu de rester plaqué dessus. */
+  mix-blend-mode: difference;
 }
 .cf-nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(var(--lime-rgb, 194,105,61), 0.45); }
 
