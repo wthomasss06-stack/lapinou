@@ -707,3 +707,106 @@
   .home-cinema .mission-text-huge { font-size: 10vw; }
   .home-cinema .faq-section { padding: 100px 24px 60px; }
 }
+
+/* ── Overlay progressif (Variante 02) ── */
+.home-cinema .hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── Titre wrapper : positionné en bas au départ ── */
+.home-cinema .hero-title-wrap {
+  position: absolute;
+  left: 50%;
+  bottom: 18%;
+  transform: translateX(-50%);
+  z-index: 2;
+  width: 100%;
+  text-align: center;
+  padding: 0 2rem;
+  pointer-events: none;
+}
+
+.home-cinema .title-container {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.home-cinema .title-small {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  color: var(--paper);
+  line-height: 1.2;
+  margin-bottom: 0.2rem;
+}
+
+.home-cinema .title-main {
+  font-family: var(--font-pixel);
+  font-size: clamp(2.4rem, 8vw, 6rem);
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--paper);
+  white-space: nowrap;
+}
+
+/* ── Contenu centre : sous-titre + CTA, stable au centre ── */
+.home-cinema .hero-center-content {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  max-width: 36rem;
+  width: 100%;
+  padding: 0 1.5rem;
+  text-align: center;
+}
+
+.home-cinema .hero-footer-text {
+  max-width: 34rem;
+}
+
+.home-cinema .hero-cta-btn {
+  flex-shrink: 0;
+}
+
+/* ── Mobile : repasse en flow normal ── */
+@media (max-width: 768px) {
+  .home-cinema .hero-title-wrap {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    transform: none;
+    padding: 0 1rem;
+    margin-bottom: 1rem;
+  }
+  .home-cinema .hero-center-content {
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    margin-top: 1rem;
+  }
+  .home-cinema .title-main {
+    font-size: clamp(2rem, 12vw, 4rem);
+  }
+}.home-cinema .hero-spotlight-item img,
+.home-cinema .hero-spotlight-item video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  will-change: transform;
+}
