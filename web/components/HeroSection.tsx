@@ -1,41 +1,37 @@
 'use client'
-import { useEffect, useRef, useState } from 'react'
+import { useRef } from 'react'
 import { useGSAP } from '@gsap/react'
 import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
 import RainbowText from './RainbowText'
 
-gsap.registerPlugin(useGSAP, SplitText)
+gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText)
 
-// HERO — plein écran, volontairement épuré : vidéo + titre + sous-titre.
-// Stats et cartes tarifs retirées (elles créaient un hero à rallonge qui
-// débordait du premier écran) — la preuve sociale et les tarifs vivent
-// juste en dessous, dans <TrustMarquee /> (3 bandes défilantes), visibles
-// dès qu'on scrolle d'un cran.
-const SLIDES = [
-  '/IMAGES/1.webm',
-  '/IMAGES/2.webm',
-  '/IMAGES/3.webm',
-  '/IMAGES/4.webm',
-  '/IMAGES/5.webm',
+// HERO — port de la variante "02 — Le Vortex" de vrai_hero_pour_akatech.html :
+// grille spotlight 3×3 surdimensionnée (300%) qui se réduit ET pivote
+// (scale 1→0.4, rotation 0→180) pendant que chaque média contre-pivote
+// (scale 1.25→1, rotation 0→-180) pour rester lisible — section pinnée
+// au scroll (scrub). Remplace l'ancien carousel vidéo plein écran + dots.
+// Uniquement du webp (aucune vidéo) : 9 lecteurs webm simultanés + le
+// scroll-jack aurait été trop lourd pour la perf. Fond webp en couche 0.
+// Titre "FLORENCE" + sous-titre inchangés (reveal élastique au montage,
+// pas lié au scroll — le hero est déjà visible au chargement).
+// Sur mobile, la grille reste figée à son état "réduit" (pas de pin/scrub).
+const GRID_COLS: string[][] = [
+  ['/IMAGES/Snapchat-956074945.webp', '/IMAGES/Snapchat-1244900246.webp', '/IMAGES/Snapchat-533353503.webp'],
+  ['/IMAGES/Snapchat-1244423645.webp', '/IMAGES/4.webp', '/IMAGES/Snapchat-1016404691.webp'],
+  ['/IMAGES/Snapchat-908462874.webp', '/IMAGES/Snapchat-956074945.webp', '/IMAGES/Snapchat-1244900246.webp'],
 ]
 
 export default function HeroSection() {
-  const [cur, setCur] = useState(0)
-  const vidRefs = useRef<(HTMLVideoElement | null)[]>([])
-  const curRef = useRef(0)
-  const busy = useRef(false)
+  const sectionRef = useRef<HTMLElement>(null)
+  const galleryRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => { curRef.current = cur }, [cur])
-  useEffect(() => { vidRefs.current[0]?.play().catch(() => {}) }, [])
-
-  // Titre "élastique" — port de chez_florence_redesign.html : y:60→0,
-  // scale:0.5→1, opacity:0→1, elastic.out(0.75,0.3), stagger 0.015.
-  // Joué une fois au montage (pas au scroll : le hero est déjà visible
-  // au chargement) — les autres grands titres (.elastic-title) reprennent
-  // les mêmes valeurs mais déclenchées au scroll (voir useGsapLenis.ts).
   useGSAP(() => {
     document.fonts.ready.then(() => {
+      // Titre "élastique" — inchangé (voir Footer/GarantiesSection pour
+      // les mêmes valeurs déclenchées au scroll via useGsapLenis.ts).
       const split = SplitText.create('#hero-title', { type: 'chars', charsClass: 'hero-char' })
       gsap.set(split.chars, { y: 60, opacity: 0, scale: 0.5 })
       gsap.to(split.chars, {
@@ -46,33 +42,59 @@ export default function HeroSection() {
         ease: 'elastic.out(0.75, 0.3)',
       })
     })
+
+    const gallery = galleryRef.current
+    const media = gallery?.querySelectorAll<HTMLElement>('.hero-spotlight-item img')
+    if (!gallery || !media) return
+
+    const mm = gsap.matchMedia()
+
+    mm.add('(min-width: 769px)', () => {
+      gsap.set(gallery, { scale: 1, rotation: 0 })
+      gsap.set(media, { scale: 1.25, rotation: 0 })
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top top',
+          end: '+=200%',
+          pin: true,
+          scrub: 1,
+        },
+      })
+      tl.to(gallery, { scale: 0.4, rotation: 180, ease: 'none' }, 0)
+      tl.to(media, { scale: 1, rotation: -180, ease: 'none' }, 0)
+
+      return () => tl.scrollTrigger?.kill()
+    })
+
+    // Mobile : pas de pin/scrub (scroll-jack + rotation sur petit écran =
+    // désagréable), la grille reste figée sur son état "réduit", sans
+    // rotation.
+    mm.add('(max-width: 768px)', () => {
+      gsap.set(gallery, { scale: 0.62, rotation: 0 })
+      gsap.set(media, { scale: 1, rotation: 0 })
+    })
+
+    return () => mm.revert()
   }, [])
 
-  const goTo = (n: number) => {
-    if (busy.current || n === curRef.current) return
-    busy.current = true
-    vidRefs.current[curRef.current]?.pause()
-    const v = vidRefs.current[n]
-    if (v) { v.currentTime = 0; v.play().catch(() => {}) }
-    setCur(n)
-    busy.current = false
-  }
-
   return (
-    <section className="hero-section" id="hero">
-      {SLIDES.map((src, i) => (
-        <div key={src} className="hero-video-slide" style={{ zIndex: i === cur ? 1 : 0, opacity: i === cur ? 1 : 0 }}>
-          <video
-            ref={(el) => { vidRefs.current[i] = el }}
-            src={src}
-            muted
-            playsInline
-            preload={i === 0 ? 'auto' : 'metadata'}
-            onEnded={() => { if (i === curRef.current) goTo((i + 1) % SLIDES.length) }}
-            className="hero-video"
-          />
-        </div>
-      ))}
+    <section className="hero-section" id="hero" ref={sectionRef}>
+      <div className="hero-bg" aria-hidden="true" />
+
+      <div className="hero-spotlight-gallery" ref={galleryRef} aria-hidden="true">
+        {GRID_COLS.map((col, ci) => (
+          <div className="hero-spotlight-col" key={ci}>
+            {col.map((src, ii) => (
+              <div className="hero-spotlight-item" key={ii}>
+                <img src={src} alt="" loading="eager" />
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+
       <div className="hero-scrim" />
 
       <div className="title-container">
@@ -86,18 +108,6 @@ export default function HeroSection() {
         className="hero-sub"
         immediate
       />
-
-      <div className="hero-dots">
-        {SLIDES.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => goTo(i)}
-            className="hero-dot"
-            style={{ width: i === cur ? '28px' : '8px', backgroundColor: i === cur ? 'var(--rust)' : 'rgba(243,233,218,0.3)' }}
-            aria-label={`Diapositive ${i + 1}`}
-          />
-        ))}
-      </div>
 
       <div className="hero-scroll-cue" aria-hidden="true">
         <span />

@@ -18,7 +18,7 @@ export default function MissionSection() {
           </div>
           <div className="mission-description">
             <RainbowText
-              text="Nous élevons et sélectionnons nos lapins avec soin — pesée précise, bonne santé, et un accompagnement complet du choix jusqu'à la vente. L'élevage qui vous connecte directement aux plus beaux lapins, en toute confiance, partout en Côte d'Ivoire."
+              text="Chez Florence est un élevage familial installé à Azaguié Gare, à trente minutes d'Abidjan. Nous élevons et sélectionnons nos lapins de race — Hollandais, Rex, Angora Français — avec la même attention à chaque portée : pesée précise, suivi de santé, accompagnement du choix jusqu'à la remise. Particuliers, restaurateurs ou éleveurs PME repartent avec un lapin dont on connaît l'histoire depuis le premier jour. Retrait sur place à Azaguié Gare ou livraison à Abidjan, Agboville et Adzopé — toujours par WhatsApp, toujours avec la même exigence."
               variant="white"
             />
           </div>
