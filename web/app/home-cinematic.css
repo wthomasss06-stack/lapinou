@@ -508,7 +508,7 @@
 .home-cinema .price-card.featured { border-color: var(--rust); background: rgba(194,114,61,0.08); transform: scale(1.03); }
 .home-cinema .price-badge {
   align-self: flex-start;
-  background: var(--rust);
+  background: var(--muted);
   color: var(--ink);
   font-size: 0.65rem;
   font-weight: 700;
@@ -534,7 +534,7 @@
   letter-spacing: 0.05em;
   transition: opacity 0.3s ease;
 }
-.home-cinema .price-card.featured .price-cta { background: var(--rust); }
+.home-cinema .price-card.featured .price-cta { background: var(--muted); }
 .home-cinema .price-cta:hover { opacity: 0.82; }
 .home-cinema .price-features { list-style: none; display: flex; flex-direction: column; gap: 11px; flex-grow: 1; margin-top: 24px; padding-top: 24px; border-top: 1px solid rgba(243,233,218,0.15); }
 .home-cinema .price-features li { font-size: 0.85rem; opacity: 0.85; padding-left: 20px; position: relative; }
