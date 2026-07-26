@@ -1,5 +1,5 @@
 git add .
-git commit -m "interaction et preloader3"
+git commit -m "hero section et carosel"
 git push
 
 

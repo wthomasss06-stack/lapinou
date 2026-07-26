@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import { useGSAP } from '@gsap/react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -28,6 +28,7 @@ const SLIDES = [
 export default function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null)
   const galleryRef = useRef<HTMLDivElement>(null)
+  const gridVideoRef = useRef<HTMLVideoElement>(null)
 
   /* ── Mobile carousel state ── */
   const [cur, setCur] = useState(0)
@@ -38,7 +39,7 @@ export default function HeroSection() {
   useEffect(() => { curRef.current = cur }, [cur])
   useEffect(() => { vidRefs.current[0]?.play().catch(() => {}) }, [])
 
-  const goTo = (n: number) => {
+  const goTo = useCallback((n: number) => {
     if (busy.current || n === curRef.current) return
     busy.current = true
     vidRefs.current[curRef.current]?.pause()
@@ -46,7 +47,26 @@ export default function HeroSection() {
     if (v) { v.currentTime = 0; v.play().catch(() => {}) }
     setCur(n)
     busy.current = false
-  }
+  }, [])
+
+  /* ── Pause/Play vidéo grille desktop selon visibilité ── */
+  useEffect(() => {
+    const v = gridVideoRef.current
+    if (!v) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          v.play().catch(() => {})
+        } else {
+          v.pause()
+        }
+      },
+      { threshold: 0.1 }
+    )
+    observer.observe(v)
+    return () => observer.disconnect()
+  }, [])
 
   /* ── GSAP : vortex sur desktop, titre élastique sur mobile ── */
   useGSAP(() => {
@@ -189,15 +209,33 @@ export default function HeroSection() {
         <div className="hero-spotlight-gallery" ref={galleryRef} aria-hidden="true">
           {GRID_COLS.map((col, ci) => (
             <div className="hero-spotlight-col" key={ci}>
-              {col.map((src, ii) => (
-                <div className="hero-spotlight-item" key={ii}>
-                  {src && src.endsWith('.webm') ? (
-                    <video src={src} autoPlay muted loop playsInline preload="auto" />
-                  ) : src ? (
-                    <img src={src} alt="" loading="eager" />
-                  ) : null}
-                </div>
-              ))}
+              {col.map((src, ii) => {
+                const isVideo = src && src.endsWith('.webm')
+                const isVisible = ci === 1 && ii === 1 // centre de la grille
+                return (
+                  <div className="hero-spotlight-item" key={ii}>
+                    {isVideo ? (
+                      <video
+                        ref={gridVideoRef}
+                        src={src}
+                        muted
+                        loop
+                        playsInline
+                        preload="metadata"
+                        poster="/IMAGES/Snapchat-908462874.webp"
+                        style={{ transform: 'translateZ(0)' }}
+                      />
+                    ) : src ? (
+                      <img
+                        src={src}
+                        alt=""
+                        loading={isVisible ? 'eager' : 'lazy'}
+                        decoding="async"
+                      />
+                    ) : null}
+                  </div>
+                )
+              })}
             </div>
           ))}
         </div>
@@ -240,8 +278,10 @@ export default function HeroSection() {
               muted
               playsInline
               preload={i === 0 ? 'auto' : 'metadata'}
+              poster="/IMAGES/Snapchat-908462874.webp"
               onEnded={() => { if (i === curRef.current) goTo((i + 1) % SLIDES.length) }}
               className="hero-video"
+              style={{ transform: 'translateZ(0)' }}
             />
           </div>
         ))}
@@ -264,7 +304,6 @@ export default function HeroSection() {
             </svg>
           </span>
         </a>
-        
       </div>
 
       {/* Cue scroll (partagé) */}
