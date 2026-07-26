@@ -5,6 +5,7 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
 import RainbowText from './RainbowText'
+import HoverFadeText from './HoverFadeText'
 
 gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText)
 
@@ -217,7 +218,7 @@ export default function HeroSection() {
             />
           </div>
           <a href="/#lapins" className="hero-cta-btn cf-arrow-btn cf-arrow-btn--solid">
-            Découvrir nos lapins
+            <HoverFadeText>Découvrir nos lapins</HoverFadeText>
             <span className="cf-arrow-btn-circle">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M7 17L17 7M17 7H7M17 7V17" />
@@ -255,17 +256,15 @@ export default function HeroSection() {
           className="hero-sub"
           immediate
         />
-        <div className="hero-dots">
-          {SLIDES.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => goTo(i)}
-              className="hero-dot"
-              style={{ width: i === cur ? '28px' : '8px', backgroundColor: i === cur ? 'var(--rust)' : 'rgba(243,233,218,0.3)' }}
-              aria-label={`Diapositive ${i + 1}`}
-            />
-          ))}
-        </div>
+        <a href="#contact" className="hero-cta-btn cf-arrow-btn cf-arrow-btn--solid hover-target">
+          <HoverFadeText>Commander</HoverFadeText>
+          <span className="cf-arrow-btn-circle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M7 17L17 7M17 7H7M17 7V17" />
+            </svg>
+          </span>
+        </a>
+        
       </div>
 
       {/* Cue scroll (partagé) */}

@@ -12,7 +12,7 @@
 }
 .hfx-word {
   grid-area: 1 / 1 / 2 / 2;
-  display: inline-flex;
+  display: inline-block;
   white-space: nowrap;
 }
 .hfx-word .char { display: inline-block; will-change: transform, opacity; }

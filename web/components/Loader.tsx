@@ -10,8 +10,9 @@ gsap.registerPlugin(useGSAP, SplitText)
 // Refonte fidèle à la variante « 5. Gravité » de gemini-code-1784715349867.html
 // (telle que le fichier la définit, images + logo réels compris), en 3
 // phases séquentielles comme l'original (preloader → intro → hero) :
-//   1. Préchargement : titre "FLORENCE" + compteur 000→100, sur fond
-//      plein. Une fois terminé, glisse vers le haut (expo.inOut).
+//   1. Préchargement : titre "Chez" / "Florence" sur deux lignes (comme
+//      le grand lettrage du footer) + compteur 000→100, sur fond plein.
+//      Une fois terminé, glisse vers le haut (expo.inOut).
 //   2. Intro "Gravité" — reprise à l'identique du bloc `case 5` : 4 bandes
 //      de rideau se déploient en rebond (bounce.out), les 5 lapins
 //      tombent du haut de l'écran (y:-50vh, scale initial 0 comme dans
@@ -172,7 +173,10 @@ export default function Loader() {
     <div id="loader">
       <div id="loader-pre">
         <div className="loader-title-row">
-          <h1 id="loader-title">CHEZ FLORENCE</h1>
+          <h1 id="loader-title">
+            <span className="loader-title-line">Chez</span>
+            <span className="loader-title-line">Florence</span>
+          </h1>
           <div className="loader-counter-wrap">
             <span id="loader-counter">000</span>
           </div>

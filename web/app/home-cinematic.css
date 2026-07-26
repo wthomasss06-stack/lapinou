@@ -615,6 +615,64 @@
 .home-cinema .projects-cta-row { display: flex; justify-content: center; margin-top: 50px; }
 .home-cinema .btn-line { border-bottom: 2px solid currentColor; padding-bottom: 4px; text-decoration: none; color: inherit; font-weight: 700; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.05em; }
 
+/* Galerie circulaire desktop + panneau "carte active" — jamais stylés
+   depuis l'introduction de CircularGallery, d'où le rendu cassé. */
+.home-cinema .lapins-circular-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+/* Le bouton slider vit maintenant ici (sous la galerie) plutôt que dans
+   le header : on annule son position:absolute (top-right du header) pour
+   qu'il rejoigne le flux normal, centré par le flex ci-dessus. */
+.home-cinema .lapins-circular-wrap .carousel-nav {
+  position: static;
+}
+.home-cinema .lapins-active-card {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  text-decoration: none;
+  color: inherit;
+  background: rgba(243,233,218,0.05);
+  border: 1px solid rgba(243,233,218,0.12);
+  border-radius: 16px;
+  padding: 18px 22px;
+  transition: border-color 0.25s ease, background-color 0.25s ease;
+}
+.home-cinema .lapins-active-card:hover { border-color: rgba(243,233,218,0.28); background: rgba(243,233,218,0.08); }
+.home-cinema .lapins-active-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.home-cinema .lapins-active-name { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; }
+.home-cinema .lapins-active-badge {
+  flex-shrink: 0;
+  background: rgba(243,233,218,0.1);
+  color: var(--paper);
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 999px;
+}
+.home-cinema .lapins-active-badge.low { background: var(--rust); color: var(--ink); animation: stockPulse 1s ease-in-out infinite alternate; }
+.home-cinema .lapins-active-sub { margin-top: 6px; font-size: 0.85rem; opacity: 0.65; }
+
+/* Repli mobile : grille de RabbitCard (composant Tailwind autonome, pas
+   besoin de styles ici au-delà de la grille elle-même). */
+.home-cinema .lapins-mobile-grid {
+  display: none;
+}
+@media (max-width: 900px) {
+  .home-cinema .lapins-mobile-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+@media (max-width: 560px) {
+  .home-cinema .lapins-mobile-grid { grid-template-columns: 1fr; }
+}
+
 /* ---------------------------------------------------------------
    TÉMOIGNAGES (No. 09)
    --------------------------------------------------------------- */
@@ -852,6 +910,12 @@
     z-index: 2;
     margin: 12px auto 0;
     padding: 0 1.5rem;
+  }
+
+  .home-cinema .hero-mobile .hero-cta-btn {
+    position: relative;
+    z-index: 2;
+    margin-top: 20px;
   }
 
   .home-cinema .hero-video-slide {
