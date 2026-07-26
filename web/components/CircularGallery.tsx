@@ -23,8 +23,16 @@ const SNAP_EASE = 0.12
 const IDLE_RESUME_DELAY = 2600 // ms avant que l'autoplay reprenne après une interaction
 
 const CircularGallery = forwardRef(function CircularGallery(
-  { items = [], onActiveIndexChange, onItemActivate },
-  ref
+  {
+    items = [],
+    onActiveIndexChange = () => {},
+    onItemActivate = () => {},
+  }: {
+    items: any[]
+    onActiveIndexChange?: (index: number) => void
+    onItemActivate?: (index: number) => void
+  },
+  ref: any
 ) {
   const trackRef = useRef(null)
   const cardRefs = useRef([])
