@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
-import { LayoutDashboard, Rabbit, ClipboardList } from 'lucide-react'
+import Link from 'next/link'
+import { LayoutDashboard, Rabbit, ClipboardList, ChevronRight } from 'lucide-react'
 import AdminGate from '@/components/admin/AdminGate'
 import CustomCursor from '@/components/CustomCursor'
 import DashboardOverview from '@/components/admin/DashboardOverview'
@@ -23,6 +24,13 @@ export default function AdminPage() {
         className="min-h-screen px-4 sm:px-6 py-8 max-w-6xl mx-auto overflow-x-hidden"
         style={{ backgroundColor: 'var(--maroon)' }}
       >
+        {/* Fil d'ariane — retour rapide au site, orientation dans l'espace admin */}
+        <div className="flex items-center gap-1.5 text-xs text-white/35 mb-6">
+          <Link href="/" className="hover:text-white/70 transition-colors">Accueil</Link>
+          <ChevronRight size={12} />
+          <span className="text-white/60">Admin</span>
+        </div>
+
         {/* Tabs — port direct de .tabs/.tab-btn (admin.html) */}
         <div className="flex flex-wrap items-center gap-2 mb-8 pb-5 border-b border-white/[0.08]">
           {TABS.map(({ id, label, icon: Icon }) => (

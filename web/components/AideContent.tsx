@@ -92,7 +92,7 @@ export default function AideContent() {
                         onClick={() => setOpenKey(isOpen ? null : key)}
                         aria-expanded={isOpen}
                       >
-                        <HoverFadeText>{item.q}</HoverFadeText>
+                        {item.q}
                         <span className="faq-icon">{isOpen ? '\u2212' : '+'}</span>
                       </button>
                       <div className={`faq-answer${isOpen ? ' open' : ''}`}>{item.a}</div>

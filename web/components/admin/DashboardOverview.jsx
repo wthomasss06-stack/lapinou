@@ -61,7 +61,10 @@ export default function DashboardOverview() {
     <div className="space-y-6">
       {/* Sélecteur de période */}
       <div className="flex items-center justify-between flex-wrap gap-3">
-        <h2 className="text-2xl font-bold text-white uppercase" style={{ fontFamily: 'var(--font-pixel)' }}>Tableau de bord</h2>
+        <div>
+          <div className="text-[0.68rem] font-bold uppercase tracking-widest text-[var(--rust)] mb-1.5">Vue d&apos;ensemble</div>
+          <h2 className="text-2xl font-bold text-white uppercase" style={{ fontFamily: 'var(--font-pixel)' }}>Tableau de bord</h2>
+        </div>
         <div className="flex gap-1.5 bg-[var(--panel)] rounded-xl p-1 border border-white/[0.08]">
           {RANGE_OPTIONS.map(opt => (
             <button
@@ -78,7 +81,7 @@ export default function DashboardOverview() {
       </div>
 
       {/* KPIs */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
         <KpiCard label="Revenu confirmé" value={formatPrice(kpis.revenueConfirmed)} accent="text-[var(--admin-green)]" />
         <KpiCard label="Revenu livraison" value={formatPrice(kpis.deliveryRevenue)} />
         <KpiCard label="En attente" value={kpis.pendingCount} accent="text-[var(--rust)]" />
