@@ -11,8 +11,8 @@ gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText)
 
 /* ═══ DESKTOP : grille 3×3 du vortex ═══ */
 const GRID_COLS: string[][] = [
-  ['/IMAGES/Snapchat-956074945.webp', '/IMAGES/3.webp', '/IMAGES/Snapchat-533353503.webp'],
-  ['/IMAGES/Snapchat-1244423645.webp', '/IMAGES/3.webm', '/IMAGES/Snapchat-1016404691.webp'],
+  ['/IMAGES/Snapchat-956074945.webp', '/IMAGES/4.webp', '/IMAGES/Snapchat-533353503.webp'],
+  ['/IMAGES/Snapchat-1244423645.webp', '/IMAGES/3.webp', '/IMAGES/Snapchat-1016404691.webp'],
   ['/IMAGES/Snapchat-908462874.webp', '/IMAGES/Snapchat-956074945.webp', '/IMAGES/Snapchat-1244900246.webp'],
 ]
 

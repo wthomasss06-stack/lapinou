@@ -657,20 +657,35 @@
 .home-cinema .lapins-active-badge.low { background: var(--rust); color: var(--ink); animation: stockPulse 1s ease-in-out infinite alternate; }
 .home-cinema .lapins-active-sub { margin-top: 6px; font-size: 0.85rem; opacity: 0.65; }
 
-/* Repli mobile : grille de RabbitCard (composant Tailwind autonome, pas
-   besoin de styles ici au-delà de la grille elle-même). */
-.home-cinema .lapins-mobile-grid {
-  display: none;
-}
+/* Repli mobile : slider horizontal tactile (scroll-snap natif) — pas une
+   grille statique. touch-action:pan-x garantit que le geste ne capture
+   que le swipe horizontal ; un swipe vertical continue de scroller la
+   page normalement, comme demandé. */
+.home-cinema .lapins-mobile-slider { display: none; }
 @media (max-width: 900px) {
-  .home-cinema .lapins-mobile-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
+  .home-cinema .lapins-mobile-slider { display: block; }
+  .home-cinema .lapins-mobile-track {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+    padding: 4px 24px 14px;
+    margin: 0 -24px;
+    scrollbar-width: none;
   }
+  .home-cinema .lapins-mobile-track::-webkit-scrollbar { display: none; }
+  .home-cinema .lapins-mobile-slide {
+    flex: 0 0 78vw;
+    max-width: 320px;
+    scroll-snap-align: center;
+  }
+  .home-cinema .lapins-mobile-nav { margin-top: 18px; }
 }
-@media (max-width: 560px) {
-  .home-cinema .lapins-mobile-grid { grid-template-columns: 1fr; }
+@media (max-width: 400px) {
+  .home-cinema .lapins-mobile-slide { flex-basis: 84vw; }
 }
 
 /* ---------------------------------------------------------------

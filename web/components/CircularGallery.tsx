@@ -138,14 +138,32 @@ const CircularGallery = forwardRef(function CircularGallery(
     window.addEventListener('pointerup', handlePointerUp)
   }
 
+  // ── Molette / trackpad + flèches clavier (port de PHOTO_CIRCULAIRE.html :
+  // wheel + keydown ArrowLeft/ArrowRight en plus du drag). ──
+  const onWheel = useCallback((e: React.WheelEvent) => {
+    e.preventDefault()
+    const delta = e.deltaY || e.deltaX
+    angleRef.current -= delta * 0.06
+    targetAngleRef.current = angleRef.current
+    idleUntilRef.current = performance.now() + IDLE_RESUME_DELAY
+  }, [])
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'ArrowRight') { e.preventDefault(); goToIndex(nearestIndex(angleRef.current) + 1) }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); goToIndex(nearestIndex(angleRef.current) - 1) }
+  }
+
   if (n === 0) return null
 
   return (
     <div
       className="circular-gallery-3d"
       onPointerDown={onPointerDown}
+      onWheel={onWheel}
+      onKeyDown={onKeyDown}
+      tabIndex={0}
       role="region"
-      aria-label="Galerie circulaire des lapins en vedette"
+      aria-label="Galerie circulaire des lapins en vedette — flèches gauche/droite, molette ou glisser pour naviguer"
     >
       <div className="circular-gallery-track" ref={trackRef}>
         {items.map((item, i) => {

@@ -153,7 +153,7 @@ export default function ReservationsManager() {
                   )}
                 </div>
 
-                <div className="flex items-center gap-2 shrink-0">
+                <div className="flex items-center gap-2 flex-wrap shrink-0">
                   {resv.latitude && resv.longitude && (
                     <button
                       onClick={() => toggleMap(resv.id)}
@@ -207,9 +207,10 @@ export default function ReservationsManager() {
                       onClick={() => runAction(resv.id, adminApi.reservations.sold, 'Marqué comme vendu')}
                       disabled={busyId === resv.id}
                       className="btn-neon px-3 py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 disabled:opacity-40"
+                      aria-label="Marquer vendu"
                     >
                       <PackageCheck size={14} />
-                      Marquer vendu
+                      <span className="hidden sm:inline">Marquer vendu</span>
                     </button>
                   )}
                 </div>

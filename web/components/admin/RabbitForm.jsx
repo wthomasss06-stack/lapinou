@@ -243,7 +243,7 @@ export default function RabbitForm({ rabbit, onSaved, onCancel }) {
               onSubmit={handleSubmit}
               className="space-y-4"
             >
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="text-xs text-white/40 uppercase tracking-widest font-mono mb-1.5 block">Nom *</label>
                   <input
@@ -301,7 +301,7 @@ export default function RabbitForm({ rabbit, onSaved, onCancel }) {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="text-xs text-white/40 uppercase tracking-widest font-mono mb-1.5 block">Prix (FCFA) *</label>
                   <input

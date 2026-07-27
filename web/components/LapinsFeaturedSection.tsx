@@ -36,7 +36,16 @@ export default function LapinsFeaturedSection() {
   const [error, setError] = useState(false)
   const [activeIndex, setActiveIndex] = useState(0)
   const galleryRef = useRef<GalleryHandle>(null)
+  const mobileTrackRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
+
+  const scrollMobile = (dir: number) => {
+    const track = mobileTrackRef.current
+    if (!track) return
+    const slide = track.querySelector<HTMLElement>('.lapins-mobile-slide')
+    const step = slide ? slide.offsetWidth + 14 : track.clientWidth * 0.8
+    track.scrollBy({ left: dir * step, behavior: 'smooth' })
+  }
 
   // Desktop : galerie circulaire. Mobile : cartes RabbitCard (grille
   // responsive) — pas de sens à faire tourner l'animation de drag/inertie
@@ -144,10 +153,24 @@ export default function LapinsFeaturedSection() {
           </ul>
         </div>
       ) : (
-        <div className="lapins-mobile-grid">
-          {rabbits.map((rabbit) => (
-            <RabbitCard key={rabbit.slug} rabbit={rabbit} />
-          ))}
+        <div className="lapins-mobile-slider">
+          <div className="lapins-mobile-track" ref={mobileTrackRef}>
+            {rabbits.map((rabbit) => (
+              <div className="lapins-mobile-slide" key={rabbit.slug}>
+                <RabbitCard rabbit={rabbit} />
+              </div>
+            ))}
+          </div>
+          {rabbits.length > 1 && (
+            <div className="carousel-nav lapins-mobile-nav">
+              <button type="button" className="carousel-btn" onClick={() => scrollMobile(-1)} aria-label="Lapin précédent">
+                <ChevronLeft size={18} />
+              </button>
+              <button type="button" className="carousel-btn carousel-btn--accent" onClick={() => scrollMobile(1)} aria-label="Lapin suivant">
+                <ChevronRight size={18} />
+              </button>
+            </div>
+          )}
         </div>
       )}
     </section>

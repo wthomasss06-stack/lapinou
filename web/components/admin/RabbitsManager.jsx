@@ -86,62 +86,106 @@ export default function RabbitsManager() {
           Aucune race enregistrée. Cliquez sur "Ajouter une race" pour commencer.
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-2xl border border-brand-border">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-brand-card text-white/40 text-xs uppercase tracking-wider">
-                <th className="text-left px-4 py-3 font-medium">Nom</th>
-                <th className="text-left px-4 py-3 font-medium">Race</th>
-                <th className="text-left px-4 py-3 font-medium">Genre</th>
-                <th className="text-left px-4 py-3 font-medium">Prix</th>
-                <th className="text-left px-4 py-3 font-medium">Stock</th>
-                <th className="text-left px-4 py-3 font-medium">Statut</th>
-                <th className="text-right px-4 py-3 font-medium">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rabbits.map(rabbit => (
-                <tr key={rabbit.id} className="border-t border-brand-border/50 hover:bg-brand-card/40 transition-colors">
-                  <td className="px-4 py-3 text-white font-medium">{rabbit.name}</td>
-                  <td className="px-4 py-3 text-white/60">{rabbit.breed}</td>
-                  <td className="px-4 py-3 text-white/60">{GENDER_LABEL[rabbit.gender]}</td>
-                  <td className="px-4 py-3 text-caramel font-medium">{formatPrice(rabbit.price)}</td>
-                  <td className="px-4 py-3">
-                    <span className={`font-mono font-bold ${rabbit.stock > 0 ? 'text-white/80' : 'text-white/30'}`}>
-                      {rabbit.stock}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className={`text-[11px] px-2 py-0.5 rounded-full font-medium ${
-                      rabbit.status === 'available' ? 'bg-sage/20 text-sage' : 'bg-white/10 text-white/40'
-                    }`}>
-                      {rabbit.status === 'available' ? 'Disponible' : 'Épuisé'}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <div className="flex justify-end gap-2">
-                      <button
-                        onClick={() => setEditing(rabbit)}
-                        className="p-2 rounded-lg text-white/40 hover:text-caramel hover:bg-caramel/10 transition-colors"
-                        aria-label="Modifier"
-                      >
-                        <Pencil size={14} />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(rabbit)}
-                        disabled={deletingId === rabbit.id}
-                        className="p-2 rounded-lg text-white/40 hover:text-terracotta hover:bg-terracotta/10 transition-colors disabled:opacity-40"
-                        aria-label="Supprimer"
-                      >
-                        <Trash2 size={14} />
-                      </button>
-                    </div>
-                  </td>
+        <>
+          {/* Desktop/tablette : table complète */}
+          <div className="hidden md:block overflow-x-auto rounded-2xl border border-brand-border">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-brand-card text-white/40 text-xs uppercase tracking-wider">
+                  <th className="text-left px-4 py-3 font-medium">Nom</th>
+                  <th className="text-left px-4 py-3 font-medium">Race</th>
+                  <th className="text-left px-4 py-3 font-medium">Genre</th>
+                  <th className="text-left px-4 py-3 font-medium">Prix</th>
+                  <th className="text-left px-4 py-3 font-medium">Stock</th>
+                  <th className="text-left px-4 py-3 font-medium">Statut</th>
+                  <th className="text-right px-4 py-3 font-medium">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {rabbits.map(rabbit => (
+                  <tr key={rabbit.id} className="border-t border-brand-border/50 hover:bg-brand-card/40 transition-colors">
+                    <td className="px-4 py-3 text-white font-medium">{rabbit.name}</td>
+                    <td className="px-4 py-3 text-white/60">{rabbit.breed}</td>
+                    <td className="px-4 py-3 text-white/60">{GENDER_LABEL[rabbit.gender]}</td>
+                    <td className="px-4 py-3 text-caramel font-medium">{formatPrice(rabbit.price)}</td>
+                    <td className="px-4 py-3">
+                      <span className={`font-mono font-bold ${rabbit.stock > 0 ? 'text-white/80' : 'text-white/30'}`}>
+                        {rabbit.stock}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className={`text-[11px] px-2 py-0.5 rounded-full font-medium ${
+                        rabbit.status === 'available' ? 'bg-sage/20 text-sage' : 'bg-white/10 text-white/40'
+                      }`}>
+                        {rabbit.status === 'available' ? 'Disponible' : 'Épuisé'}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <div className="flex justify-end gap-2">
+                        <button
+                          onClick={() => setEditing(rabbit)}
+                          className="p-2 rounded-lg text-white/40 hover:text-caramel hover:bg-caramel/10 transition-colors"
+                          aria-label="Modifier"
+                        >
+                          <Pencil size={14} />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(rabbit)}
+                          disabled={deletingId === rabbit.id}
+                          className="p-2 rounded-lg text-white/40 hover:text-terracotta hover:bg-terracotta/10 transition-colors disabled:opacity-40"
+                          aria-label="Supprimer"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile : cartes empilées — une table à 7 colonnes n'est pas
+              lisible sous md, même avec scroll horizontal. */}
+          <div className="md:hidden space-y-3">
+            {rabbits.map(rabbit => (
+              <div key={rabbit.id} className="bg-brand-card border border-brand-border rounded-2xl p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="text-white font-bold truncate">{rabbit.name}</div>
+                    <div className="text-white/50 text-xs mt-0.5">{rabbit.breed} · {GENDER_LABEL[rabbit.gender]}</div>
+                  </div>
+                  <span className={`shrink-0 text-[11px] px-2 py-0.5 rounded-full font-medium ${
+                    rabbit.status === 'available' ? 'bg-sage/20 text-sage' : 'bg-white/10 text-white/40'
+                  }`}>
+                    {rabbit.status === 'available' ? 'Disponible' : 'Épuisé'}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between mt-3 pt-3 border-t border-brand-border/50 text-sm">
+                  <span className="text-caramel font-bold">{formatPrice(rabbit.price)}</span>
+                  <span className={`font-mono font-bold ${rabbit.stock > 0 ? 'text-white/80' : 'text-white/30'}`}>
+                    {rabbit.stock} en stock
+                  </span>
+                </div>
+                <div className="flex gap-2 mt-3">
+                  <button
+                    onClick={() => setEditing(rabbit)}
+                    className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-semibold text-white/70 bg-white/5 hover:text-caramel transition-colors"
+                  >
+                    <Pencil size={13} /> Modifier
+                  </button>
+                  <button
+                    onClick={() => handleDelete(rabbit)}
+                    disabled={deletingId === rabbit.id}
+                    className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-semibold text-white/70 bg-white/5 hover:text-terracotta transition-colors disabled:opacity-40"
+                  >
+                    <Trash2 size={13} /> Supprimer
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       <AnimatePresence>

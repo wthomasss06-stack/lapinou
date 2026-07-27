@@ -22,6 +22,11 @@
   -webkit-mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
   mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
 }
+.circular-gallery-3d:focus-visible {
+  outline: 2px solid var(--rust);
+  outline-offset: 6px;
+  border-radius: 18px;
+}
 
 .circular-gallery-track {
   position: absolute;
