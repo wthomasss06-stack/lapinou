@@ -1,5 +1,5 @@
 git add .
-git commit -m "hero section et carosel"
+git commit -m "indexation"
 git push
 
 
