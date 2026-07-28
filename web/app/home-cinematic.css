@@ -201,7 +201,7 @@
   position: absolute;
   inset: 0;
   z-index: 0;
-  background-image: url('/IMAGES/Snapchat-908462874.webp');
+  background-image: url('https://res.cloudinary.com/dwuybrjxh/image/upload/f_auto,q_auto/chez-florence/IMAGES/Snapchat-908462874.webp');
   background-size: cover;
   background-position: center;
 }

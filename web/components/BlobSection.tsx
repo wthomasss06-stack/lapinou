@@ -1,4 +1,5 @@
 'use client'
+import { cld } from '@/lib/cloudinary'
 
 // No. 06 — En Mouvement. Le blob (scale 0.12→1 + border-radius organique→0%)
 // est pinné et scrubé, et la vidéo joue/pause selon la visibilité de la
@@ -15,7 +16,7 @@ export default function BlobSection() {
           loop
           playsInline
           preload="metadata"
-          src="/IMAGES/Snapchat-1680052335_001.webm"
+          src={cld('/IMAGES/Snapchat-1680052335_001.webm')}
         />
       </div>
     </section>

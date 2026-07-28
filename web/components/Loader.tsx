@@ -4,6 +4,7 @@ import { useGSAP } from '@gsap/react'
 import { gsap } from 'gsap'
 import { SplitText } from 'gsap/SplitText'
 import Image from 'next/image'
+import { cld } from '@/lib/cloudinary'
 
 gsap.registerPlugin(useGSAP, SplitText)
 
@@ -30,11 +31,11 @@ const LOADER_SEEN_KEY = 'lapinou_loader_seen'
 // Ordre + rôles repris tels quels du fichier de référence (intro-item-1 à
 // 5) : chaque lapin est assigné à une position précise de itemTargets.
 const BUNNIES = [
-  { src: '/IMAGES/loader/bunny-purple.webp' }, // item 1 — haut-gauche
-  { src: '/IMAGES/loader/bunny-amber.webp' },  // item 2 — haut-droite
-  { src: '/IMAGES/loader/bunny-rust.webp' },   // item 3 — bas-gauche
-  { src: '/IMAGES/loader/bunny-red.webp' },    // item 4 — bas-droite
-  { src: '/IMAGES/loader/bunny-marble.png' }, // item 5 — haut-centre
+  { src: cld('/IMAGES/loader/bunny-purple.webp') }, // item 1 — haut-gauche
+  { src: cld('/IMAGES/loader/bunny-amber.webp') },  // item 2 — haut-droite
+  { src: cld('/IMAGES/loader/bunny-rust.webp') },   // item 3 — bas-gauche
+  { src: cld('/IMAGES/loader/bunny-red.webp') },    // item 4 — bas-droite
+  { src: cld('/IMAGES/loader/bunny-marble.png') }, // item 5 — haut-centre
 ]
 
 // Positions cibles — reprises telles quelles de itemTargets dans

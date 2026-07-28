@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import RainbowText from './RainbowText'
+import { cld } from '@/lib/cloudinary'
 
 // Port direct de <section class="mission-section" id="histoire"> (index.html),
 // converti en 2 colonnes : texte à gauche, photo à droite.
@@ -25,7 +26,7 @@ export default function MissionSection() {
         </div>
         <div className="mission-image-col reveal-text">
           <Image
-            src="/IMAGES/eleveur-soin.jpg"
+            src={cld('/IMAGES/eleveur-soin.jpg')}
             alt="Éleveur Chez Florence prenant soin d'un lapin"
             fill
             sizes="(max-width: 900px) 100vw, 45vw"

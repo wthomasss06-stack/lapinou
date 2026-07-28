@@ -1,4 +1,5 @@
 'use client'
+import { cld } from '@/lib/cloudinary'
 
 // No. 04 — Triptyque. Trois panneaux affichent des tranches d'une même
 // composition (déplacées en arrière-plan via CSS) ; au scroll, les deux
@@ -12,15 +13,15 @@ export default function GalerieSection() {
       <div className="triptych-wrapper">
         <div className="trip-panel trip-side">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/IMAGES/Snapchat-90679770.jpg" loading="lazy" alt="Lapin" />
+          <img src={cld('/IMAGES/Snapchat-90679770.jpg')} loading="lazy" alt="Lapin" />
         </div>
         <div className="trip-panel trip-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/IMAGES/Snapchat-1016404691.webp" loading="lazy" alt="Lapin" />
+          <img src={cld('/IMAGES/Snapchat-1016404691.webp')} loading="lazy" alt="Lapin" />
         </div>
         <div className="trip-panel trip-side">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/IMAGES/Snapchat-1244423645.webp" loading="lazy" alt="Lapin" />
+          <img src={cld('/IMAGES/Snapchat-1244423645.webp')} loading="lazy" alt="Lapin" />
         </div>
       </div>
     </section>

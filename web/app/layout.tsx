@@ -5,6 +5,7 @@ import { Toaster } from 'react-hot-toast'
 import CookieBanner from '@/components/CookieBanner'
 import ServiceWorkerRegister from '@/components/ServiceWorkerRegister'
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION, jsonLdScript, getOrganizationJsonLd, getWebsiteJsonLd } from '@/lib/seo'
+import { cld } from '@/lib/cloudinary'
 
 const syne = Syne({
   subsets: ['latin'],
@@ -77,13 +78,13 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     type: 'website',
     locale: 'fr_FR',
-    images: [{ url: '/IMAGES/vente-lapins-affiche.jpg', width: 1376, height: 768, alt: 'Chez Florence — Vente de lapins à Azaguié, Côte d\'Ivoire' }],
+    images: [{ url: cld('/IMAGES/vente-lapins-affiche.jpg'), width: 1376, height: 768, alt: 'Chez Florence — Vente de lapins à Azaguié, Côte d\'Ivoire' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: TITLE,
     description: DESCRIPTION,
-    images: ['/IMAGES/vente-lapins-affiche.jpg'],
+    images: [cld('/IMAGES/vente-lapins-affiche.jpg')],
   },
 }
 

@@ -4,6 +4,8 @@
 // les schemas JSON-LD de chaque page. Si l'adresse, le téléphone ou les
 // tarifs changent, tout se met à jour depuis ce seul fichier.
 
+import { cld } from './cloudinary'
+
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://chez-florence.vercel.app').replace(/\/$/, '')
 
 export const SITE_NAME = 'CHEZ FLORENCE'
@@ -63,7 +65,7 @@ export function getOrganizationJsonLd() {
     '@id': `${SITE_URL}/#organization`,
     name: BUSINESS.name,
     url: SITE_URL,
-    image: `${SITE_URL}/IMAGES/vente-lapins-affiche.jpg`,
+    image: cld('/IMAGES/vente-lapins-affiche.jpg'),
     description: SITE_DESCRIPTION,
     telephone: BUSINESS.telephoneE164,
     email: BUSINESS.email,

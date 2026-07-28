@@ -1,4 +1,5 @@
 'use client'
+import { cld } from '@/lib/cloudinary'
 
 // No. 04 — Portrait. L'iris (clip-path circle 0% → 150%) est pinné et
 // scrubé au scroll par lib/useGsapLenis.ts (ScrollTrigger sur #sec-iris,
@@ -10,7 +11,7 @@ export default function IrisSection() {
       <h2 className="iris-word">CHEZ FLORENCE</h2>
       <div className="takeover-layer iris-mask">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/IMAGES/Snapchat-533353503.webp" loading="lazy" alt="Portrait de lapin" />
+        <img src={cld('/IMAGES/Snapchat-533353503.webp')} loading="lazy" alt="Portrait de lapin" />
       </div>
     </section>
   )

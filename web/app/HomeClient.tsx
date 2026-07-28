@@ -5,6 +5,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
 import { formatWhatsappDisplay } from '@/lib/whatsapp'
+import { cld } from '@/lib/cloudinary'
 
 const WHATSAPP_NUMBER = (process.env.NEXT_PUBLIC_WHATSAPP || '').replace(/\D/g, '')
 const waLink = (text?: string) =>
@@ -439,7 +440,7 @@ export default function HomeClient() {
             <a href={waLink("Bonjour, le lapin Hollandais est-il toujours disponible ?")} target="_blank" rel="noopener noreferrer" className="project-item hover-view">
               <div className="project-img-box">
                 <div className="stock-pill">5 en stock</div>
-                <img src="/IMAGES/hollandais.jpg" alt="Lapin Hollandais noir et blanc, race pure, élevé avec soin à Abidjan" loading="lazy" />
+                <img src={cld('/IMAGES/hollandais.jpg')} alt="Lapin Hollandais noir et blanc, race pure, élevé avec soin à Abidjan" loading="lazy" />
               </div>
               <div className="project-meta"><div>Hollandais</div><div className="p-price">8 500 FCFA</div></div>
               <div className="project-sub">Lot mixte · 1.5 kg · Noir et blanc — Prix net</div>
@@ -448,7 +449,7 @@ export default function HomeClient() {
             <a href={waLink("Bonjour, le lapin Angora français est-il toujours disponible ?")} target="_blank" rel="noopener noreferrer" className="project-item offset hover-view">
               <div className="project-img-box">
                 <div className="stock-pill low">4 en stock</div>
-                <img src="/IMAGES/angora.jpg" alt="Lapin Angora français blanc crème, pelage soyeux, disponible à Abidjan" loading="lazy" />
+                <img src={cld('/IMAGES/angora.jpg')} alt="Lapin Angora français blanc crème, pelage soyeux, disponible à Abidjan" loading="lazy" />
               </div>
               <div className="project-meta"><div>Angora Français</div><div className="p-price">9 000 FCFA</div></div>
               <div className="project-sub">Femelle · 1.8 kg · Blanc crème — Kit toilettage offert</div>
@@ -457,7 +458,7 @@ export default function HomeClient() {
             <a href={waLink("Bonjour, le lapin Rex est-il toujours disponible ?")} target="_blank" rel="noopener noreferrer" className="project-item hover-view">
               <div className="project-img-box">
                 <div className="stock-pill low">3 en stock</div>
-                <img src="/IMAGES/rex.jpg" alt="Lapin Rex gris ardoise, race pure, poids 2.1 kg, élevage Abidjan" loading="lazy" />
+                <img src={cld('/IMAGES/rex.jpg')} alt="Lapin Rex gris ardoise, race pure, poids 2.1 kg, élevage Abidjan" loading="lazy" />
               </div>
               <div className="project-meta"><div>Rex</div><div className="p-price">10 000 FCFA</div></div>
               <div className="project-sub">Mâle · 2.1 kg · Gris ardoise — Prix net</div>
@@ -674,7 +675,7 @@ export default function HomeClient() {
         .hero-section { display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .jellyfish-bg {
             position: absolute; width: 550px; height: 550px;
-            background: url('/IMAGES/hero-bg.jpg') center/cover;
+            background: url('https://res.cloudinary.com/dwuybrjxh/image/upload/f_auto,q_auto/chez-florence/IMAGES/hero-bg.jpg') center/cover;
             mix-blend-mode: multiply; mask-image: radial-gradient(circle, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 70%); -webkit-mask-image: radial-gradient(circle, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 70%);
             opacity: 0.85; pointer-events: none; z-index: 1; transition: transform 0.1s linear;
         }

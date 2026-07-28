@@ -1,24 +1,25 @@
 'use client'
 import { motion } from 'framer-motion'
+import { cld } from '@/lib/cloudinary'
 
 const CARDS = [
   {
     label: '01 — Particuliers',
     title: 'Pour votre\nCuisine',
     desc: 'Une viande saine et savoureuse pour votre famille. Chaque lapin est élevé avec soin, suivi vétérinairement, prêt pour votre table.',
-    img: '/IMAGES/Snapchat-73962748.webp',
+    img: cld('/IMAGES/Snapchat-73962748.webp'),
   },
   {
     label: '02 — Restaurateurs',
     title: 'Pour votre\nCarte',
     desc: 'Approvisionnement régulier, lapins sélectionnés pour la qualité bouchère. Découpe et livraison sur commande partout à Abidjan.',
-    img: '/IMAGES/Snapchat-763078288.webp',
+    img: cld('/IMAGES/Snapchat-763078288.webp'),
   },
   {
     label: '03 — PME & Éleveurs',
     title: 'Démarrez votre\nÉlevage',
     desc: 'Reproducteurs certifiés pour lancer ou agrandir votre ferme. Conseil technique et vente en gros disponibles sur demande.',
-    img: '/IMAGES/Snapchat-908462874.webp',
+    img: cld('/IMAGES/Snapchat-908462874.webp'),
   },
 ]
 

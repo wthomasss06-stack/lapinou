@@ -6,24 +6,25 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
 import RainbowText from './RainbowText'
 import HoverFadeText from './HoverFadeText'
+import { cld } from '@/lib/cloudinary'
 
 gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText)
 
 /* ═══ DESKTOP : grille 3×3 du vortex ═══ */
 const GRID_COLS: string[][] = [
-  ['/IMAGES/Snapchat-956074945.webp', '/IMAGES/3.webp', '/IMAGES/Snapchat-533353503.webp'],
-  ['/IMAGES/Snapchat-1244423645.webp', '/IMAGES/4.webp', '/IMAGES/Snapchat-1016404691.webp'],
-  ['/IMAGES/Snapchat-908462874.webp', '/IMAGES/Snapchat-956074945.webp', '/IMAGES/Snapchat-1244900246.webp'],
+  [cld('/IMAGES/Snapchat-956074945.webp'), cld('/IMAGES/3.webp'), cld('/IMAGES/Snapchat-533353503.webp')],
+  [cld('/IMAGES/Snapchat-1244423645.webp'), cld('/IMAGES/4.webp'), cld('/IMAGES/Snapchat-1016404691.webp')],
+  [cld('/IMAGES/Snapchat-908462874.webp'), cld('/IMAGES/Snapchat-956074945.webp'), cld('/IMAGES/Snapchat-1244900246.webp')],
 ]
 
 /* ═══ MOBILE : slides webm plein écran (aucun souci de perf signalé ici,
    contrairement à la grille desktop — inchangé) ═══ */
 const SLIDES = [
-  '/IMAGES/1.webm',
-  '/IMAGES/2.webm',
-  '/IMAGES/3.webm',
-  '/IMAGES/4.webm',
-  '/IMAGES/5.webm',
+  cld('/IMAGES/1.webm'),
+  cld('/IMAGES/2.webm'),
+  cld('/IMAGES/3.webm'),
+  cld('/IMAGES/4.webm'),
+  cld('/IMAGES/5.webm'),
 ]
 
 export default function HeroSection() {
@@ -243,7 +244,7 @@ export default function HeroSection() {
               muted
               playsInline
               preload={i === 0 ? 'auto' : 'metadata'}
-              poster="/IMAGES/Snapchat-908462874.webp"
+              poster={cld('/IMAGES/Snapchat-908462874.webp')}
               onEnded={() => { if (i === curRef.current) goTo((i + 1) % SLIDES.length) }}
               className="hero-video"
               style={{ transform: 'translateZ(0)' }}
