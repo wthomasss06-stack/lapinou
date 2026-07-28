@@ -11,7 +11,7 @@ export default function HistoireSection() {
 
       <div className="mission-layout">
         <div>
-          <div className="eyebrow">No. 02 — Notre Histoire</div>
+          <div className="eyebrow"> Notre Histoire</div>
           <div className="mission-text-huge reveal-text">
             Nous élevons
             <br />

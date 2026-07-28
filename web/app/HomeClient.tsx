@@ -329,7 +329,7 @@ export default function HomeClient() {
         <section className="mission-section" id="histoire" data-theme="dark">
           <div className="mission-layout">
             <div>
-              <div className="eyebrow">No. 02 — Notre Histoire</div>
+              <div className="eyebrow"> Notre Histoire</div>
               <div className="mission-text-huge reveal-text">Nous élevons<br />avec<br /><span style={{ color: 'var(--accent-orange)' }}>soin.</span></div>
             </div>
             <div className="mission-description">
@@ -380,7 +380,7 @@ export default function HomeClient() {
         <section id="tarifs" data-theme="dark">
           <div className="section-head">
             <div>
-              <div className="eyebrow">No. 05 — Tarifs</div>
+              <div className="eyebrow"> Tarifs</div>
               <h2 className="section-title reveal-text">Un Tarif Pour<br />Chaque Besoin</h2>
             </div>
             <div className="section-desc">Le prix dépend du poids et de la quantité — à l&apos;unité, en duo, ou en gros pour les professionnels.</div>
@@ -430,7 +430,7 @@ export default function HomeClient() {
         <section id="lapins" data-theme="light" style={{ paddingBottom: 100 }}>
           <div className="section-head">
             <div>
-              <div className="eyebrow">No. 08 — Nos Lapins</div>
+              <div className="eyebrow"> Nos Lapins</div>
               <h2 className="section-title reveal-text">En Vedette</h2>
             </div>
             <div className="section-desc">Ajoutés par notre équipe, prêts à la vente. Azaguié Gare.</div>
@@ -473,7 +473,7 @@ export default function HomeClient() {
         <section className="testimonials-section" id="temoignages" data-theme="dark">
           <div className="section-head">
             <div>
-              <div className="eyebrow">No. 09 — Témoignages</div>
+              <div className="eyebrow"> Témoignages</div>
               <h2 className="section-title reveal-text">Ils Nous<br />Font Confiance</h2>
             </div>
           </div>
@@ -518,7 +518,7 @@ export default function HomeClient() {
         <section className="faq-section" id="faq" data-theme="light">
           <div className="section-head">
             <div>
-              <div className="eyebrow">No. 10 — Questions Fréquentes</div>
+              <div className="eyebrow"> Questions Fréquentes</div>
               <h2 className="section-title reveal-text">Vous Avez<br />Des Questions ?</h2>
             </div>
           </div>

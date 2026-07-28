@@ -42,7 +42,7 @@ export default function PricingSection() {
     <section id="tarifs" data-theme="dark">
       <div className="section-head">
         <div>
-          <div className="eyebrow">No. 05 — Tarifs</div>
+          <div className="eyebrow"> Tarifs</div>
           <div className="section-title reveal-text">
             Un Tarif Pour
             <br />

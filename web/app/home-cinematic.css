@@ -615,8 +615,7 @@
 .home-cinema .projects-cta-row { display: flex; justify-content: center; margin-top: 50px; }
 .home-cinema .btn-line { border-bottom: 2px solid currentColor; padding-bottom: 4px; text-decoration: none; color: inherit; font-weight: 700; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.05em; }
 
-/* Galerie circulaire desktop + panneau "carte active" — jamais stylés
-   depuis l'introduction de CircularGallery, d'où le rendu cassé. */
+/* Panneau "carte active" sous la galerie circulaire WebGL */
 .home-cinema .lapins-circular-wrap {
   display: flex;
   flex-direction: column;

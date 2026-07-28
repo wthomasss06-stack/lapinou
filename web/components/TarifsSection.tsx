@@ -22,7 +22,7 @@ export default function TarifsSection() {
     <section id="tarifs" data-theme="maroon">
       <div className="section-head">
         <div>
-          <div className="eyebrow">No. 05 — Tarifs</div>
+          <div className="eyebrow">Tarifs</div>
           <h2 className="section-title reveal-text">
             Un Tarif Pour
             <br />

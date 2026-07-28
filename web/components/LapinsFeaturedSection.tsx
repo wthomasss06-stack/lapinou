@@ -102,7 +102,7 @@ export default function LapinsFeaturedSection() {
     <section id="lapins" data-theme="rust">
       <div className="section-head section-head--carousel">
         <div>
-          <div className="eyebrow">No. 08 — Nos Lapins</div>
+          <div className="eyebrow"> Nos Lapins</div>
           <h2 className="section-title elastic-title">En Vedette</h2>
         </div>
         <RainbowText text="Ajoutés par notre équipe, prêts à la vente. Azaguié Gare." variant="white" className="section-desc" />

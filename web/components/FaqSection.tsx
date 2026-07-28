@@ -16,7 +16,7 @@ export default function FaqSection() {
     <section id="faq" className="faq-section" data-theme="rust">
       <div className="section-head">
         <div>
-          <div className="eyebrow">No. 10 — Questions Fréquentes</div>
+          <div className="eyebrow"> Questions Fréquentes</div>
           <h2 className="section-title reveal-text">
             Vous Avez
             <br />

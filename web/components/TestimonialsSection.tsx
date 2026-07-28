@@ -29,7 +29,7 @@ export default function TestimonialsSection() {
     >
       <div className="section-head">
         <div>
-          <div className="eyebrow">No. 09 — Témoignages</div>
+          <div className="eyebrow"> Témoignages</div>
           <h2 className="section-title reveal-text">
             Ils Nous
             <br />

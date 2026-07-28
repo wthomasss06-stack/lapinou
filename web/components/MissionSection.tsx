@@ -8,7 +8,7 @@ export default function MissionSection() {
     <section className="mission-section" id="histoire" data-theme="maroon">
       <div className="mission-layout">
         <div className="mission-text-col">
-          <div className="eyebrow">No. 02 — Notre Histoire</div>
+          <div className="eyebrow"> Notre Histoire</div>
           <div className="mission-text-huge elastic-title">
             Nous élevons
             <br />
