@@ -314,7 +314,7 @@
 .home-cinema .mission-section { display: flex; flex-direction: column; justify-content: center; }
 .home-cinema .mission-layout {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
+  grid-template-columns: 1.35fr 0.65fr;
   gap: 4rem;
   align-items: center;
   max-width: 78rem;
@@ -331,7 +331,7 @@
   text-align: left;
   color: var(--paper);
 }
-.home-cinema .mission-description { margin-top: 1.75rem; }
+.home-cinema .mission-description { margin-top: 1.75rem; min-height: 7.5rem; }
 .home-cinema .mission-description p {
   font-size: clamp(1rem, 1.6vw, 1.25rem);
   line-height: 1.55;
@@ -341,6 +341,11 @@
   max-width: 32rem;
   margin: 0;
 }
+/* Repli mobile (pas de diaporama) : les 4 paragraphes empilés ont besoin
+   d'un espacement entre eux, contrairement à la version desktop qui
+   n'en affiche qu'un seul à la fois. */
+.home-cinema .mission-description--stacked { display: flex; flex-direction: column; gap: 1rem; }
+
 .home-cinema .mission-image-col {
   position: relative;
   width: 100%;
@@ -349,6 +354,31 @@
   overflow: hidden;
   box-shadow: 0 24px 60px rgba(0,0,0,0.4);
 }
+/* Diaporama desktop : diapositives empilées, fondu croisé au changement
+   de cran (voir MissionSection.tsx — onUpdate du ScrollTrigger pinné). */
+.home-cinema .mission-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.home-cinema .mission-slide.is-active { opacity: 1; z-index: 1; }
+.home-cinema .mission-slide video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.home-cinema .mission-steps-dots { display: flex; gap: 8px; margin-top: 1.75rem; }
+.home-cinema .mission-step-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(243,233,218,0.25);
+  transition: background-color 0.3s ease, width 0.3s ease;
+}
+.home-cinema .mission-step-dot.is-active { background: var(--rust); width: 22px; }
 
 /* ---------------------------------------------------------------
    GARANTIES (No. 03) — bicamérale : lignes + image au survol du
@@ -615,7 +645,8 @@
 .home-cinema .projects-cta-row { display: flex; justify-content: center; margin-top: 50px; }
 .home-cinema .btn-line { border-bottom: 2px solid currentColor; padding-bottom: 4px; text-decoration: none; color: inherit; font-weight: 700; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.05em; }
 
-/* Panneau "carte active" sous la galerie circulaire WebGL */
+/* Galerie circulaire desktop + panneau "carte active" — jamais stylés
+   depuis l'introduction de CircularGallery, d'où le rendu cassé. */
 .home-cinema .lapins-circular-wrap {
   display: flex;
   flex-direction: column;

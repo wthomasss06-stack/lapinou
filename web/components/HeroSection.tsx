@@ -11,12 +11,13 @@ gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText)
 
 /* ═══ DESKTOP : grille 3×3 du vortex ═══ */
 const GRID_COLS: string[][] = [
-  ['/IMAGES/Snapchat-956074945.webp', '/IMAGES/4.webp', '/IMAGES/Snapchat-533353503.webp'],
-  ['/IMAGES/Snapchat-1244423645.webp', '/IMAGES/3.webp', '/IMAGES/Snapchat-1016404691.webp'],
+  ['/IMAGES/Snapchat-956074945.webp', '/IMAGES/3.webp', '/IMAGES/Snapchat-533353503.webp'],
+  ['/IMAGES/Snapchat-1244423645.webp', '/IMAGES/4.webp', '/IMAGES/Snapchat-1016404691.webp'],
   ['/IMAGES/Snapchat-908462874.webp', '/IMAGES/Snapchat-956074945.webp', '/IMAGES/Snapchat-1244900246.webp'],
 ]
 
-/* ═══ MOBILE : slides webm plein écran ═══ */
+/* ═══ MOBILE : slides webm plein écran (aucun souci de perf signalé ici,
+   contrairement à la grille desktop — inchangé) ═══ */
 const SLIDES = [
   '/IMAGES/1.webm',
   '/IMAGES/2.webm',
@@ -28,9 +29,8 @@ const SLIDES = [
 export default function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null)
   const galleryRef = useRef<HTMLDivElement>(null)
-  const gridVideoRef = useRef<HTMLVideoElement>(null)
 
-  /* ── Mobile carousel state ── */
+  /* ── Mobile carousel state (vidéo, inchangé) ── */
   const [cur, setCur] = useState(0)
   const vidRefs = useRef<(HTMLVideoElement | null)[]>([])
   const curRef = useRef(0)
@@ -49,25 +49,6 @@ export default function HeroSection() {
     busy.current = false
   }, [])
 
-  /* ── Pause/Play vidéo grille desktop selon visibilité ── */
-  useEffect(() => {
-    const v = gridVideoRef.current
-    if (!v) return
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          v.play().catch(() => {})
-        } else {
-          v.pause()
-        }
-      },
-      { threshold: 0.1 }
-    )
-    observer.observe(v)
-    return () => observer.disconnect()
-  }, [])
-
   /* ── GSAP : vortex sur desktop, titre élastique sur mobile ── */
   useGSAP(() => {
     const section = sectionRef.current
@@ -83,9 +64,7 @@ export default function HeroSection() {
       if (!gallery) return () => {}
 
       const items = gallery.querySelectorAll<HTMLElement>('.hero-spotlight-item')
-      const imgs = gallery.querySelectorAll<HTMLImageElement | HTMLVideoElement>(
-        '.hero-spotlight-item img, .hero-spotlight-item video'
-      )
+      const imgs = gallery.querySelectorAll<HTMLImageElement>('.hero-spotlight-item img')
       const titleWrap = section.querySelector<HTMLElement>('.hero-desktop .hero-title-wrap')
       const centerContent = section.querySelector<HTMLElement>('.hero-desktop .hero-center-content')
       const heroOverlay = section.querySelector<HTMLElement>('.hero-desktop .hero-overlay')
@@ -210,29 +189,15 @@ export default function HeroSection() {
           {GRID_COLS.map((col, ci) => (
             <div className="hero-spotlight-col" key={ci}>
               {col.map((src, ii) => {
-                const isVideo = src && src.endsWith('.webm')
                 const isVisible = ci === 1 && ii === 1 // centre de la grille
                 return (
                   <div className="hero-spotlight-item" key={ii}>
-                    {isVideo ? (
-                      <video
-                        ref={gridVideoRef}
-                        src={src}
-                        muted
-                        loop
-                        playsInline
-                        preload="metadata"
-                        poster="/IMAGES/Snapchat-908462874.webp"
-                        style={{ transform: 'translateZ(0)' }}
-                      />
-                    ) : src ? (
-                      <img
-                        src={src}
-                        alt=""
-                        loading={isVisible ? 'eager' : 'lazy'}
-                        decoding="async"
-                      />
-                    ) : null}
+                    <img
+                      src={src}
+                      alt=""
+                      loading={isVisible ? 'eager' : 'lazy'}
+                      decoding="async"
+                    />
                   </div>
                 )
               })}
