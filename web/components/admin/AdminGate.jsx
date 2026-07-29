@@ -43,7 +43,7 @@ export default function AdminGate({ children }) {
 
   if (!authed) {
     return (
-      <main className="min-h-screen flex items-center justify-center px-6">
+      <main className="min-h-screen flex items-center justify-center px-6" style={{ backgroundColor: 'var(--maroon)' }}>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -82,7 +82,7 @@ export default function AdminGate({ children }) {
   }
 
   return (
-    <div>
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--maroon)' }}>
       <div className="flex items-center justify-between px-6 py-4 border-b border-brand-border">
         <Logo size={28} />
         <button

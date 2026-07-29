@@ -98,7 +98,10 @@ export default function Footer() {
       </div>
 
       <div className="footer-bottom">
-        <p className="footer-copyright">© 2026 Chez Florence — Tous droits réservés</p>
+        <p className="footer-copyright">
+          © 2026 Chez Florence — Tous droits réservés · Créé par{' '}
+          <a href="https://akatech.vercel.app/" target="_blank" rel="noopener noreferrer" className="hover-target">AKATech Studio</a>
+        </p>
       </div>
     </footer>
   )

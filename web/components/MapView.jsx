@@ -122,6 +122,13 @@ export default function MapView() {
           center,
           zoom: userCoords ? 8 : 11,
           attributionControl: false,
+          // Sans ça, un swipe à un doigt sur la carte (mobile) ou un simple
+          // scroll molette (desktop) déplace/zoome la carte au lieu de faire
+          // défiler la page — piège classique pour une carte encastrée dans
+          // le flux (footer, fiche lapin). Avec cooperativeGestures: il faut
+          // 2 doigts pour déplacer la carte sur tactile, Ctrl/Cmd + molette
+          // pour zoomer sur desktop — la page défile normalement sinon.
+          cooperativeGestures: true,
         })
         map.addControl(new mapboxgl.AttributionControl({ compact: true }), 'bottom-right')
         map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right')
