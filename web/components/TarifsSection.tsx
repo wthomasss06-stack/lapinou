@@ -3,6 +3,8 @@ import { useRef } from 'react'
 import { useTilt3D } from '@/lib/useTilt3D'
 import RainbowText from './RainbowText'
 import HoverFadeText from './HoverFadeText'
+import CharSplitHeading from './CharSplitHeading'
+import { CHEZ_FLORENCE_IMAGE_POOL } from '@/lib/chezFlorenceLetters'
 
 // Section Tarifs restaurée en grille (en plus de la Ligne 2 du
 // TrustMarquee, qui garde le résumé en ticker).
@@ -23,11 +25,12 @@ export default function TarifsSection() {
       <div className="section-head">
         <div>
           <div className="eyebrow">Tarifs</div>
-          <h2 className="section-title reveal-text">
-            Un Tarif Pour
-            <br />
-            Chaque Besoin
-          </h2>
+          <CharSplitHeading
+            lines={['Un Tarif Pour', 'Chaque Besoin']}
+            images={CHEZ_FLORENCE_IMAGE_POOL}
+            as="h2"
+            className="section-title reveal-text"
+          />
         </div>
         <RainbowText
           text="Le prix dépend du poids et de la quantité — à l'unité, en duo, ou en gros pour les professionnels."

@@ -2,6 +2,8 @@
 import { useState } from 'react'
 import ArrowButton from './ArrowButton'
 import { HOME_FAQS as FAQS } from '@/lib/faq-data'
+import CharSplitHeading from './CharSplitHeading'
+import { CHEZ_FLORENCE_IMAGE_POOL } from '@/lib/chezFlorenceLetters'
 
 // Port direct de <section id="faq"> (index.html). Version complète et
 // catégorisée sur /aide — cette section reste volontairement courte (les
@@ -17,11 +19,12 @@ export default function FaqSection() {
       <div className="section-head">
         <div>
           <div className="eyebrow"> Questions Fréquentes</div>
-          <h2 className="section-title reveal-text">
-            Vous Avez
-            <br />
-            Des Questions ?
-          </h2>
+          <CharSplitHeading
+            lines={['Vous Avez', 'Des Questions ?']}
+            images={CHEZ_FLORENCE_IMAGE_POOL}
+            as="h2"
+            className="section-title reveal-text"
+          />
         </div>
       </div>
 

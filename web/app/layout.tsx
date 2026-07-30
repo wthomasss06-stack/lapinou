@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Syne, Space_Grotesk, JetBrains_Mono, Silkscreen } from 'next/font/google'
 import './globals.css'
+import './hover-effects.css'
 import { Toaster } from 'react-hot-toast'
 import CookieBanner from '@/components/CookieBanner'
 import ServiceWorkerRegister from '@/components/ServiceWorkerRegister'

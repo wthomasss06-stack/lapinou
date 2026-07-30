@@ -7,6 +7,8 @@ import Footer from '@/components/Footer'
 import HoverFadeText from '@/components/HoverFadeText'
 import RainbowText from '@/components/RainbowText'
 import { CATEGORIES, AIDE_FAQS as FAQS } from '@/lib/aide-faq-data'
+import CharSplitHeading from '@/components/CharSplitHeading'
+import { CHEZ_FLORENCE_IMAGE_POOL } from '@/lib/chezFlorenceLetters'
 import '@/app/aide/aide.css'
 
 // Logique interactive de /aide (recherche + filtres par catégorie + accordéon).
@@ -43,7 +45,7 @@ export default function AideContent() {
       <main>
         <section className="page-hero">
           <div className="eyebrow">Centre d&apos;Aide</div>
-          <h1 className="page-title">Comment Pouvons-Nous Vous Aider ?</h1>
+          <CharSplitHeading lines={['Comment Pouvons-Nous Vous Aider ?']} images={CHEZ_FLORENCE_IMAGE_POOL} as="h1" className="page-title" />
           <RainbowText
             text="Trouvez rapidement les réponses à vos questions sur l'achat, la livraison et l'élevage de lapins à Abidjan."
             variant="white"
@@ -80,7 +82,7 @@ export default function AideContent() {
           ) : (
             grouped.map(([cat, items]) => (
               <div className="faq-category" key={cat}>
-                <h2 className="cat-title">{cat}</h2>
+                <CharSplitHeading lines={[cat]} images={CHEZ_FLORENCE_IMAGE_POOL} as="h2" className="cat-title" />
                 {items.map((item) => {
                   const key = `${item.category}-${item.q}`
                   const isOpen = openKey === key

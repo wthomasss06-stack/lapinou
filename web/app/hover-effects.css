@@ -1,0 +1,166 @@
+/* ── hover-effects.css ──────────────────────────────────────────────
+   Styles pour 3 effets ajoutés sur demande :
+   1. LetterHoverTitle   — survol par lettre avec image dédiée
+                           (reveal_hover_image_par_lettre.html)
+   2. CharSplitHeading / .hero-char via useGsapLenis.ts
+                         — image au survol du titre, au plus proche du
+                           curseur (teeeextoooo_prooo.html)
+   3. BunnyFountain      — fontaine de lapins en fond de footer
+                           (footer_animated_bunnies.html)
+   ------------------------------------------------------------------ */
+
+/* ── 1. Survol par lettre (image dédiée par lettre) ────────────────── */
+
+.letter-hover-title {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.letter-hover-gap {
+  display: inline-block;
+  width: 0.35em;
+}
+
+.letter-hover-box {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1em;
+  cursor: pointer;
+  transition: width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.letter-hover-box:hover {
+  width: 1.25em;
+}
+
+.letter-hover-char {
+  position: relative;
+  z-index: 2;
+  transition: opacity 0.25s ease, transform 0.3s ease;
+}
+
+.letter-hover-box:hover .letter-hover-char {
+  opacity: 0;
+  transform: scale(0.7);
+}
+
+/* Lettres détourées, fond transparent, format portrait (~0.6 large/haut,
+   voir les fichiers fournis) — contain (pas cover, ça les rognerait) dans
+   une boîte qui dépasse volontairement la ligne de texte, et une ombre
+   portée qui suit la silhouette réelle (drop-shadow) plutôt qu'un
+   box-shadow rectangulaire qui se verrait derrière la transparence. */
+.letter-hover-image {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1.4em;
+  height: 2.3em;
+  object-fit: contain;
+  transform: translate(-50%, -50%) scale(0.6) rotate(-5deg);
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  pointer-events: none;
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.45));
+}
+
+.letter-hover-box:hover .letter-hover-image {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1) rotate(0deg);
+}
+
+/* Variante interactive du grand lettrage footer : le dégradé qui s'estompe
+   vers le bas (.footer-giant-type de base) ne peut pas se combiner
+   proprement avec des lettres qui se remplacent individuellement par une
+   image — couleur pleine à la place, plus simple et fiable. */
+.footer-giant-type.footer-giant-type--interactive {
+  background: none;
+  -webkit-text-fill-color: var(--paper);
+  color: var(--paper);
+  opacity: 0.92;
+}
+
+/* ── 1bis. Image dédiée posée sur des .hero-char existants (Hero) ──── */
+
+.hero-char {
+  position: relative;
+}
+
+.hero-letter-hover-image {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1.3em;
+  height: 2.1em;
+  object-fit: contain;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.7) rotate(-4deg);
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.5));
+  z-index: 3;
+}
+
+.hero-letter-hover-image.is-active {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1) rotate(0deg);
+}
+
+/* ── 2. Image au survol du titre (caractère le plus proche du curseur) ─ */
+
+.hover-char-line {
+  display: block;
+}
+
+.hover-char {
+  display: inline-block;
+}
+
+.hover-char-image {
+  position: absolute;
+  width: 0.95em;
+  height: 1.55em;
+  object-fit: contain;
+  transform: translate(-50%, -50%) scale(0.6) rotate(-6deg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.5));
+  z-index: 5;
+}
+
+.hover-char-image.is-active {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1) rotate(0deg);
+}
+
+/* ── 3. Fontaine de lapins (fond de footer) ────────────────────────── */
+
+.fountain-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.bunny-particle {
+  position: absolute;
+  bottom: -80px;
+  left: 50%;
+  width: 70px;
+  height: 70px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  margin-left: -35px;
+  opacity: 0;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.4));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bunny-particle { display: none; }
+}

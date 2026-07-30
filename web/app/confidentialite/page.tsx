@@ -3,6 +3,8 @@ import CustomCursor from '@/components/CustomCursor'
 import Footer from '@/components/Footer'
 import RainbowText from '@/components/RainbowText'
 import { LegalSectionBlock, type LegalSection } from '@/components/LegalBlocks'
+import CharSplitHeading from '@/components/CharSplitHeading'
+import { CHEZ_FLORENCE_IMAGE_POOL } from '@/lib/chezFlorenceLetters'
 import '@/components/LegalPage.css'
 
 export const metadata = {
@@ -125,7 +127,7 @@ export default function ConfidentialitePage() {
         <div className="breadcrumb"><a href="/">Accueil</a> / <span>Confidentialité</span></div>
         <section className="page-hero">
           <div className="eyebrow">Protection de vos données</div>
-          <h1 className="page-title">Politique de Confidentialité</h1>
+          <CharSplitHeading lines={['Politique de Confidentialité']} images={CHEZ_FLORENCE_IMAGE_POOL} as="h1" className="page-title" />
           <RainbowText
             text="Chez Florence s'engage à protéger vos informations personnelles. Transparence, sécurité et contrôle : voici comment nous traitons vos données."
             variant="white"

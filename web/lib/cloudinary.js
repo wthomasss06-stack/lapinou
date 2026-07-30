@@ -39,5 +39,10 @@ export function cld(localPath, options = {}) {
   const transforms = ['f_auto', 'q_auto']
   if (options.width) transforms.push(`w_${options.width}`)
 
-  return `https://res.cloudinary.com/${CLOUD_NAME}/${resourceType}/upload/${transforms.join(',')}/${BASE_FOLDER}/${base}.${ext}`
+  // Encode chaque segment individuellement (espaces, accents...) sans
+  // toucher aux '/' séparateurs — nécessaire pour des dossiers comme
+  // "CHEZ FLORENCE" (espace dans le nom).
+  const encodedBase = base.split('/').map(encodeURIComponent).join('/')
+
+  return `https://res.cloudinary.com/${CLOUD_NAME}/${resourceType}/upload/${transforms.join(',')}/${BASE_FOLDER}/${encodedBase}.${ext}`
 }

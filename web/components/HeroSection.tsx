@@ -7,6 +7,8 @@ import { SplitText } from 'gsap/SplitText'
 import RainbowText from './RainbowText'
 import HoverFadeText from './HoverFadeText'
 import { cld } from '@/lib/cloudinary'
+import { wireLetterDedicatedHoverImages } from '@/lib/hoverImageChars'
+import { CHEZ_FLORENCE_LETTER_IMAGES } from '@/lib/chezFlorenceLetters'
 
 gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText)
 
@@ -80,6 +82,7 @@ export default function HeroSection() {
         ease: 'power3.out',
       })
 
+      let cleanupLetterHoverDesktop = () => {}
       document.fonts.ready.then(() => {
         try {
           const split = SplitText.create('#hero-title-desktop', { type: 'chars', charsClass: 'hero-char' })
@@ -91,6 +94,7 @@ export default function HeroSection() {
             stagger: 0.015,
             ease: 'elastic.out(0.75, 0.3)',
           })
+          cleanupLetterHoverDesktop = wireLetterDedicatedHoverImages(split.chars, CHEZ_FLORENCE_LETTER_IMAGES)
         } catch (e) {
           console.warn('SplitText non disponible', e)
         }
@@ -146,6 +150,7 @@ export default function HeroSection() {
       scrollTl.to(imgs, { scale: 1, rotation: -180, ease: 'none' }, 0)
 
       return () => {
+        cleanupLetterHoverDesktop()
         scrollTl.kill()
         ScrollTrigger.getAll().forEach(st => {
           if (st.trigger === section) st.kill()
@@ -157,6 +162,7 @@ export default function HeroSection() {
        MOBILE — Slides webm (titre élastique uniquement)
        ═══════════════════════════════════════════════ */
     mm.add('(max-width: 768px)', () => {
+      let cleanupLetterHoverMobile = () => {}
       document.fonts.ready.then(() => {
         try {
           const split = SplitText.create('#hero-title-mobile', { type: 'chars', charsClass: 'hero-char' })
@@ -168,11 +174,12 @@ export default function HeroSection() {
             stagger: 0.015,
             ease: 'elastic.out(0.75, 0.3)',
           })
+          cleanupLetterHoverMobile = wireLetterDedicatedHoverImages(split.chars, CHEZ_FLORENCE_LETTER_IMAGES)
         } catch (e) {
           console.warn('SplitText non disponible', e)
         }
       })
-      return () => {}
+      return () => { cleanupLetterHoverMobile() }
     })
 
     return () => { mm.revert() }

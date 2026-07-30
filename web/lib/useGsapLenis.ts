@@ -4,6 +4,8 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
 import Lenis from 'lenis'
+import { wireHoverImageChars } from './hoverImageChars'
+import { CHEZ_FLORENCE_IMAGE_POOL } from './chezFlorenceLetters'
 
 gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText)
 ScrollTrigger.config({ ignoreMobileResize: true })
@@ -152,6 +154,10 @@ export default function useGsapLenis() {
               toggleActions: 'play none none reverse',
             },
           })
+          // Image au survol du titre (caractère le plus proche du curseur) —
+          // demande "teeeextoooo_prooo.html" appliquée à chaque titre de
+          // section, pool d'images tiré au hasard à chaque survol.
+          cleanupFns.push(wireHoverImageChars(heading, '.hero-char', CHEZ_FLORENCE_IMAGE_POOL))
         })
 
         // Lenis a lui aussi mis en cache la hauteur totale scrollable

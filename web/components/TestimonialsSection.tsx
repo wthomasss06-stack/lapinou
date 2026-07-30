@@ -1,5 +1,7 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
+import CharSplitHeading from './CharSplitHeading'
+import { CHEZ_FLORENCE_IMAGE_POOL } from '@/lib/chezFlorenceLetters'
 
 // Port de <section id="temoignages"> (index.html) — converti en carousel
 // auto-défilant (toutes les 5s), en pause tant que la souris est dessus.
@@ -30,11 +32,12 @@ export default function TestimonialsSection() {
       <div className="section-head">
         <div>
           <div className="eyebrow"> Témoignages</div>
-          <h2 className="section-title reveal-text">
-            Ils Nous
-            <br />
-            Font Confiance
-          </h2>
+          <CharSplitHeading
+            lines={['Ils Nous', 'Font Confiance']}
+            images={CHEZ_FLORENCE_IMAGE_POOL}
+            as="h2"
+            className="section-title reveal-text"
+          />
         </div>
       </div>
 

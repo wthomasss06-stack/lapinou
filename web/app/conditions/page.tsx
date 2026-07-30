@@ -3,6 +3,8 @@ import CustomCursor from '@/components/CustomCursor'
 import Footer from '@/components/Footer'
 import RainbowText from '@/components/RainbowText'
 import { LegalToc, LegalSectionBlock, type LegalSection } from '@/components/LegalBlocks'
+import CharSplitHeading from '@/components/CharSplitHeading'
+import { CHEZ_FLORENCE_IMAGE_POOL } from '@/lib/chezFlorenceLetters'
 import '@/components/LegalPage.css'
 
 export const metadata = {
@@ -153,7 +155,7 @@ export default function ConditionsPage() {
         <div className="breadcrumb"><a href="/">Accueil</a> / <span>Conditions Générales</span></div>
         <section className="page-hero">
           <div className="eyebrow">Cadre Juridique</div>
-          <h1 className="page-title">Conditions Générales de Vente</h1>
+          <CharSplitHeading lines={['Conditions Générales de Vente']} images={CHEZ_FLORENCE_IMAGE_POOL} as="h1" className="page-title" />
           <RainbowText
             text="Les présentes conditions régissent toute commande de lapins effectuée auprès de Chez Florence. En passant commande, vous acceptez l'intégralité de ces conditions."
             variant="white"
