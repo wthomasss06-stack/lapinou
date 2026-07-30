@@ -3,7 +3,7 @@
   "env": {
     "NEXT_PUBLIC_API_URL": "https://lapinou.onrender.com/api",
     "NEXT_PUBLIC_SITE_URL": "https://chez-florence.vercel.app",
-    "NEXT_PUBLIC_WHATSAPP": "2250142507750"
+    "NEXT_PUBLIC_WHATSAPP": "2250142507750",
     "NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME": "dwuybrjxh"
   }
 }
