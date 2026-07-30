@@ -1,4 +1,4 @@
-// fix_prod_photos.js
+// fix_prod_photos.js.
 // Corrige les photos en base de données Neon qui pointent vers /uploads/ local
 // Lance depuis la racine du projet : node fix_prod_photos.js
 
