@@ -209,6 +209,38 @@ footer#contact {
   user-select: none;
 }
 
+/* Force le lettrage sur exactement 2 lignes : CHEZ / FLORENCE */
+.footer-giant-type--interactive {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+.footer-giant-line {
+  white-space: nowrap;
+  display: block;
+  text-align: center;
+  width: 100%;
+  font-family: var(--font-pixel);
+  font-size: clamp(3rem, 13vw, 12rem);
+  line-height: 0.85;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  background: linear-gradient(to bottom, rgba(243,233,218,0.8) 0%, rgba(243,233,218,0.04) 85%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  user-select: none;
+}
+.footer-giant-line .letter-hover-char {
+  background: inherit;
+  -webkit-background-clip: inherit;
+  background-clip: inherit;
+  -webkit-text-fill-color: inherit;
+  color: inherit;
+}
+
 @media (max-width: 900px) {
   .footer-grid { grid-template-columns: 1fr; }
   .footer-nav-grid { grid-template-columns: 1fr 1fr; }
