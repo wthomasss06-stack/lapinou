@@ -1,13 +1,11 @@
 'use client'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { PawPrint, ChevronLeft, ChevronRight } from 'lucide-react'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { rabbitsApi } from '@/lib/api'
-import { isUnavailable, formatPrice, resolvePhotoUrl } from '@/lib/status'
+import { isUnavailable, resolvePhotoUrl } from '@/lib/status'
 import RainbowText from './RainbowText'
-import CircularGallery from './CircularGallery'
+import KineticMarqueeGallery from './KineticMarqueeGallery'
 import RabbitCard from './RabbitCard'
 
 type GalleryItem = {
@@ -21,20 +19,11 @@ type GalleryItem = {
   unavailable: boolean
 }
 
-type GalleryHandle = { next: () => void; prev: () => void }
-
-const LOW_STOCK_THRESHOLD = 2
-
 export default function LapinsFeaturedSection() {
   const [rabbits, setRabbits] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
-  const [activeIndex, setActiveIndex] = useState(0)
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
-  const galleryRef = useRef<GalleryHandle>(null)
   const mobileTrackRef = useRef<HTMLDivElement>(null)
-  const router = useRouter()
 
   const scrollMobile = (dir: number) => {
     const track = mobileTrackRef.current
@@ -72,7 +61,6 @@ export default function LapinsFeaturedSection() {
         const mainPhoto = rabbit.photos?.find((p: any) => p.isMain) || rabbit.photos?.[0]
         const src = mainPhoto ? resolvePhotoUrl(mainPhoto.url) : null
         if (!src) return null
-        const unavailable = isUnavailable(rabbit)
         return {
           image: src,
           slug: rabbit.slug,
@@ -81,37 +69,17 @@ export default function LapinsFeaturedSection() {
           breed: rabbit.breed,
           weight: rabbit.weight,
           stock: rabbit.stock,
-          unavailable,
+          unavailable: isUnavailable(rabbit),
         }
       })
       .filter((item): item is GalleryItem => item !== null)
   }, [rabbits])
 
-  const displayedIndex = hoveredIndex ?? activeIndex
-  const displayedRabbit =
-    galleryItems[displayedIndex] || galleryItems[activeIndex] || galleryItems[0] || null
-
-  const badgeLabel = displayedRabbit
-    ? displayedRabbit.unavailable
-      ? 'Épuisé'
-      : typeof displayedRabbit.stock === 'number'
-        ? `${displayedRabbit.stock} en stock`
-        : null
-    : null
-  const badgeLow =
-    !!displayedRabbit &&
-    !displayedRabbit.unavailable &&
-    typeof displayedRabbit.stock === 'number' &&
-    displayedRabbit.stock > 0 &&
-    displayedRabbit.stock <= LOW_STOCK_THRESHOLD
-
-  const hoveredRabbit = hoveredIndex !== null ? galleryItems[hoveredIndex] : null
-
   return (
     <section id="lapins" data-theme="rust">
       <div className="section-head section-head--carousel">
         <div>
-          <div className="eyebrow"> Nos Lapins</div>
+          <div className="eyebrow">Nos Lapins</div>
           <h2 className="section-title elastic-title">En Vedette</h2>
         </div>
         <RainbowText
@@ -135,99 +103,7 @@ export default function LapinsFeaturedSection() {
           Aucun lapin disponible pour le moment.
         </p>
       ) : isDesktop ? (
-        <div
-          className="lapins-circular-wrap"
-          style={{ position: 'relative' }}
-          onMouseMove={(e) => {
-            const rect = e.currentTarget.getBoundingClientRect()
-            setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top })
-          }}
-        >
-          <CircularGallery
-            ref={galleryRef}
-            items={galleryItems}
-            onActiveIndexChange={setActiveIndex}
-            onHoverIndexChange={setHoveredIndex}
-            onItemActivate={(i: number) => {
-              const r = galleryItems[i]
-              if (r) router.push(`/rabbits/${r.slug}`)
-            }}
-          />
-
-          {/* ── TOOLTIP AU SURVOL : info dès l'entrée sur une carte ── */}
-          {hoveredRabbit && (
-            <div
-              className="lapins-hover-tooltip"
-              style={{
-                left: mousePos.x,
-                top: mousePos.y,
-              }}
-            >
-              <span className="tooltip-name">{hoveredRabbit.name}</span>
-              <span className="tooltip-price">{formatPrice(hoveredRabbit.price)}</span>
-              {hoveredRabbit.breed && (
-                <span className="tooltip-breed">· {hoveredRabbit.breed}</span>
-              )}
-              <span
-                className={`tooltip-stock${
-                  hoveredRabbit.unavailable
-                    ? ' out'
-                    : hoveredRabbit.stock <= LOW_STOCK_THRESHOLD
-                      ? ' low'
-                      : ''
-                }`}
-              >
-                {hoveredRabbit.unavailable
-                  ? 'Épuisé'
-                  : `${hoveredRabbit.stock} en stock`}
-              </span>
-            </div>
-          )}
-
-          {displayedRabbit && (
-            <Link href={`/rabbits/${displayedRabbit.slug}`} className="lapins-active-card">
-              <div className="lapins-active-top">
-                <span className="lapins-active-name">{displayedRabbit.name}</span>
-                {badgeLabel && (
-                  <span className={`lapins-active-badge${badgeLow ? ' low' : ''}`}>
-                    {badgeLabel}
-                  </span>
-                )}
-              </div>
-              <div className="lapins-active-sub">
-                {formatPrice(displayedRabbit.price)}
-                {displayedRabbit.breed ? ` · ${displayedRabbit.breed}` : ''}
-              </div>
-            </Link>
-          )}
-
-          <div className="carousel-nav">
-            <button
-              type="button"
-              className="carousel-btn"
-              onClick={() => galleryRef.current?.prev()}
-              aria-label="Précédent"
-            >
-              <ChevronLeft size={18} />
-            </button>
-            <button
-              type="button"
-              className="carousel-btn carousel-btn--accent"
-              onClick={() => galleryRef.current?.next()}
-              aria-label="Suivant"
-            >
-              <ChevronRight size={18} />
-            </button>
-          </div>
-
-          <ul className="sr-only">
-            {galleryItems.map((r) => (
-              <li key={r.slug}>
-                <Link href={`/rabbits/${r.slug}`}>{r.name}</Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <KineticMarqueeGallery items={galleryItems} />
       ) : (
         <div className="lapins-mobile-slider">
           <div className="lapins-mobile-track" ref={mobileTrackRef}>
