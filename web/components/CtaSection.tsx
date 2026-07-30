@@ -1,7 +1,7 @@
 'use client'
 import { useRef } from 'react'
-import Link from 'next/link'
 import { motion, useScroll, useTransform } from 'framer-motion'
+import ArrowButton from './ArrowButton'
 
 const diagVariant = {
   hidden: { clipPath: 'polygon(0 0, 0 0, 0 100%, 0 100%)' },
@@ -110,18 +110,8 @@ export default function CtaSection() {
           transition={{ duration: 0.7, delay: 0.45, ease: 'easeOut' }}
           className="flex flex-wrap gap-4 justify-center"
         >
-          <Link
-            href="/rabbits"
-            className="inline-flex items-center gap-2 font-mono text-[0.7rem] tracking-[0.2em] uppercase text-white border border-[rgba(var(--green-rgb),0.5)] rounded-full px-8 py-4 hover:bg-[var(--green)] hover:border-[var(--green)] hover:text-[var(--border)] transition-all duration-300"
-          >
-            Voir le catalogue &nbsp;↗
-          </Link>
-          <Link
-            href="#races"
-            className="inline-flex items-center gap-2 font-mono text-[0.7rem] tracking-[0.2em] uppercase text-white/40 border border-white/[0.1] rounded-full px-8 py-4 hover:text-white hover:border-white/30 transition-all duration-300"
-          >
-            Nos races
-          </Link>
+          <ArrowButton href="/rabbits" solid>Voir le catalogue</ArrowButton>
+          <ArrowButton href="#lapins">Nos races</ArrowButton>
         </motion.div>
       </div>
     </section>

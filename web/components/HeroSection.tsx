@@ -9,6 +9,7 @@ import HoverFadeText from './HoverFadeText'
 import { cld } from '@/lib/cloudinary'
 import { wireLetterDedicatedHoverImages } from '@/lib/hoverImageChars'
 import { CHEZ_FLORENCE_LETTER_IMAGES } from '@/lib/chezFlorenceLetters'
+import LetterHoverTitle from './LetterHoverTitle'
 
 gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText)
 
@@ -215,7 +216,12 @@ export default function HeroSection() {
         <div className="hero-scrim" />
         <div className="hero-title-wrap">
           <div className="title-container">
-            <div className="title-small">Chez</div>
+            <LetterHoverTitle
+              as="div"
+              words={['Chez']}
+              letterImages={CHEZ_FLORENCE_LETTER_IMAGES}
+              className="title-small"
+            />
             <h1 id="hero-title-desktop" className="title-main">FLORENCE</h1>
           </div>
         </div>

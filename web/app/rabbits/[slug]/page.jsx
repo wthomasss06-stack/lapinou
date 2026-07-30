@@ -179,7 +179,7 @@ export default async function RabbitDetailPage({ params }) {
 
             {/* Grille Prix & Réservation */}
             <div className="bg-[rgba(243,233,218,0.06)] border border-[rgba(243,233,218,0.14)] rounded-2xl p-5 mb-5">
-              <div className="grid grid-cols-2 gap-4 items-center">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
                 <div>
                   <div className="text-[10px] font-bold uppercase tracking-widest text-white/35 mb-1">Prix de vente</div>
                   <div className={`font-display text-2xl sm:text-3xl font-extrabold ${unavailable ? 'text-white/30' : 'text-caramel'}`}>

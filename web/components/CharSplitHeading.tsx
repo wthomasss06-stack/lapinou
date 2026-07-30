@@ -6,6 +6,11 @@ import { wireHoverImageChars } from '@/lib/hoverImageChars'
 // image flottante au survol du caractère le plus proche du curseur — port
 // de teeeextoooo_prooo.html (Effect 086), voir lib/hoverImageChars.ts.
 //
+// Les lettres sont regroupées par MOT (chaque mot est un bloc insécable) :
+// sur mobile, si une ligne ne tient pas, le retour à la ligne se fait entre
+// les mots, jamais au milieu d'un mot (bug corrigé : "CHAQUE BESOIN" ne se
+// coupe plus en "CHAQUE BESOI" / "N").
+//
 // À utiliser pour les titres qui n'ont PAS déjà de découpage par caractère
 // (.reveal-text, page-title, cat-title...). Les titres portant déjà
 // .elastic-title sont découpés par GSAP SplitText dans useGsapLenis.ts —
@@ -31,11 +36,17 @@ export default function CharSplitHeading({ lines, images, as: Tag = 'h2', classN
     <Tag ref={ref} className={className}>
       {lines.map((line, li) => (
         <span className="hover-char-line" key={li}>
-          {line.split('').map((ch, ci) => (
-            <span className="hover-char" key={ci}>{ch === ' ' ? '\u00A0' : ch}</span>
+          {line.split(' ').map((word, wi, arr) => (
+            <span className="hover-char-word" key={wi}>
+              {word.split('').map((ch, ci) => (
+                <span className="hover-char" key={ci}>{ch}</span>
+              ))}
+              {wi < arr.length - 1 && ' '}
+            </span>
           ))}
         </span>
       ))}
     </Tag>
   )
 }
+

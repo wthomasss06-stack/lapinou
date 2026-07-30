@@ -1,5 +1,5 @@
 'use client'
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import { ChevronLeft, ChevronRight, Maximize2, Images } from 'lucide-react'
 import Lightbox from './Lightbox'
 import HoverFadeText from './HoverFadeText'
@@ -7,11 +7,20 @@ import HoverFadeText from './HoverFadeText'
 export default function RabbitGallery({ photos, title, unavailable, stock }) {
   const [cur, setCur] = useState(0)
   const [lightbox, setLightbox] = useState(null)
+  const [paused, setPaused] = useState(false)
   const total = photos.length
   const touchX = useRef(null)
 
   const prev = useCallback(e => { e?.stopPropagation(); setCur(c => (c - 1 + total) % total) }, [total])
   const next = useCallback(e => { e?.stopPropagation(); setCur(c => (c + 1) % total) }, [total])
+
+  // Défilement automatique — toutes les 4s, en pause au survol (desktop),
+  // pendant un tap tactile, ou tant que la lightbox est ouverte.
+  useEffect(() => {
+    if (total <= 1 || paused || lightbox !== null) return
+    const id = setInterval(() => setCur(c => (c + 1) % total), 4000)
+    return () => clearInterval(id)
+  }, [total, paused, lightbox])
 
   if (!total) {
     return (
@@ -31,12 +40,15 @@ export default function RabbitGallery({ photos, title, unavailable, stock }) {
       <div
         className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-brand-card"
         style={{ cursor: total > 1 ? 'zoom-in' : 'default' }}
-        onTouchStart={e => { touchX.current = e.touches[0].clientX }}
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        onTouchStart={e => { touchX.current = e.touches[0].clientX; setPaused(true) }}
         onTouchEnd={e => {
           if (touchX.current === null) return
           const dx = e.changedTouches[0].clientX - touchX.current
           if (Math.abs(dx) > 40) dx < 0 ? next() : prev()
           touchX.current = null
+          setPaused(false)
         }}
         onClick={() => setLightbox(cur)}
       >

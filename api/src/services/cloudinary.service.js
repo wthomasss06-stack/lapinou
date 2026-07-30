@@ -14,6 +14,28 @@ cloudinary.config({
 
 const FOLDER = 'lapinou/rabbits'
 
+// ─── Filigrane logo — même principe que Nexura (lib/useCloudinaryUpload.js),
+// adapté à l'upload signé côté backend : au lieu de retoucher l'URL après
+// coup, le filigrane est ajouté directement dans la transformation d'upload
+// (le rendu final est déjà celui filigrané, pas besoin d'y repenser ailleurs).
+//
+// Pré-requis (une seule fois) : uploader le logo officiel Chez Florence
+// (idéalement une version simple, sans fond sombre) sur Cloudinary avec le
+// public_id exact "chez-florence/watermark/logo" — dashboard Cloudinary →
+// Media Library → Upload → dossier chez-florence/watermark → renommer en
+// "logo". Tant que ce n'est pas fait, l'overlay est silencieusement ignoré
+// par Cloudinary (pas d'erreur, juste pas de filigrane) — rien ne casse.
+const WATERMARK_PUBLIC_ID = 'lapinou/watermark/logo'
+const WATERMARK_OVERLAY = WATERMARK_PUBLIC_ID.replace(/\//g, ':')
+
+const WATERMARK_TRANSFORM = {
+  overlay: WATERMARK_OVERLAY,
+  width: 130,
+  opacity: 25,
+  gravity: 'center',
+  flags: 'layer_apply',
+}
+
 // ─── Upload d'un buffer image (depuis multer memoryStorage) ──────────────────
 function uploadBuffer(buffer, originalname) {
   return new Promise((resolve, reject) => {
@@ -22,7 +44,10 @@ function uploadBuffer(buffer, originalname) {
         folder: FOLDER,
         resource_type: 'image',
         // Optimisation automatique — même esprit que les transformations Nexura
-        transformation: [{ quality: 'auto', fetch_format: 'auto' }],
+        transformation: [
+          { quality: 'auto', fetch_format: 'auto' },
+          WATERMARK_TRANSFORM,
+        ],
       },
       (err, result) => {
         if (err) return reject(err)

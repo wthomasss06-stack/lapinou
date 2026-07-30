@@ -40,6 +40,7 @@ import LapinsFeaturedSection from '@/components/LapinsFeaturedSection'
 import TestimonialsSection   from '@/components/TestimonialsSection'
 import PosterSection         from '@/components/PosterSection'
 import FaqSection            from '@/components/FaqSection'
+import CtaSection            from '@/components/CtaSection'
 import Footer                from '@/components/Footer'
 import { HOME_FAQS } from '@/lib/faq-data'
 import { SITE_URL, jsonLdScript } from '@/lib/seo'
@@ -143,6 +144,7 @@ export default async function HomePage() {
         <FaqSection />
       </div>
 
+      <CtaSection />
       <Footer />
 
     </main>
