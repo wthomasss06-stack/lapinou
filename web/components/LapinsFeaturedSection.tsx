@@ -12,7 +12,6 @@ import RabbitCard from './RabbitCard'
 
 type GalleryItem = {
   image: string
-  text: string
   slug: string
   name: string
   price: number
@@ -24,17 +23,15 @@ type GalleryItem = {
 
 type GalleryHandle = { next: () => void; prev: () => void }
 
-// "Nos Lapins" — galerie circulaire WebGL (port de PHOTO_CIRCULAIRE.html,
-// voir CircularGallery.jsx : variante "vortex" de courbe + boucle infinie)
-// + boutons précédent/suivant sur desktop. Remplace l'ancien carousel
-// horizontal scroll-snap. Vraies fiches (rabbitsApi, même source que
-// /rabbits/[slug] et SimilarRabbits) : tout ajout côté admin apparaît ici
-// automatiquement.
+const LOW_STOCK_THRESHOLD = 2
+
 export default function LapinsFeaturedSection() {
   const [rabbits, setRabbits] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const [activeIndex, setActiveIndex] = useState(0)
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const galleryRef = useRef<GalleryHandle>(null)
   const mobileTrackRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
@@ -47,9 +44,6 @@ export default function LapinsFeaturedSection() {
     track.scrollBy({ left: dir * step, behavior: 'smooth' })
   }
 
-  // Desktop : galerie circulaire. Mobile : cartes RabbitCard (grille
-  // responsive) — pas de sens à faire tourner l'animation de drag/inertie
-  // du carrousel 3D sur un écran qui ne l'affichera jamais.
   const [isDesktop, setIsDesktop] = useState(true)
   useEffect(() => {
     const mq = window.matchMedia('(min-width: 901px)')
@@ -60,7 +54,8 @@ export default function LapinsFeaturedSection() {
   }, [])
 
   useEffect(() => {
-    rabbitsApi.list({})
+    rabbitsApi
+      .list({})
       .then((r: any) => setRabbits((r.results || []).slice(0, 8)))
       .catch(() => setError(true))
       .finally(() => {
@@ -71,9 +66,6 @@ export default function LapinsFeaturedSection() {
       })
   }, [])
 
-  // Fiches avec photo uniquement — contrairement aux cartes HTML, un plan
-  // WebGL n'a pas de repli "icône" possible sans image. Cas marginal : en
-  // pratique les fiches admin ont (quasi) toujours au moins une photo.
   const galleryItems = useMemo<GalleryItem[]>(() => {
     return rabbits
       .map((rabbit): GalleryItem | null => {
@@ -83,7 +75,6 @@ export default function LapinsFeaturedSection() {
         const unavailable = isUnavailable(rabbit)
         return {
           image: src,
-          text: `${rabbit.name} — ${formatPrice(rabbit.price)}${unavailable ? ' · Épuisé' : ''}`,
           slug: rabbit.slug,
           name: rabbit.name,
           price: rabbit.price,
@@ -96,7 +87,25 @@ export default function LapinsFeaturedSection() {
       .filter((item): item is GalleryItem => item !== null)
   }, [rabbits])
 
-  const activeRabbit = galleryItems[activeIndex] || galleryItems[0] || null
+  const displayedIndex = hoveredIndex ?? activeIndex
+  const displayedRabbit =
+    galleryItems[displayedIndex] || galleryItems[activeIndex] || galleryItems[0] || null
+
+  const badgeLabel = displayedRabbit
+    ? displayedRabbit.unavailable
+      ? 'Épuisé'
+      : typeof displayedRabbit.stock === 'number'
+        ? `${displayedRabbit.stock} en stock`
+        : null
+    : null
+  const badgeLow =
+    !!displayedRabbit &&
+    !displayedRabbit.unavailable &&
+    typeof displayedRabbit.stock === 'number' &&
+    displayedRabbit.stock > 0 &&
+    displayedRabbit.stock <= LOW_STOCK_THRESHOLD
+
+  const hoveredRabbit = hoveredIndex !== null ? galleryItems[hoveredIndex] : null
 
   return (
     <section id="lapins" data-theme="rust">
@@ -105,12 +114,18 @@ export default function LapinsFeaturedSection() {
           <div className="eyebrow"> Nos Lapins</div>
           <h2 className="section-title elastic-title">En Vedette</h2>
         </div>
-        <RainbowText text="Ajoutés par notre équipe, prêts à la vente. Azaguié Gare." variant="white" className="section-desc" />
+        <RainbowText
+          text="Ajoutés par notre équipe, prêts à la vente. Azaguié Gare."
+          variant="white"
+          className="section-desc"
+        />
       </div>
 
       {loading ? (
         <div className="projects-track" aria-hidden="true">
-          {[0, 1, 2].map((i) => <div className="project-skeleton" key={i} />)}
+          {[0, 1, 2].map((i) => (
+            <div className="project-skeleton" key={i} />
+          ))}
         </div>
       ) : error ? (
         <p className="projects-empty">Impossible de charger les lapins pour le moment.</p>
@@ -120,35 +135,96 @@ export default function LapinsFeaturedSection() {
           Aucun lapin disponible pour le moment.
         </p>
       ) : isDesktop ? (
-        <div className="lapins-circular-wrap">
+        <div
+          className="lapins-circular-wrap"
+          style={{ position: 'relative' }}
+          onMouseMove={(e) => {
+            const rect = e.currentTarget.getBoundingClientRect()
+            setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top })
+          }}
+        >
           <CircularGallery
             ref={galleryRef}
             items={galleryItems}
             onActiveIndexChange={setActiveIndex}
+            onHoverIndexChange={setHoveredIndex}
             onItemActivate={(i: number) => {
               const r = galleryItems[i]
               if (r) router.push(`/rabbits/${r.slug}`)
             }}
           />
 
-          
+          {/* ── TOOLTIP AU SURVOL : info dès l'entrée sur une carte ── */}
+          {hoveredRabbit && (
+            <div
+              className="lapins-hover-tooltip"
+              style={{
+                left: mousePos.x,
+                top: mousePos.y,
+              }}
+            >
+              <span className="tooltip-name">{hoveredRabbit.name}</span>
+              <span className="tooltip-price">{formatPrice(hoveredRabbit.price)}</span>
+              {hoveredRabbit.breed && (
+                <span className="tooltip-breed">· {hoveredRabbit.breed}</span>
+              )}
+              <span
+                className={`tooltip-stock${
+                  hoveredRabbit.unavailable
+                    ? ' out'
+                    : hoveredRabbit.stock <= LOW_STOCK_THRESHOLD
+                      ? ' low'
+                      : ''
+                }`}
+              >
+                {hoveredRabbit.unavailable
+                  ? 'Épuisé'
+                  : `${hoveredRabbit.stock} en stock`}
+              </span>
+            </div>
+          )}
+
+          {displayedRabbit && (
+            <Link href={`/rabbits/${displayedRabbit.slug}`} className="lapins-active-card">
+              <div className="lapins-active-top">
+                <span className="lapins-active-name">{displayedRabbit.name}</span>
+                {badgeLabel && (
+                  <span className={`lapins-active-badge${badgeLow ? ' low' : ''}`}>
+                    {badgeLabel}
+                  </span>
+                )}
+              </div>
+              <div className="lapins-active-sub">
+                {formatPrice(displayedRabbit.price)}
+                {displayedRabbit.breed ? ` · ${displayedRabbit.breed}` : ''}
+              </div>
+            </Link>
+          )}
 
           <div className="carousel-nav">
-            <button type="button" className="carousel-btn" onClick={() => galleryRef.current?.prev()} aria-label="Précédent">
+            <button
+              type="button"
+              className="carousel-btn"
+              onClick={() => galleryRef.current?.prev()}
+              aria-label="Précédent"
+            >
               <ChevronLeft size={18} />
             </button>
-            <button type="button" className="carousel-btn carousel-btn--accent" onClick={() => galleryRef.current?.next()} aria-label="Suivant">
+            <button
+              type="button"
+              className="carousel-btn carousel-btn--accent"
+              onClick={() => galleryRef.current?.next()}
+              aria-label="Suivant"
+            >
               <ChevronRight size={18} />
             </button>
           </div>
 
-          {/* Repli accessible + crawlable : la galerie 3D n'est pas
-              nativement lisible par un lecteur d'écran (le JSON-LD de
-              app/page.tsx couvre déjà le SEO structuré ; ceci couvre la
-              navigation clavier/lecteur d'écran réelle). */}
           <ul className="sr-only">
             {galleryItems.map((r) => (
-              <li key={r.slug}><Link href={`/rabbits/${r.slug}`}>{r.name}</Link></li>
+              <li key={r.slug}>
+                <Link href={`/rabbits/${r.slug}`}>{r.name}</Link>
+              </li>
             ))}
           </ul>
         </div>
@@ -163,10 +239,20 @@ export default function LapinsFeaturedSection() {
           </div>
           {rabbits.length > 1 && (
             <div className="carousel-nav lapins-mobile-nav">
-              <button type="button" className="carousel-btn" onClick={() => scrollMobile(-1)} aria-label="Lapin précédent">
+              <button
+                type="button"
+                className="carousel-btn"
+                onClick={() => scrollMobile(-1)}
+                aria-label="Lapin précédent"
+              >
                 <ChevronLeft size={18} />
               </button>
-              <button type="button" className="carousel-btn carousel-btn--accent" onClick={() => scrollMobile(1)} aria-label="Lapin suivant">
+              <button
+                type="button"
+                className="carousel-btn carousel-btn--accent"
+                onClick={() => scrollMobile(1)}
+                aria-label="Lapin suivant"
+              >
                 <ChevronRight size={18} />
               </button>
             </div>

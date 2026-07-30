@@ -1,5 +1,4 @@
 'use client'
-
 import { useEffect, useRef } from 'react'
 import Link from 'next/link'
 import gsap from 'gsap'
@@ -19,20 +18,21 @@ const NAV_LINKS = [
   { label: 'Notre Histoire', href: '/#histoire' },
   { label: 'FAQ', href: '/#faq' },
 ]
-
 const INFO_LINKS = [
   { label: 'Aide', href: '/aide' },
   { label: 'Conditions Générales', href: '/conditions' },
   { label: 'Confidentialité', href: '/confidentialite' },
 ]
 
-// Liste complète de vos images de projectiles
-const PROJECTILE_IMAGES = [
+// ── Toutes les images projectile (loader + curseur txt) ──────────────
+const BUNNY_IMAGES = [
+  // Loader
   '/IMAGES/loader/bunny-marble.png',
   '/IMAGES/loader/bunny-purple.webp',
   '/IMAGES/loader/bunny-red.webp',
   '/IMAGES/loader/bunny-rust.webp',
   '/IMAGES/loader/bunny-amber.webp',
+  // Curseur / projectiles
   '/IMAGES/CURSEUR TEXTE TITRE PROJECTIL/k.webp',
   '/IMAGES/CURSEUR TEXTE TITRE PROJECTIL/kkkk.webp',
   '/IMAGES/CURSEUR TEXTE TITRE PROJECTIL/ll.webp',
@@ -94,141 +94,140 @@ const PROJECTILE_IMAGES = [
   '/IMAGES/CURSEUR TEXTE TITRE PROJECTIL/h.webp',
   '/IMAGES/CURSEUR TEXTE TITRE PROJECTIL/hh.webp',
   '/IMAGES/CURSEUR TEXTE TITRE PROJECTIL/HHHH.webp',
-  '/IMAGES/CURSEUR TEXTE TITRE PROJECTIL/jjjj.webp'
+  '/IMAGES/CURSEUR TEXTE TITRE PROJECTIL/jjjj.webp',
 ]
 
-export default function Footer() {
-  const footerRef = useRef<HTMLElement>(null)
-  const targetTextRef = useRef<HTMLDivElement>(null)
-  const particlesContainerRef = useRef<HTMLDivElement>(null)
+function ProjectileBunnies() {
+  const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const container = particlesContainerRef.current
-    const footer = footerRef.current
-    const targetText = targetTextRef.current
-    if (!container || !footer || !targetText) return
+    if (!containerRef.current) return
+    const container = containerRef.current
+    const particles: HTMLImageElement[] = []
+    const delayedCalls: gsap.core.Tween[] = []
 
-    const numParticles = 40 // Nombre de projectiles simultanés
-    const createdParticles: HTMLImageElement[] = []
-    let ctx = gsap.context(() => {})
+    const numParticles = 70
 
-    const animateParticle = (particle: HTMLImageElement) => {
-      if (!footer || !targetText) return
+    for (let i = 0; i < numParticles; i++) {
+      const img = document.createElement('img')
+      img.className = 'projectile-bunny'
+      img.src = BUNNY_IMAGES[Math.floor(Math.random() * BUNNY_IMAGES.length)]
+      img.alt = ''
+      container.appendChild(img)
+      particles.push(img)
 
-      // Calcul de la hauteur cible pour atteindre exactement le texte
-      const footerRect = footer.getBoundingClientRect()
-      const targetRect = targetText.getBoundingClientRect()
+      const dc = gsap.delayedCall(Math.random() * 2, () => animateParticle(img))
+      delayedCalls.push(dc)
+    }
 
-      // Position Y relative du texte par rapport au bas du footer
-      const targetCenterY = targetRect.top + targetRect.height / 2 - footerRect.top
-      const distanceToTarget = footerRect.height - targetCenterY
+    function animateParticle(particle: HTMLImageElement) {
+      const h = container.offsetHeight || window.innerHeight
+      const w = container.offsetWidth || window.innerWidth
 
-      // Variation aléatoire autour de la zone du texte
-      const topY = -distanceToTarget + (Math.random() * 40 - 20)
-
-      // Source image aléatoire
-      const randomImg = PROJECTILE_IMAGES[Math.floor(Math.random() * PROJECTILE_IMAGES.length)]
-      particle.src = randomImg
-
-      // Réinitialisation de la position
       gsap.set(particle, {
         x: 0,
         y: 50,
         opacity: 1,
-        scale: Math.random() * 0.4 + 0.8, // Taille agrandie
-        rotation: Math.random() * 360
+        scale: Math.random() * 0.6 + 0.4,
+        rotation: Math.random() * 360,
       })
 
-      const launchDuration = Math.random() * 0.35 + 0.25
-      const fallDuration = 0.9
-      const randomX = (Math.random() - 0.5) * (window.innerWidth * 0.8)
+      const launchDuration = Math.random() * 0.3 + 0.2
+      const fallDuration = 1.0
+      const topY = -(Math.random() * (h * 0.7) + h * 0.3)
+      const randomX = (Math.random() - 0.5) * (w * 1.2)
 
-      // Animation X (Dispersion horizontale)
-      gsap.to(particle, {
+      const twX = gsap.to(particle, {
         x: randomX,
-        rotation: (Math.random() - 0.5) * 720,
+        rotation: `+=${(Math.random() - 0.5) * 720}`,
         duration: launchDuration + fallDuration,
-        ease: 'power1.out'
+        ease: 'power1.out',
       })
+      delayedCalls.push(twX)
 
-      // Timeline Y & Opacité
       const tl = gsap.timeline({
         onComplete: () => {
-          gsap.delayedCall(Math.random() * 0.6, () => animateParticle(particle))
-        }
+          const dc = gsap.delayedCall(Math.random() * 0.5, () => animateParticle(particle))
+          delayedCalls.push(dc)
+        },
       })
 
       tl.to(particle, {
         y: topY,
         duration: launchDuration,
-        ease: 'power4.out' // Arrivée rapide au niveau du texte
+        ease: 'power4.out',
       }).to(particle, {
-        y: topY + 150,
+        y: topY + h * 0.15,
         opacity: 0,
         duration: fallDuration,
-        ease: 'power2.in'
+        ease: 'power2.in',
       })
-    }
 
-    // Création des éléments d'images
-    for (let i = 0; i < numParticles; i++) {
-      const img = document.createElement('img')
-      img.classList.add('particle-img')
-      img.alt = ''
-      container.appendChild(img)
-      createdParticles.push(img)
-
-      gsap.delayedCall(Math.random() * 2.5, () => animateParticle(img))
+      delayedCalls.push(tl)
     }
 
     return () => {
-      ctx.revert()
-      createdParticles.forEach((p) => {
-        gsap.killTweensOf(p)
-        p.remove()
-      })
+      delayedCalls.forEach((dc) => dc.kill())
+      gsap.killTweensOf(particles)
+      particles.forEach((p) => p.remove())
     }
   }, [])
 
   return (
-    <footer id="contact" ref={footerRef}>
-      {/* Conteneur des projectiles GSAP */}
-      <div className="particles-overlay" ref={particlesContainerRef} aria-hidden="true" />
+    <div className="projectile-container" aria-hidden="true">
+      <div className="projectile-glow" />
+    </div>
+  )
+}
+
+export default function Footer() {
+  return (
+    <footer id="contact">
+      <ProjectileBunnies />
 
       <div className="footer-main">
         <h2 className="footer-title elastic-title">
-          Parlons de<br />votre lapin.
+          Parlons de
+          <br />
+          votre lapin.
         </h2>
-
-        {/* Cible visée par l'animation GSAP */}
-        <div ref={targetTextRef} className="footer-sub-wrapper">
-          <RainbowText
-            text="Une question sur une race, un prix, une disponibilité ? Écrivez-nous — on vous répond vite."
-            variant="white"
-            className="footer-sub"
-          />
-        </div>
+        <RainbowText
+          text="Une question sur une race, un prix, une disponibilité ? Écrivez-nous — on vous répond vite."
+          variant="white"
+          className="footer-sub"
+        />
 
         <div className="footer-grid">
-          {/* Colonne Contact Gauche */}
+          {/* Colonne info + localisation */}
           <div className="footer-info-col">
             <div className="contact-details">
               <div className="contact-item">
-                <div className="contact-label">Téléphone</div>
-                <div className="contact-value">
-                  <a href="tel:+2250101314063" className="hover-target">+225 01 01 31 40 63</a>
-                </div>
-              </div>
-              <div className="contact-item">
                 <div className="contact-label">Email</div>
                 <div className="contact-value">
-                  <a href="mailto:wthomasss06@gmail.com" className="hover-target">wthomasss06@gmail.com</a>
+                  <a href="mailto:wthomasss06@gmail.com" className="hover-target">
+                    wthomasss06@gmail.com
+                  </a>
                 </div>
               </div>
               <div className="contact-item">
                 <div className="contact-label">WhatsApp</div>
                 <div className="contact-value">
-                  <a href={waHref} target="_blank" rel="noopener noreferrer" className="hover-target">+225 01 42 50 77 50</a>
+                  <a
+                    href={waHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover-target"
+                  >
+                    +225 01 42 50 77 50
+                  </a>
+                </div>
+              </div>
+              <div className="contact-item">
+                <div className="contact-label">Téléphone</div>
+                <div className="contact-value">
+                  <a href="tel:+2250101314063" className="hover-target">
+                    +225 01 01 31 40 63
+                  </a>
                 </div>
               </div>
               <div className="contact-item">
@@ -238,15 +237,14 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Bouton Contact Droite */}
+          {/* Bouton magnétique → formulaire de contact */}
           <div className="footer-contact-col">
             <ContactMorphButton />
           </div>
         </div>
 
-        {/* Grille de navigation : Navigation (Gauche) | Commander (Milieu) | Informations (Droite) */}
+        {/* Grille de navigation — Commander au milieu, Informations à droite */}
         <div className="footer-nav-grid">
-          {/* Colonne Gauche : Navigation */}
           <div className="footer-nav-col">
             <h3>Navigation</h3>
             <ul>
@@ -260,7 +258,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Colonne Milieu : Commander */}
           <div className="footer-nav-col footer-nav-action">
             <h3>Commander</h3>
             <div className="footer-map-card">
@@ -268,7 +265,6 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Colonne Droite : Informations */}
           <div className="footer-nav-col">
             <h3>Informations</h3>
             <ul>
@@ -283,13 +279,20 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="footer-giant-type" aria-hidden="true">CHEZ FLORENCE</div>
+        <div className="footer-giant-type" aria-hidden="true">
+          CHEZ FLORENCE
+        </div>
       </div>
 
       <div className="footer-bottom">
         <p className="footer-copyright">
           © 2026 Chez Florence — Tous droits réservés · Créé par{' '}
-          <a href="https://akatech.vercel.app/" target="_blank" rel="noopener noreferrer" className="hover-target">
+          <a
+            href="https://akatech.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover-target"
+          >
             AKATech Studio
           </a>
         </p>

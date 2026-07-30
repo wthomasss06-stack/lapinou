@@ -9,12 +9,43 @@ footer#contact {
   position: relative;
   overflow: hidden;
 }
+
+/* ── Overlay des projectiles GSAP (Fond rose supprimé) ────── */
+.particles-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+
+/* Style des images projetées (taille agrandie et responsive) */
+.particle-img {
+  position: absolute;
+  bottom: -60px;
+  left: 50%;
+  width: 65px;
+  height: 65px;
+  object-fit: contain;
+  margin-left: -32.5px;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
+}
+
 .footer-main {
   display: flex;
   flex-direction: column;
   align-items: center;
   flex-grow: 1;
+  position: relative;
+  z-index: 3;
 }
+
 .footer-title {
   font-family: var(--font-pixel);
   font-size: clamp(2.6rem, 6vw, 5.2rem);
@@ -25,13 +56,20 @@ footer#contact {
   line-height: 1.05;
   color: var(--paper);
 }
+
+.footer-sub-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 4rem;
+}
+
 .footer-sub {
   text-align: center;
-  max-width: 420px;
+  max-width: 450px;
   font-size: clamp(1.05rem, 2vw, 1.4rem);
   line-height: 1.5;
-  opacity: 0.75;
-  margin-bottom: 4rem;
+  opacity: 0.85;
 }
 
 .footer-grid {
@@ -43,116 +81,76 @@ footer#contact {
   align-items: start;
 }
 
-/* ── Colonne info ────────────────────────────────────────────── */
-.footer-info-col { display: flex; flex-direction: column; align-items: center; gap: 2.5rem; }
+/* ── Colonne info contact ─────────────────────────────────── */
+.footer-info-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.5rem;
+}
+
 .contact-details {
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
+
 .contact-item {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  border-bottom: 1px solid rgba(243,233,218,0.12);
+  border-bottom: 1px solid rgba(243, 233, 218, 0.12);
   padding-bottom: 0.85rem;
   gap: 1rem;
 }
-.contact-label { font-family: var(--font-label); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; opacity: 0.5; flex-shrink: 0; }
-.contact-value { font-size: 0.95rem; text-align: right; }
-.contact-value a { color: var(--paper); text-decoration: none; }
-.contact-value a:hover { color: var(--rust); }
 
-/* ── Formulaire minimaliste — adapté de contact_section_variants.html
-   [PRENUM 4 : MONOCHROME], porté sur paper/ink/rust ────────────── */
-.footer-form-card {
-  background: rgba(243,233,218,0.04);
-  border: 1px solid rgba(243,233,218,0.15);
-  border-radius: 20px;
-  padding: 2.5rem;
-}
-.footer-form { display: flex; flex-direction: column; gap: 1.25rem; }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
-.field-group { display: flex; flex-direction: column; gap: 0.5rem; }
-.field-label {
+.contact-label {
   font-family: var(--font-label);
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  opacity: 0.6;
+  letter-spacing: 1px;
+  opacity: 0.5;
+  flex-shrink: 0;
 }
-.input-minimal {
-  width: 100%;
-  background: transparent;
-  border: 1px solid rgba(243,233,218,0.22);
-  border-radius: 10px;
-  padding: 0.85rem;
-  color: var(--paper);
-  font-family: var(--font-body);
+
+.contact-value {
   font-size: 0.95rem;
-  resize: none;
-  transition: border-color 0.25s ease;
+  text-align: right;
 }
-.input-minimal::placeholder { color: rgba(243,233,218,0.35); }
-.input-minimal:focus { outline: none; border-color: var(--rust); }
 
-.btn-minimal {
-  width: 100%;
-  padding: 1rem;
-  background: var(--paper);
-  color: var(--ink);
-  border: 1px solid var(--paper);
-  border-radius: 10px;
-  font-family: var(--font-label);
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  transition: background-color 0.25s ease, color 0.25s ease;
+.contact-value a {
+  color: var(--paper);
+  text-decoration: none;
+  transition: color 0.2s ease;
 }
-.btn-minimal:hover:not(:disabled) { background: transparent; color: var(--paper); }
-.btn-minimal:disabled { opacity: 0.6; cursor: default; }
 
-.footer-form-error { font-size: 0.82rem; color: var(--rust); text-align: center; }
-.footer-form-success { text-align: center; padding: 2rem 0; display: flex; flex-direction: column; gap: 1.25rem; align-items: center; }
-.footer-form-success p { font-size: 1rem; opacity: 0.85; }
-
-.footer-bottom {
-  display: flex;
-  justify-content: center;
-  border-top: 1px solid rgba(243,233,218,0.15);
-  padding-top: 20px;
-  text-transform: uppercase;
-  margin-top: 4rem;
+.contact-value a:hover {
+  color: var(--rust);
 }
-.footer-copyright { opacity: 1; font-size: 0.85rem; color: var(--paper); }
 
-/* ── Carte carte (Mapbox) — <MapView />, la même que le détail lapin */
+/* ── Carte Mapbox (Commander) ────────────────────────────── */
 .footer-map-card {
-  background: rgba(243,233,218,0.03);
-  border: 1px solid rgba(243,233,218,0.12);
+  background: rgba(243, 233, 218, 0.03);
+  border: 1px solid rgba(243, 233, 218, 0.12);
   border-radius: 16px;
   padding: 0.9rem;
 }
 
-/* ── Grille de navigation — port de .nav-grid (footer.html) ─────── */
+/* ── Grille de navigation : Navigation | Commander | Informations ── */
 .footer-nav-grid {
   width: 100%;
   max-width: 1100px;
   display: grid;
-  grid-template-columns: 1fr 1fr 1.3fr;
+  grid-template-columns: 1fr 1.3fr 1fr;
   gap: 2.5rem;
-  border-top: 1px solid rgba(243,233,218,0.18);
+  border-top: 1px solid rgba(243, 233, 218, 0.18);
   padding-top: 2rem;
   margin-top: 4.5rem;
+  align-items: start;
 }
+
 .footer-nav-col h3 {
   font-family: var(--font-label);
   font-size: 0.75rem;
@@ -162,32 +160,31 @@ footer#contact {
   color: var(--paper);
   opacity: 0.85;
 }
-.footer-nav-col ul { list-style: none; }
-.footer-nav-col ul li { margin-bottom: 0.7rem; }
+
+.footer-nav-col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-nav-col ul li {
+  margin-bottom: 0.7rem;
+}
+
 .footer-nav-col ul li a {
   text-decoration: none;
-  color: rgba(243,233,218,0.65);
+  color: rgba(243, 233, 218, 0.65);
   font-size: 0.92rem;
   transition: color 0.2s ease, padding-left 0.2s ease;
   display: inline-block;
 }
-.footer-nav-col ul li a:hover { color: var(--paper); padding-left: 4px; }
-.footer-nav-action p { font-size: 0.85rem; opacity: 0.6; line-height: 1.5; margin-bottom: 1.1rem; }
-.btn-message {
-  display: inline-block;
-  background: transparent;
-  color: var(--paper);
-  border: 1px solid rgba(243,233,218,0.35);
-  padding: 0.7rem 1.4rem;
-  border-radius: 30px;
-  font-size: 0.82rem;
-  text-decoration: none;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
-}
-.btn-message:hover { background: rgba(243,233,218,0.1); border-color: var(--paper); }
 
-/* ── Gros lettrage — port de .giant-typography (footer.html), dégradé
-   métallique via background-clip:text, sur la palette du projet ─── */
+.footer-nav-col ul li a:hover {
+  color: var(--paper);
+  padding-left: 4px;
+}
+
+/* ── Gros lettrage bas de page ────────────────────────────── */
 .footer-giant-type {
   width: 100%;
   margin-top: 2rem;
@@ -197,7 +194,7 @@ footer#contact {
   text-align: center;
   letter-spacing: -0.02em;
   text-transform: uppercase;
-  background: linear-gradient(to bottom, rgba(243,233,218,0.8) 0%, rgba(243,233,218,0.04) 85%);
+  background: linear-gradient(to bottom, rgba(243, 233, 218, 0.8) 0%, rgba(243, 233, 218, 0.04) 85%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -205,16 +202,60 @@ footer#contact {
   user-select: none;
 }
 
-@media (max-width: 900px) {
-  .footer-grid { grid-template-columns: 1fr; }
-  .footer-nav-grid { grid-template-columns: 1fr 1fr; }
-  .footer-nav-action { grid-column: span 2; }
+.footer-bottom {
+  display: flex;
+  justify-content: center;
+  border-top: 1px solid rgba(243, 233, 218, 0.15);
+  padding-top: 20px;
+  text-transform: uppercase;
+  margin-top: 4rem;
+  position: relative;
+  z-index: 3;
 }
+
+.footer-copyright {
+  opacity: 1;
+  font-size: 0.85rem;
+  color: var(--paper);
+}
+
+/* ── Adaptabilité Responsive ──────────────────────────────── */
+@media (max-width: 900px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .footer-nav-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .footer-nav-action {
+    grid-column: span 2;
+    order: 3;
+  }
+}
+
 @media (max-width: 768px) {
-  footer#contact { padding: 80px 24px 30px; }
-  .form-row { grid-template-columns: 1fr; }
-  .footer-form-card { padding: 1.5rem; }
-  .footer-nav-grid { grid-template-columns: 1fr; margin-top: 3rem; }
-  .footer-nav-action { grid-column: span 1; }
-  .footer-giant-type { margin-top: 1rem; }
+  footer#contact {
+    padding: 80px 24px 30px;
+  }
+
+  .particle-img {
+    width: 48px;
+    height: 48px;
+    margin-left: -24px;
+  }
+
+  .footer-nav-grid {
+    grid-template-columns: 1fr;
+    margin-top: 3rem;
+  }
+
+  .footer-nav-action {
+    grid-column: span 1;
+  }
+
+  .footer-giant-type {
+    margin-top: 1rem;
+  }
 }
