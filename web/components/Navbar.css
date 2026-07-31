@@ -372,12 +372,6 @@ nav.cf-card-nav.is-open {
   pointer-events: none;
   z-index: 9990;
   overflow: hidden;
-  /* Masqué jusqu'au calcul viewport (loader ou SiteChrome). */
-  visibility: hidden;
-}
-
-html[data-nav-ready] .cf-mobile-prelayers {
-  visibility: visible;
 }
 
 .cf-mobile-prelayer {
@@ -385,7 +379,7 @@ html[data-nav-ready] .cf-mobile-prelayers {
   inset: 0;
   width: 100%;
   height: 100%;
-  transform: translate3d(100%, 0, 0);
+  will-change: transform;
 }
 
 .cf-mobile-prelayer--bg {
@@ -407,15 +401,10 @@ html[data-nav-ready] .cf-mobile-prelayers {
   overflow-y: auto;
   z-index: 9999;
   pointer-events: none;
-  transform: translate3d(100%, 0, 0);
-  visibility: hidden;
+  will-change: transform;
 }
 
-html[data-nav-ready] .cf-mobile-panel {
-  visibility: visible;
-}
-
-.cf-mobile-panel[data-open='true'] {
+.cf-mobile-panel.is-open {
   pointer-events: auto;
 }
 
@@ -502,7 +491,6 @@ html[data-nav-ready] .cf-mobile-panel {
   padding: 0.15em 0;
   border-bottom: 1px solid rgba(var(--muted-rgb, 168, 150, 120), 0.15);
   transition: color 0.22s;
-  transform: translate3d(0, 130%, 0) rotate(8deg);
   will-change: transform;
 }
 

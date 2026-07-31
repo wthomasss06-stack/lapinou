@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import CharSplitHeading from './CharSplitHeading'
+import SectionHead from './SectionHead'
 import { CHEZ_FLORENCE_IMAGE_POOL } from '@/lib/chezFlorenceLetters'
 
 // Port de <section id="temoignages"> (index.html) — converti en carousel
@@ -29,17 +30,18 @@ export default function TestimonialsSection() {
       onMouseEnter={() => { pausedRef.current = true }}
       onMouseLeave={() => { pausedRef.current = false }}
     >
-      <div className="section-head">
-        <div>
-          <div className="eyebrow"> Témoignages</div>
+      <SectionHead
+        number={5}
+        eyebrow="Témoignages"
+        title={(
           <CharSplitHeading
             lines={['Ils Nous', 'Font Confiance']}
             images={CHEZ_FLORENCE_IMAGE_POOL}
             as="h2"
             className="section-title reveal-text"
           />
-        </div>
-      </div>
+        )}
+      />
 
       <div className="testimonials-track">
         {TESTIMONIALS.map((t, i) => (

@@ -4,6 +4,7 @@ import { useTilt3D } from '@/lib/useTilt3D'
 import RainbowText from './RainbowText'
 import ArrowButton from './ArrowButton'
 import CharSplitHeading from './CharSplitHeading'
+import SectionHead from './SectionHead'
 import { CHEZ_FLORENCE_IMAGE_POOL } from '@/lib/chezFlorenceLetters'
 
 // Section Tarifs restaurée en grille (en plus de la Ligne 2 du
@@ -22,22 +23,25 @@ export default function TarifsSection() {
 
   return (
     <section id="tarifs" data-theme="rust">
-      <div className="section-head">
-        <div>
-          <div className="eyebrow">Tarifs</div>
+      <SectionHead
+        number={3}
+        eyebrow="Tarifs"
+        title={(
           <CharSplitHeading
             lines={['Un Tarif Pour', 'Chaque Besoin']}
             images={CHEZ_FLORENCE_IMAGE_POOL}
             as="h2"
             className="section-title reveal-text"
           />
-        </div>
-        <RainbowText
-          text="Le prix dépend du poids et de la quantité — à l'unité, en duo, ou en gros pour les professionnels."
-          variant="white"
-          className="section-desc"
-        />
-      </div>
+        )}
+        desc={(
+          <RainbowText
+            text="Le prix dépend du poids et de la quantité — à l'unité, en duo, ou en gros pour les professionnels."
+            variant="white"
+            className="section-desc"
+          />
+        )}
+      />
 
       <div className="pricing-grid" ref={gridRef}>
         {PLANS.map((plan) => (

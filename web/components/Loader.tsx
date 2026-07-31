@@ -50,18 +50,24 @@ const ITEM_TARGETS = [
   { x: '0vw', y: '-38vh', rotation: 5 },
 ]
 
+type LoaderPhase = 'pending' | 'playing' | 'skipped' | 'done'
+
 export default function Loader() {
-  const [skip] = useState(() => !shouldPlayLoader())
-  const [done, setDone] = useState(skip)
+  // Même rendu SSR + 1er paint client ('pending') — sessionStorage lu après mount.
+  const [phase, setPhase] = useState<LoaderPhase>('pending')
 
   useEffect(() => {
-    if (!skip) return
-    ensureViewportMetrics()
-    markLoaderDone()
-  }, [skip])
+    if (!shouldPlayLoader()) {
+      ensureViewportMetrics()
+      markLoaderDone()
+      setPhase('skipped')
+    } else {
+      setPhase('playing')
+    }
+  }, [])
 
   useGSAP((_context, contextSafe) => {
-    if (!contextSafe || done || skip) return
+    if (!contextSafe || phase !== 'playing') return
     let cancelled = false
 
     const start = contextSafe(() => {
@@ -157,7 +163,7 @@ export default function Loader() {
       tl.call(() => {
         if (!cancelled) {
           markLoaderDone()
-          setDone(true)
+          setPhase('done')
         }
       })
     })
@@ -167,9 +173,9 @@ export default function Loader() {
     })
 
     return () => { cancelled = true }
-  }, [done, skip])
+  }, [phase])
 
-  if (done) return null
+  if (phase === 'skipped' || phase === 'done') return null
 
   return (
     <div id="loader">

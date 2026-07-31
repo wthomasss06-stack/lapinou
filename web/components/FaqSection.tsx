@@ -3,6 +3,7 @@ import { useState } from 'react'
 import ArrowButton from './ArrowButton'
 import { HOME_FAQS as FAQS } from '@/lib/faq-data'
 import CharSplitHeading from './CharSplitHeading'
+import SectionHead from './SectionHead'
 import { CHEZ_FLORENCE_IMAGE_POOL } from '@/lib/chezFlorenceLetters'
 
 // Port direct de <section id="faq"> (index.html). Version complète et
@@ -16,17 +17,18 @@ export default function FaqSection() {
 
   return (
     <section id="faq" className="faq-section" data-theme="rust">
-      <div className="section-head">
-        <div>
-          <div className="eyebrow"> Questions Fréquentes</div>
+      <SectionHead
+        number={6}
+        eyebrow="Questions Fréquentes"
+        title={(
           <CharSplitHeading
             lines={['Vous Avez', 'Des Questions ?']}
             images={CHEZ_FLORENCE_IMAGE_POOL}
             as="h2"
             className="section-title reveal-text"
           />
-        </div>
-      </div>
+        )}
+      />
 
       <div className="faq-grid">
         {FAQS.map((item, i) => {

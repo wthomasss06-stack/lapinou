@@ -7,6 +7,7 @@ import { isUnavailable, resolvePhotoUrl } from '@/lib/status'
 import RainbowText from './RainbowText'
 import KineticMarqueeGallery from './KineticMarqueeGallery'
 import RabbitCard from './RabbitCard'
+import SectionHead from './SectionHead'
 
 type GalleryItem = {
   image: string
@@ -77,17 +78,19 @@ export default function LapinsFeaturedSection() {
 
   return (
     <section id="lapins" data-theme="dark">
-      <div className="section-head section-head--carousel">
-        <div>
-          <div className="eyebrow">Nos Lapins</div>
-          <h2 className="section-title elastic-title">En Vedette</h2>
-        </div>
-        <RainbowText
-          text="Ajoutés par notre équipe, prêts à la vente. Azaguié Gare."
-          variant="white"
-          className="section-desc"
-        />
-      </div>
+      <SectionHead
+        number={4}
+        className="section-head--carousel"
+        eyebrow="Nos Lapins"
+        title={<h2 className="section-title elastic-title">En Vedette</h2>}
+        desc={(
+          <RainbowText
+            text="Ajoutés par notre équipe, prêts à la vente. Azaguié Gare."
+            variant="white"
+            className="section-desc"
+          />
+        )}
+      />
 
       {loading ? (
         <div className="projects-track" aria-hidden="true">

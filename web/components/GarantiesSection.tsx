@@ -5,6 +5,7 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Image from 'next/image'
 import { cld } from '@/lib/cloudinary'
+import SectionHead from './SectionHead'
 
 gsap.registerPlugin(useGSAP, ScrollTrigger)
 
@@ -106,16 +107,17 @@ export default function GarantiesSection() {
 
   return (
     <section id="garanties" ref={sectionRef} className="garanties-section" data-theme="rust">
-      <div className="section-head">
-        <div>
-          <div className="eyebrow">Nos Engagements — Santé · Race · Suivi</div>
+      <SectionHead
+        number={2}
+        eyebrow="Nos Engagements — Santé · Race · Suivi"
+        title={(
           <h2 className="section-title elastic-title">
             Nos
             <br />
             Garanties
           </h2>
-        </div>
-      </div>
+        )}
+      />
 
       <div
         className={`garanties-wrapper${anyActive ? ' any-active' : ''}`}

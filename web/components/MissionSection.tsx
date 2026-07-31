@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import RainbowText from './RainbowText'
+import SectionHead from './SectionHead'
 import { cld } from '@/lib/cloudinary'
 
 // Port direct de <section class="mission-section" id="histoire"> (index.html),
@@ -7,16 +8,24 @@ import { cld } from '@/lib/cloudinary'
 export default function MissionSection() {
   return (
     <section className="mission-section" id="histoire" data-theme="maroon">
-      <div className="mission-layout">
-        <div className="mission-text-col">
-          <div className="eyebrow"> Notre Histoire</div>
+      <SectionHead
+        number={1}
+        eyebrow="Notre Histoire"
+        title={(
           <div className="mission-text-huge elastic-title">
             Nous élevons
             <br />
             avec
             <br />
-            <span style={{ color: '#fff' }}>soin.</span>
+            <br />
+            soin.
+            <br />
+            
           </div>
+        )}
+      />
+      <div className="mission-layout">
+        <div className="mission-text-col">
           <div className="mission-description">
             <RainbowText
               text="Chez Florence est un élevage familial installé à Azaguié Gare, à trente minutes d'Abidjan. Nous élevons et sélectionnons nos lapins de race — Hollandais, Rex, Angora Français — avec la même attention à chaque portée : pesée précise, suivi de santé, accompagnement du choix jusqu'à la remise. Particuliers, restaurateurs ou éleveurs PME repartent avec un lapin dont on connaît l'histoire depuis le premier jour. Retrait sur place à Azaguié Gare ou livraison à Abidjan, Agboville et Adzopé — toujours par WhatsApp, toujours avec la même exigence."

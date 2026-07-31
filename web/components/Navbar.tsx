@@ -190,7 +190,6 @@ function MobileStaggeredNav() {
 
   useLayoutEffect(() => {
     ensureViewportMetrics()
-    const metrics = getViewportMetrics()
 
     const panel = panelRef.current
     const preContainer = preLayersRef.current
@@ -208,35 +207,59 @@ function MobileStaggeredNav() {
     gsap.set(iconRef.current, { rotate: 0, transformOrigin: '50% 50%' })
     gsap.set(textInnerRef.current, { yPercent: 0 })
 
+    const metrics = getViewportMetrics()
     if (metrics.isMobile) {
       panel.style.height = `${metrics.dvh}px`
     }
   }, [])
 
+  useEffect(() => {
+    document.body.style.overflow = open ? 'hidden' : ''
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [open])
+
   const playOpen = useCallback(() => {
     if (busyRef.current) return
     busyRef.current = true
+    ensureViewportMetrics()
+
     const panel = panelRef.current
     const layers = preLayerElsRef.current
-    if (!panel) { busyRef.current = false; return }
+    if (!panel) {
+      busyRef.current = false
+      return
+    }
 
     const itemEls = Array.from(panel.querySelectorAll<HTMLElement>('.cf-mobile-item'))
     gsap.set(itemEls, { yPercent: 130, rotate: 8 })
 
-    const tl = gsap.timeline({ onComplete: () => { busyRef.current = false } })
+    const tl = gsap.timeline({
+      onComplete: () => {
+        busyRef.current = false
+      },
+      onInterrupt: () => {
+        busyRef.current = false
+      },
+    })
+
     layers.forEach((el, i) => {
-      tl.fromTo(el, { xPercent: 100 }, { xPercent: 0, duration: 0.45, ease: 'power4.out' }, i * 0.07)
+      tl.fromTo(el, { xPercent: 100 }, { xPercent: 0, duration: 0.45, ease: 'power4.out', overwrite: 'auto' }, i * 0.07)
     })
     const lastTime = layers.length ? (layers.length - 1) * 0.07 : 0
     const panelInsertTime = lastTime + (layers.length ? 0.08 : 0)
-    tl.fromTo(panel, { xPercent: 100 }, { xPercent: 0, duration: 0.6, ease: 'power4.out' }, panelInsertTime)
+    tl.fromTo(panel, { xPercent: 100 }, { xPercent: 0, duration: 0.6, ease: 'power4.out', overwrite: 'auto' }, panelInsertTime)
     if (itemEls.length) {
       tl.to(itemEls, {
-        yPercent: 0, rotate: 0, duration: 0.9, ease: 'power4.out',
+        yPercent: 0,
+        rotate: 0,
+        duration: 0.9,
+        ease: 'power4.out',
         stagger: { each: 0.06, from: 'start' },
+        overwrite: 'auto',
       }, panelInsertTime + 0.15)
     }
-    tl.play(0)
   }, [])
 
   const playClose = useCallback(() => {
@@ -320,7 +343,7 @@ function MobileStaggeredNav() {
         <div className="cf-mobile-prelayer cf-mobile-prelayer--bg" />
       </div>
 
-      <div ref={panelRef} className="cf-mobile-panel" aria-hidden={!open} data-open={open}>
+      <div ref={panelRef} className={`cf-mobile-panel${open ? ' is-open' : ''}`} aria-hidden={!open}>
         <div className="cf-mobile-panel-inner">
           <div className="cf-mobile-panel-header">
             <Logo size={48} />
