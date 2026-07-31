@@ -32,11 +32,9 @@ export default function CtaSection() {
         footer={(
           <div className="cta-btns">
             <ArrowButton href={WHATSAPP_URL} external solid>
-              Commander sur WhatsApp
+              Commander 
             </ArrowButton>
-            <ArrowButton href="/#lapins">
-              Nos lapins
-            </ArrowButton>
+            
           </div>
         )}
       />
