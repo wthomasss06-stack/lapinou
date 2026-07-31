@@ -523,7 +523,7 @@ screenshots/
 
 <div align="center">
 
-Développé par **AKATech Studio**
+Développé par **AKATech Studio.**
 
 [![akaTech](https://img.shields.io/badge/akaTech-akatech.vercel.app-FF5500?style=flat-square)](https://akatech.vercel.app/)
 [![WhatsApp](https://img.shields.io/badge/WhatsApp-%2B225_01_42_50_77_50-25D366?style=flat-square&logo=whatsapp)](https://wa.me/2250142507750)
