@@ -5,6 +5,7 @@ import './hover-effects.css'
 import { Toaster } from 'react-hot-toast'
 import CookieBanner from '@/components/CookieBanner'
 import ServiceWorkerRegister from '@/components/ServiceWorkerRegister'
+import SiteChrome from '@/components/SiteChrome'
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION, jsonLdScript, getOrganizationJsonLd, getWebsiteJsonLd } from '@/lib/seo'
 import { cld } from '@/lib/cloudinary'
 import { Analytics } from '@vercel/analytics/next'
@@ -126,6 +127,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
         {children}
+        <SiteChrome />
         <CookieBanner />
         <ServiceWorkerRegister />
         <Analytics />

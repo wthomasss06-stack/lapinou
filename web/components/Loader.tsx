@@ -1,10 +1,12 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useGSAP } from '@gsap/react'
 import { gsap } from 'gsap'
 import { SplitText } from 'gsap/SplitText'
 import Image from 'next/image'
 import { cld } from '@/lib/cloudinary'
+import { markLoaderDone, shouldPlayLoader } from '@/lib/loaderSession'
+import { ensureViewportMetrics } from '@/lib/viewportMetrics'
 
 gsap.registerPlugin(useGSAP, SplitText)
 
@@ -25,7 +27,8 @@ gsap.registerPlugin(useGSAP, SplitText)
 //      power2.in.
 //   3. Rideau (#loader) qui remonte pour révéler le Hero, simplement.
 // Garde la logique 3 phases (préloader → intro gravité → hero).
-// Le décompte 000→100 et l'animation rejouent à chaque refresh.
+// Le décompte 000→100 rejoue à chaque refresh ; retour client vers l'accueil
+// sans rejouer (voir loaderSession.ts).
 
 // Ordre + rôles repris tels quels du fichier de référence (intro-item-1 à
 // 5) : chaque lapin est assigné à une position précise de itemTargets.
@@ -48,13 +51,22 @@ const ITEM_TARGETS = [
 ]
 
 export default function Loader() {
-  const [done, setDone] = useState(false)
+  const [skip] = useState(() => !shouldPlayLoader())
+  const [done, setDone] = useState(skip)
+
+  useEffect(() => {
+    if (!skip) return
+    ensureViewportMetrics()
+    markLoaderDone()
+  }, [skip])
 
   useGSAP((_context, contextSafe) => {
-    if (!contextSafe || done) return
+    if (!contextSafe || done || skip) return
     let cancelled = false
 
     const start = contextSafe(() => {
+      ensureViewportMetrics()
+
       const revealers = gsap.utils.toArray<HTMLElement>('.loader-revealer')
       const items = gsap.utils.toArray<HTMLElement>('.loader-item')
       const titleSplit = SplitText.create('#loader-title', { type: 'chars' })
@@ -143,7 +155,10 @@ export default function Loader() {
       }, '+=0.15')
 
       tl.call(() => {
-        if (!cancelled) setDone(true)
+        if (!cancelled) {
+          markLoaderDone()
+          setDone(true)
+        }
       })
     })
 
@@ -152,7 +167,7 @@ export default function Loader() {
     })
 
     return () => { cancelled = true }
-  }, [])
+  }, [done, skip])
 
   if (done) return null
 

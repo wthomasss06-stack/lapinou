@@ -1,7 +1,6 @@
 'use client'
 import { useMemo, useState } from 'react'
 import { Search } from 'lucide-react'
-import Navbar from '@/components/Navbar'
 import CustomCursor from '@/components/CustomCursor'
 import Footer from '@/components/Footer'
 import HoverFadeText from '@/components/HoverFadeText'
@@ -40,7 +39,6 @@ export default function AideContent() {
 
   return (
     <div className="aide-page">
-      <Navbar />
       <CustomCursor />
       <main>
         <section className="page-hero">

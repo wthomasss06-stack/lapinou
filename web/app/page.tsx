@@ -2,9 +2,7 @@
 // ═══════════════════════════════════════════════════════════════════
 //  CHEZ FLORENCE — Page d'accueil
 //
-//  • Navbar — CardNav (desktop) + StaggeredMenu (mobile). Porte toute la
-//    navigation du site (Nos Lapins/Tarifs/Notre Histoire/FAQ/Contact +
-//    Aide/Conditions/Confidentialité + WhatsApp).
+//  • Navbar — dans SiteChrome (layout), persistante entre les pages.
 //  • HeroSection — plein écran, épuré (vidéo + titre + sous-titre
 //    seulement). Stats et cartes tarifs retirées d'ici pour que le hero
 //    tienne dans le premier écran et convertisse mieux.
@@ -18,7 +16,7 @@
 //  • TestimonialsSection (id="temoignages") — 3 avis.
 //  • FaqSection (id="faq") — 6 questions ; version complète sur /aide.
 //  • Footer (id="contact") — identité + contact (toute la nav vit dans
-//    <Navbar />).
+//    le footer), la nav vit dans <SiteChrome /> (layout).
 //
 //  Fond marron unique (--maroon) sur toute la home.
 // ═══════════════════════════════════════════════════════════════════
@@ -26,7 +24,6 @@
 import 'lenis/dist/lenis.css'
 import '@/app/home-cinematic.css'
 
-import Navbar                from '@/components/Navbar'
 import GrainOverlay          from '@/components/GrainOverlay'
 import Loader                from '@/components/Loader'
 import CustomCursor          from '@/components/CustomCursor'
@@ -125,7 +122,6 @@ export default async function HomePage() {
         />
       )}
 
-      <Navbar />
 
       <div className="home-cinema">
         <GrainOverlay />

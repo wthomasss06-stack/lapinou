@@ -7,7 +7,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ChevronRight, Sparkles, MessageCircleHeart, ShieldCheck, Stethoscope } from 'lucide-react'
-import Navbar from '@/components/Navbar'
 import CustomCursor from '@/components/CustomCursor'
 import Footer from '@/components/Footer'
 import RabbitGallery from '@/components/RabbitGallery'
@@ -141,7 +140,7 @@ export default async function RabbitDetailPage({ params }) {
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: jsonLdScript(breadcrumbJsonLd) }}
       />
-      <Navbar />
+
       <CustomCursor />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-28 pb-10">

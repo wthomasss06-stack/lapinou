@@ -1,4 +1,3 @@
-import Navbar from '@/components/Navbar'
 import CustomCursor from '@/components/CustomCursor'
 import Footer from '@/components/Footer'
 import RainbowText from '@/components/RainbowText'
@@ -121,7 +120,6 @@ const SECTIONS: LegalSection[] = [
 export default function ConfidentialitePage() {
   return (
     <div className="legal-page">
-      <Navbar />
       <CustomCursor />
       <main>
         <div className="breadcrumb"><a href="/">Accueil</a> / <span>Confidentialité</span></div>

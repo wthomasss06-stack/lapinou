@@ -1,10 +1,11 @@
 'use client'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { gsap } from 'gsap'
 import Logo from './Logo'
 import ArrowButton from './ArrowButton'
 import HoverFadeText from './HoverFadeText'
+import { ensureViewportMetrics, getViewportMetrics } from '@/lib/viewportMetrics'
 import './Navbar.css'
 
 // ── Navbar CHEZ FLORENCE — CardNav (desktop) + StaggeredMenu (mobile) ──
@@ -53,6 +54,7 @@ function DesktopCardNav() {
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
+    ensureViewportMetrics()
     const nav = navRef.current
     const content = contentRef.current
     const cards = cardsRef.current
@@ -61,11 +63,19 @@ function DesktopCardNav() {
     gsap.set(cards, { y: 45, opacity: 0 })
 
     const tl = gsap.timeline({ paused: true })
-    tl.to(nav, { height: () => content.scrollHeight + 64, duration: 0.55, ease: 'power3.inOut' })
+    tl.to(nav, {
+      height: () => content.scrollHeight + 64,
+      duration: 0.55,
+      ease: 'power3.inOut',
+    })
     tl.to(cards, { y: 0, opacity: 1, duration: 0.4, stagger: 0.08, ease: 'power3.out' }, '-=0.25')
     tlRef.current = tl
 
-    const onResize = () => { if (openRef.current) gsap.set(nav, { height: content.scrollHeight + 64 }) }
+    const onResize = () => {
+      if (!openRef.current) return
+      ensureViewportMetrics()
+      gsap.set(nav, { height: content.scrollHeight + 64 })
+    }
     window.addEventListener('resize', onResize)
     return () => {
       window.removeEventListener('resize', onResize)
@@ -178,22 +188,29 @@ function MobileStaggeredNav() {
   const [textLines, setTextLines] = useState(['Menu', 'Fermer'])
   const busyRef = useRef(false)
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      const panel = panelRef.current
-      const preContainer = preLayersRef.current
-      if (!panel || !plusHRef.current || !plusVRef.current || !iconRef.current || !textInnerRef.current) return
+  useLayoutEffect(() => {
+    ensureViewportMetrics()
+    const metrics = getViewportMetrics()
 
-      const preLayers = preContainer ? Array.from(preContainer.querySelectorAll<HTMLElement>('.cf-mobile-prelayer')) : []
-      preLayerElsRef.current = preLayers
+    const panel = panelRef.current
+    const preContainer = preLayersRef.current
+    if (!panel || !plusHRef.current || !plusVRef.current || !iconRef.current || !textInnerRef.current) return
 
-      gsap.set([panel, ...preLayers], { xPercent: 100 })
-      gsap.set(plusHRef.current, { rotate: 0, transformOrigin: '50% 50%' })
-      gsap.set(plusVRef.current, { rotate: 90, transformOrigin: '50% 50%' })
-      gsap.set(iconRef.current, { rotate: 0, transformOrigin: '50% 50%' })
-      gsap.set(textInnerRef.current, { yPercent: 0 })
-    })
-    return () => ctx.revert()
+    const preLayers = preContainer ? Array.from(preContainer.querySelectorAll<HTMLElement>('.cf-mobile-prelayer')) : []
+    preLayerElsRef.current = preLayers
+
+    const itemEls = Array.from(panel.querySelectorAll<HTMLElement>('.cf-mobile-item'))
+
+    gsap.set([panel, ...preLayers], { xPercent: 100, force3D: true })
+    gsap.set(itemEls, { yPercent: 130, rotate: 8, force3D: true })
+    gsap.set(plusHRef.current, { rotate: 0, transformOrigin: '50% 50%' })
+    gsap.set(plusVRef.current, { rotate: 90, transformOrigin: '50% 50%' })
+    gsap.set(iconRef.current, { rotate: 0, transformOrigin: '50% 50%' })
+    gsap.set(textInnerRef.current, { yPercent: 0 })
+
+    if (metrics.isMobile) {
+      panel.style.height = `${metrics.dvh}px`
+    }
   }, [])
 
   const playOpen = useCallback(() => {
@@ -303,7 +320,7 @@ function MobileStaggeredNav() {
         <div className="cf-mobile-prelayer cf-mobile-prelayer--bg" />
       </div>
 
-      <div ref={panelRef} className="cf-mobile-panel" aria-hidden={!open}>
+      <div ref={panelRef} className="cf-mobile-panel" aria-hidden={!open} data-open={open}>
         <div className="cf-mobile-panel-inner">
           <div className="cf-mobile-panel-header">
             <Logo size={48} />
