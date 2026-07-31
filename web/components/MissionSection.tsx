@@ -10,15 +10,12 @@ export default function MissionSection() {
     <section className="mission-section" id="histoire" data-theme="maroon">
       <SectionHead
         number={1}
-        eyebrow="Notre Histoire"
+        eyebrow="A Propos"
         title={(
           <div className="mission-text-huge elastic-title">
-            Nous élevons
+            Notre 
             <br />
-            avec
-            <br />
-            
-            soin.
+            Histoire
             <br />
           </div>
         )}
