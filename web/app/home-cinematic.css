@@ -431,7 +431,7 @@
     line-height: 1.05;
     text-transform: uppercase;
     text-align: left;
-    color: var(--maroon);
+    color: var(--paper);
   }
   .home-cinema .mission-description { margin-top: 1.75rem; min-height: 7.5rem; }
   .home-cinema .mission-description p {

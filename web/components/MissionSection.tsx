@@ -17,10 +17,9 @@ export default function MissionSection() {
             <br />
             avec
             <br />
-            <br />
+            
             soin.
             <br />
-            
           </div>
         )}
       />
