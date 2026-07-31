@@ -331,7 +331,7 @@ export default function HomeClient() {
           <div className="mission-layout">
             <div>
               <div className="eyebrow"> Notre Histoire</div>
-              <div className="mission-text-huge reveal-text">Nous élevons<br />avec<br /><span style={{ color: 'var(--accent-orange)' }}>soin.</span></div>
+              <div className="mission-text-huge reveal-text">Nous élevons<br />avec<br /><span style={{ color: '#fff' }}>soin.</span></div>
             </div>
             <div className="mission-description">
               <p className="reveal-text">Nous élevons et sélectionnons nos lapins avec soin — pesée précise, bonne santé, et un accompagnement complet du choix jusqu&apos;à la vente. L&apos;élevage qui vous connecte directement aux plus beaux lapins, en toute confiance, partout en Côte d&apos;Ivoire.</p>

@@ -17,7 +17,7 @@ export default function HistoireSection() {
             <br />
             avec
             <br />
-            <span style={{ color: 'var(--accent-orange)' }}>soin.</span>
+            <span style={{ color: '#fff' }}>soin.</span>
           </div>
         </div>
         <div className="mission-description">

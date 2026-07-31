@@ -15,7 +15,7 @@ export default function MissionSection() {
             <br />
             avec
             <br />
-            <span style={{ color: 'var(--rust)' }}>soin.</span>
+            <span style={{ color: '#fff' }}>soin.</span>
           </div>
           <div className="mission-description">
             <RainbowText
