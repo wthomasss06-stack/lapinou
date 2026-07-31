@@ -370,6 +370,21 @@ body {
 .cf-arrow-btn.cf-arrow-btn--solid:hover .cf-arrow-btn-circle { border-color: #ffffff; background-color: #ffffff; }
 .cf-arrow-btn.cf-arrow-btn--solid:hover .cf-arrow-btn-circle svg { color: var(--maroon); transform: rotate(45deg); }
 
+.cf-arrow-btn.cf-arrow-btn--block {
+  width: 100%;
+  justify-content: center;
+}
+
+.sticky-cta-mobile {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 480px;
+  z-index: 90;
+}
+
 /* ═══════════════════════════════════════════════════════════════════
    Curseur custom — désormais global (plus scopé .home-cinema) : rendu
    par <CustomCursor /> sur home, détail lapin, admin, aide, conditions

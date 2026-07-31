@@ -101,51 +101,17 @@ nav.cf-card-nav.is-open {
   gap: 8px;
 }
 
-.cf-nav-cta {
-  background: var(--caramel, #B8834A);
-  color: #ffffff;
-  border: none;
-  padding: 9px 18px;
-  border-radius: 999px;
-  font-family: var(--font-label);
-  font-weight: 800;
+.cf-nav-right .cf-arrow-btn {
   font-size: 0.72rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  cursor: pointer;
-  box-shadow: 0 4px 16px rgba(184, 131, 74, 0.4);
-  transition: transform 0.25s, box-shadow 0.25s, background-color 0.25s;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  mix-blend-mode: difference;
+  padding: 9px 14px 9px 18px;
 }
-
-.cf-nav-cta-arrow {
-  width: 14px;
-  height: 14px;
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+.cf-nav-right .cf-arrow-btn-circle {
+  width: 24px;
+  height: 24px;
 }
-
-.cf-nav-cta:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 22px rgba(184, 131, 74, 0.6);
-}
-
-.cf-nav-cta:hover .cf-nav-cta-arrow {
-  transform: rotate(45deg) scale(1.18);
-}
-
-.cf-nav-cta--outline {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: none;
-}
-
-.cf-nav-cta--outline:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.8);
+.cf-nav-right .cf-arrow-btn-circle svg {
+  width: 11px;
+  height: 11px;
 }
 
 .cf-nav-content {

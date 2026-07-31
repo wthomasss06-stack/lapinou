@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { gsap } from 'gsap'
 import Logo from './Logo'
+import ArrowButton from './ArrowButton'
 import HoverFadeText from './HoverFadeText'
 import './Navbar.css'
 
@@ -112,10 +113,9 @@ function DesktopCardNav() {
           <Logo size={52} className="cf-nav-logo" onClick={closeNav} />
 
           <div className="cf-nav-right">
-            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="cf-nav-cta" onClick={closeNav}>
-              <HoverFadeText>Commander</HoverFadeText>
-              <ArrowIcon className="cf-nav-cta-arrow" />
-            </a>
+            <ArrowButton href={WHATSAPP_URL} external solid onClick={closeNav}>
+              Commander
+            </ArrowButton>
           </div>
         </div>
 
@@ -332,9 +332,9 @@ function MobileStaggeredNav() {
           </ul>
 
           <div className="cf-mobile-panel-footer">
-            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="cf-mobile-cta" onClick={closeMenu}>
-              <HoverFadeText>WhatsApp</HoverFadeText>
-            </a>
+            <ArrowButton href={WHATSAPP_URL} external solid block onClick={closeMenu}>
+              Commander sur WhatsApp
+            </ArrowButton>
           </div>
         </div>
       </div>

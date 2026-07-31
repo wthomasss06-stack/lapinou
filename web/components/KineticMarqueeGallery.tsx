@@ -1,7 +1,6 @@
 'use client'
 import { useEffect, useRef } from 'react'
 import Link from 'next/link'
-import { ArrowUpRight } from 'lucide-react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import './KineticMarqueeGallery.css'
@@ -111,8 +110,13 @@ export default function KineticMarqueeGallery({ items }: Props) {
                   className="kinetic-img"
                   loading="lazy"
                 />
-                <span className="kinetic-order-btn">
-                  Commander <ArrowUpRight size={16} className="kinetic-btn-arrow" />
+                <span className="kinetic-order-btn cf-arrow-btn cf-arrow-btn--solid">
+                  Commander
+                  <span className="cf-arrow-btn-circle">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <path d="M7 17L17 7M17 7H7M17 7V17" />
+                    </svg>
+                  </span>
                 </span>
               </Link>
             )}

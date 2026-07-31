@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import NavCard from './NavCard'
 import StaggeredMenu from './StaggeredMenu'
 import './SiteNav.css'
 
@@ -15,15 +14,9 @@ const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP?.replace(/\D/g, '') || ''
 export const waHref = (text?: string) =>
   WHATSAPP ? `https://wa.me/${WHATSAPP}${text ? `?text=${encodeURIComponent(text)}` : ''}` : '#'
 
-// Navigation unique pour tout le site (home + pages internes + détail
-// lapin). Remplace les 2 variantes de l'ancien <Navbar /> et absorbe les
-// liens qui vivaient dans le footer (FAQ/Tarifs/Aide/Confidentialité/
-// Conditions/WhatsApp) : un seul bouton, un seul jeu de liens.
-//  • Desktop (≥900px) : le bouton ouvre <NavCard /> (carte qui se déplie
-//    sous le header).
-//  • Mobile (<900px) : le même bouton ouvre <StaggeredMenu /> (overlay
-//    plein écran, liens en cascade). Le CTA WhatsApp sticky reste en plus
-//    pour la conversion rapide.
+// Navigation unique — StaggeredMenu sur tous les breakpoints (desktop
+// inclus). Header flottant avec mix-blend-mode: difference comme l'ancien
+// cf-mobile-nav / cf-card-nav.
 export const PRIMARY_LINKS: NavLinkItem[] = [
   { label: 'Accueil', href: '/' },
   { label: 'Nos Lapins', href: '/#lapins' },
@@ -41,8 +34,6 @@ export default function SiteNav() {
   const [open, setOpen] = useState(false)
   const close = () => setOpen(false)
 
-  // Verrouille le scroll de fond pendant que le menu (carte ou overlay)
-  // est ouvert.
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : ''
     return () => {
@@ -50,7 +41,6 @@ export default function SiteNav() {
     }
   }, [open])
 
-  // Échap ferme le menu, quel que soit le breakpoint.
   useEffect(() => {
     if (!open) return
     const onKey = (e: KeyboardEvent) => {
@@ -61,7 +51,7 @@ export default function SiteNav() {
   }, [open])
 
   return (
-    <>
+    <div className="site-nav-shell">
       <header className="site-nav" data-open={open}>
         <Link href="/" className="logo-area hover-target" onClick={close}>
           <div className="logo-blob" />
@@ -80,8 +70,7 @@ export default function SiteNav() {
         </button>
       </header>
 
-      <NavCard isOpen={open} onClose={close} primary={PRIMARY_LINKS} secondary={SECONDARY_LINKS} />
       <StaggeredMenu isOpen={open} onClose={close} primary={PRIMARY_LINKS} secondary={SECONDARY_LINKS} />
-    </>
+    </div>
   )
 }

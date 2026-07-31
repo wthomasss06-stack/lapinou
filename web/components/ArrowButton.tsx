@@ -1,3 +1,4 @@
+import { forwardRef } from 'react'
 import Link from 'next/link'
 import HoverFadeText from './HoverFadeText'
 
@@ -18,16 +19,34 @@ type Props = {
   href: string
   children: string
   solid?: boolean
+  block?: boolean
   external?: boolean
   className?: string
+  onClick?: () => void
 }
 
-export default function ArrowButton({ href, children, solid, external, className = '' }: Props) {
-  const cls = `cf-arrow-btn${solid ? ' cf-arrow-btn--solid' : ''} hover-target ${className}`.trim()
+const ArrowButton = forwardRef<HTMLAnchorElement, Props>(function ArrowButton(
+  { href, children, solid, block, external, className = '', onClick },
+  ref
+) {
+  const cls = [
+    'cf-arrow-btn',
+    solid && 'cf-arrow-btn--solid',
+    block && 'cf-arrow-btn--block',
+    'hover-target',
+    className,
+  ].filter(Boolean).join(' ')
 
   if (external || href.startsWith('http') || href.startsWith('#')) {
     return (
-      <a href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined} className={cls}>
+      <a
+        ref={ref}
+        href={href}
+        target={external ? '_blank' : undefined}
+        rel={external ? 'noopener noreferrer' : undefined}
+        className={cls}
+        onClick={onClick}
+      >
         <HoverFadeText>{children}</HoverFadeText>
         <Arrow />
       </a>
@@ -35,9 +54,11 @@ export default function ArrowButton({ href, children, solid, external, className
   }
 
   return (
-    <Link href={href} className={cls}>
+    <Link ref={ref as React.Ref<HTMLAnchorElement>} href={href} className={cls} onClick={onClick}>
       <HoverFadeText>{children}</HoverFadeText>
       <Arrow />
     </Link>
   )
-}
+})
+
+export default ArrowButton

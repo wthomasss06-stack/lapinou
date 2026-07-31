@@ -1,5 +1,5 @@
 'use client'
-import { useState, useLayoutEffect } from 'react'
+import { useState } from 'react'
 import { useGSAP } from '@gsap/react'
 import { gsap } from 'gsap'
 import { SplitText } from 'gsap/SplitText'
@@ -24,9 +24,8 @@ gsap.registerPlugin(useGSAP, SplitText)
 //      le même tween, scale 3 + rotation +180 + fade, stagger 0.05,
 //      power2.in.
 //   3. Rideau (#loader) qui remonte pour révéler le Hero, simplement.
-// Garde la logique "une fois par session" (sessionStorage) de l'ancienne
-// version.
-const LOADER_SEEN_KEY = 'lapinou_loader_seen'
+// Garde la logique 3 phases (préloader → intro gravité → hero).
+// Le décompte 000→100 et l'animation rejouent à chaque refresh.
 
 // Ordre + rôles repris tels quels du fichier de référence (intro-item-1 à
 // 5) : chaque lapin est assigné à une position précise de itemTargets.
@@ -49,17 +48,7 @@ const ITEM_TARGETS = [
 ]
 
 export default function Loader() {
-  // Doit être identique au 1er rendu serveur et client (sessionStorage
-  // n'existe pas côté serveur) — on démarre à false puis on resynchronise
-  // juste après, avant peinture, pour qu'un retour dans la même session
-  // ne montre jamais le loader à l'écran.
   const [done, setDone] = useState(false)
-
-  useLayoutEffect(() => {
-    try {
-      if (sessionStorage.getItem(LOADER_SEEN_KEY) === '1') setDone(true)
-    } catch (_) {}
-  }, [])
 
   useGSAP((_context, contextSafe) => {
     if (!contextSafe || done) return
@@ -154,10 +143,7 @@ export default function Loader() {
       }, '+=0.15')
 
       tl.call(() => {
-        if (!cancelled) {
-          setDone(true)
-          try { sessionStorage.setItem(LOADER_SEEN_KEY, '1') } catch (_) {}
-        }
+        if (!cancelled) setDone(true)
       })
     })
 

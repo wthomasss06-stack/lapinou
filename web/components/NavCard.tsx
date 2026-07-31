@@ -4,7 +4,7 @@ import { useRef } from 'react'
 import Link from 'next/link'
 import { gsap } from 'gsap'
 import { useGSAP } from '@gsap/react'
-import { ArrowUpRight } from 'lucide-react'
+import ArrowButton from './ArrowButton'
 import { waHref, type NavLinkItem } from './SiteNav'
 import './NavCard.css'
 
@@ -105,18 +105,17 @@ export default function NavCard({ isOpen, onClose, primary, secondary }: NavCard
       <div ref={addRow as any} className="nav-card-col nav-card-col--cta">
         <span className="nav-card-eyebrow">Commander</span>
         <p className="nav-card-cta-text">Une race qui vous intéresse ? On répond vite sur WhatsApp.</p>
-        <a
-          href={waHref()}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="nav-card-whatsapp hover-target"
+        <ArrowButton
+          href={waHref('Bonjour Chez Florence, je suis intéressé par vos lapins.')}
+          external
+          solid
           onClick={onClose}
         >
-          WhatsApp <ArrowUpRight size={16} strokeWidth={1.75} />
-        </a>
-        <Link href="/#tarifs" className="nav-card-outline hover-target" onClick={onClose}>
-          <span className="pixel-square" /> Voir les tarifs
-        </Link>
+          Commander
+        </ArrowButton>
+        <ArrowButton href="/#tarifs" onClick={onClose}>
+          Voir les tarifs
+        </ArrowButton>
       </div>
     </div>
   )

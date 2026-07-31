@@ -1,3 +1,5 @@
+import ArrowButton from './ArrowButton'
+
 const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP?.replace(/\D/g, '') || ''
 
 // Port direct de .sticky-cta-mobile (index.html) — remplace .nav-center
@@ -6,13 +8,14 @@ const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP?.replace(/\D/g, '') || ''
 export default function StickyMobileCta() {
   if (!WHATSAPP) return null
   return (
-    <a
+    <ArrowButton
       href={`https://wa.me/${WHATSAPP}?text=${encodeURIComponent('Bonjour Chez Florence, je suis intéressé par vos lapins.')}`}
-      target="_blank"
-      rel="noopener noreferrer"
+      external
+      solid
+      block
       className="sticky-cta-mobile"
     >
-      Commander sur WhatsApp →
-    </a>
+      Commander sur WhatsApp
+    </ArrowButton>
   )
 }

@@ -2,7 +2,7 @@
 import { useRef } from 'react'
 import { useTilt3D } from '@/lib/useTilt3D'
 import RainbowText from './RainbowText'
-import HoverFadeText from './HoverFadeText'
+import ArrowButton from './ArrowButton'
 import CharSplitHeading from './CharSplitHeading'
 import { CHEZ_FLORENCE_IMAGE_POOL } from '@/lib/chezFlorenceLetters'
 
@@ -48,9 +48,9 @@ export default function TarifsSection() {
               {plan.amount}<span>FCFA</span>
             </div>
             <div className="price-sub">{plan.desc}</div>
-            <a href="#contact" className="price-cta hover-target">
-              <HoverFadeText>Commander</HoverFadeText>
-            </a>
+            <ArrowButton href="#contact" solid block className="price-cta">
+              Commander
+            </ArrowButton>
             <ul className="price-features">
               {plan.features.map((f) => <li key={f}>{f}</li>)}
             </ul>

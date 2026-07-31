@@ -114,52 +114,9 @@
     color: var(--muted);
     margin: 0;
   }
-  
-  .nav-card-whatsapp {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 12px 20px;
-    border-radius: 999px;
-    background: var(--rust);
-    color: var(--ink);
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 0.9rem;
-    text-decoration: none;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-  }
-  
-  .nav-card-whatsapp:hover {
-    transform: translateY(-2px);
-    opacity: 0.92;
-  }
-  
-  .nav-card-outline {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 11px 20px;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    color: var(--paper);
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 0.85rem;
-    text-decoration: none;
-    transition: background 0.3s ease;
-  }
-  
-  .nav-card-outline:hover {
-    background: rgba(255, 255, 255, 0.08);
-  }
-  
-  .nav-card-outline .pixel-square {
-    width: 8px;
-    height: 8px;
-    background: var(--paper);
-    display: inline-block;
+
+  .nav-card-col--cta .cf-arrow-btn {
+    align-self: flex-start;
   }
   
   @media (max-width: 1080px) {

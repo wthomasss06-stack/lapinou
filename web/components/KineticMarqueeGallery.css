@@ -135,31 +135,15 @@
   filter: grayscale(100%) brightness(0.5) contrast(1.1);
 }
 
-/* ── Bouton Commander (bas droite de l'image, couleur caramel #B8834A) ── */
+/* ── Bouton Commander (bas droite de l'image) ── */
 .kinetic-order-btn {
   position: absolute;
   bottom: 1.4rem;
   right: 1.4rem;
-  padding: 0.85rem 1.8rem;
-  background: var(--caramel, #B8834A);
-  color: #ffffff;
-  border-radius: 30px;
-  font-family: var(--font-label);
-  font-size: 0.78rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  pointer-events: none; /* clic passe au Link parent */
+  pointer-events: none;
   box-shadow: 0 6px 24px rgba(184, 131, 74, 0.45);
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.3s ease, background-color 0.3s ease;
-}
-
-.kinetic-btn-arrow {
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+              box-shadow 0.3s ease;
 }
 
 .kinetic-image-wrap:hover .kinetic-order-btn {
@@ -167,8 +151,15 @@
   box-shadow: 0 10px 32px rgba(184, 131, 74, 0.65);
 }
 
-.kinetic-image-wrap:hover .kinetic-btn-arrow {
-  transform: rotate(45deg) scale(1.2);
+.kinetic-image-wrap:hover .kinetic-order-btn .cf-arrow-btn-circle {
+  border-color: var(--ink);
+  background-color: var(--ink);
+  transform: rotate(45deg);
+}
+
+.kinetic-image-wrap:hover .kinetic-order-btn .cf-arrow-btn-circle svg {
+  transform: rotate(45deg);
+  color: var(--paper);
 }
 
 /* ── Overlay "Épuisé" (centre de l'image) ──────────────────────── */
