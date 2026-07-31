@@ -155,8 +155,12 @@
   gap: 16px;
   margin-bottom: 50px;
   max-width: 46rem;
+  width: 100%;
+  box-sizing: border-box;
   margin-left: auto;
   margin-right: auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
 }
 .home-cinema .section-title {
   font-family: var(--font-pixel);
@@ -882,6 +886,28 @@
 
 .home-cinema .hero-cta-btn {
   flex-shrink: 0;
+  mix-blend-mode: difference;
+}
+
+.home-cinema .cta-section {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 120px 20px;
+}
+
+.home-cinema .cta-btns {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 28px;
+  width: 100%;
 }
 
 /* ── Mobile : repasse en flow normal ── */
