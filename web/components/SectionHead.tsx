@@ -15,7 +15,7 @@ export default function SectionHead({ number, eyebrow, title, desc, footer, clas
   const inverted = number % 2 === 0
 
   const num = (
-    <div className="editorial-head__num" aria-hidden="true">
+    <div className="editorial-head__num elastic-title" aria-hidden="true">
       {numStr}
     </div>
   )
