@@ -27,11 +27,9 @@ export default function CtaSection() {
         />
         <div className="cta-btns">
           <ArrowButton href={WHATSAPP_URL} external solid>
-            Commander sur WhatsApp
+            Commander 
           </ArrowButton>
-          <ArrowButton href="/#lapins">
-            Nos lapins
-          </ArrowButton>
+          
         </div>
       </div>
     </section>

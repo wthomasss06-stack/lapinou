@@ -1,47 +1,28 @@
 /* ═══════════════════════════════════════════════════════════════════
    SiteNav — header flottant unique pour tout le site (remplace les 2
    variantes home/inner de l'ancien Navbar). "Fluid island" détachée du
-   bord plutôt que collée en pleine largeur : voir StaggeredMenu.css pour
-   l'overlay plein écran (tous breakpoints).
+   bord plutôt que collée en pleine largeur : voir NavCard.css pour la
+   carte desktop et StaggeredMenu.css pour l'overlay mobile.
    ═══════════════════════════════════════════════════════════════════ */
 
-/* Coque fixe sans fond — le mix-blend-mode vit sur .site-nav enfant
-   pour se comporter comme cf-card-nav / cf-mobile-nav. */
-.site-nav-shell {
+.site-nav {
   position: fixed;
-  top: 14px;
+  top: 20px;
   left: 50%;
   transform: translateX(-50%);
   width: calc(100% - 40px);
   max-width: 1200px;
-  z-index: 9000;
-  pointer-events: none;
-}
-
-.site-nav {
-  position: relative;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 10px 10px 10px 22px;
   border-radius: 999px;
-  pointer-events: auto;
-  /* Port de mix_blend_header_playground.html + cf-mobile-nav :
-     inversion chromatique sur hero vidéo, marron, clair… */
-  mix-blend-mode: difference;
-  background: transparent;
-  border: 1px solid transparent;
-  color: #fff;
-  transition: background-color 0.4s ease, border-color 0.4s ease,
-    backdrop-filter 0.4s ease;
-}
-
-.site-nav[data-open='true'] {
-  mix-blend-mode: difference;
-  background: rgba(var(--maroon-rgb), 0.92);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(var(--ink-rgb), 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--paper);
 }
 
 .site-nav .logo-area {
@@ -53,12 +34,12 @@
   font-size: 1.05rem;
   text-transform: uppercase;
   text-decoration: none;
-  color: #fff;
+  color: var(--paper);
 }
 .site-nav .logo-blob {
   width: 30px;
   height: 22px;
-  background: #fff;
+  background: var(--rust);
   border-radius: 40% 60% 60% 40% / 50% 30% 70% 50%;
   animation: site-nav-blobby 6s infinite ease-in-out;
   flex-shrink: 0;
@@ -86,7 +67,7 @@
   width: 18px;
   height: 2px;
   border-radius: 2px;
-  background: #fff;
+  background: var(--paper);
   transform: translate(-50%, -50%) translateY(-4px);
   transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1), background 0.35s ease;
 }
@@ -106,11 +87,9 @@
 }
 
 @media (max-width: 640px) {
-  .site-nav-shell {
+  .site-nav {
     top: 14px;
     width: calc(100% - 24px);
-  }
-  .site-nav {
     padding: 8px 8px 8px 18px;
   }
   .site-nav .logo-area span { font-size: 0.95rem; }

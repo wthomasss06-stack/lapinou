@@ -1,12 +1,11 @@
 'use client'
 
-import { useLayoutEffect, useRef } from 'react'
+import { useRef } from 'react'
 import Link from 'next/link'
 import { gsap } from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { X } from 'lucide-react'
 import { waHref, type NavLinkItem } from './SiteNav'
-import { ensureViewportMetrics } from '@/lib/viewportMetrics'
 import './StaggeredMenu.css'
 
 gsap.registerPlugin(useGSAP)
@@ -30,12 +29,6 @@ export default function StaggeredMenu({ isOpen, onClose, primary, secondary }: S
   const addItem = (el: HTMLElement | null) => {
     if (el) itemsRef.current.push(el)
   }
-
-  useLayoutEffect(() => {
-    ensureViewportMetrics()
-    if (!overlayRef.current) return
-    gsap.set(itemsRef.current, { y: 26, autoAlpha: 0 })
-  }, [])
 
   useGSAP(
     () => {
