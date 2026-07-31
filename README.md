@@ -204,6 +204,50 @@ En cas d'annulation, le stock est automatiquement restauré.
 
 ---
 
+## 🧩Librairies
+
+### Librairies Utilitaires (`/lib`)
+
+#### `cloudinary.js`
+Convertit les chemins locaux de type `/IMAGES/xxx.webp` en URLs Cloudinary CDN avec optimisation automatique (`f_auto`, `q_auto`). Miroir exact de l'arborescence locale — aucun mapping manuel requis.
+
+```ts
+import { cld } from '@/lib/cloudinary'
+cld('/IMAGES/eleveur-soin.jpg', { width: 800 })
+// → https://res.cloudinary.com/.../image/upload/f_auto,q_auto,w_800/...
+```
+
+#### `chezFlorenceLetters.ts`
+Deux exports :
+- **`CHEZ_FLORENCE_LETTER_IMAGES`** : mapping lettre → image dédiée pour l'effet de survol par lettre (ex: `C` → `C.webp`, `H` → `H.webp`).
+- **`CHEZ_FLORENCE_IMAGE_POOL`** : pool de ~60 images (loader bunnies + curseurs projetil) pour l'effet image aléatoire au survol des titres.
+
+#### `numberHoverImages.ts`
+Pools d'images "chiffre" (`IMAGES/num/`) pour l'effet de survol des numéros de section. Chaque chiffre a plusieurs variantes (ex: `7`, `77`, `777777`, `77777777`) — une est tirée au hasard à chaque survol via `wireDigitHoverImages`.
+
+#### `hoverImageChars.ts`
+Utilitaire vanilla JS, indépendant du framework. Trois fonctions :
+- **`wireHoverImageChars`** : affiche une image flottante près du caractère le plus proche du curseur, choisie aléatoirement dans un pool (effet "teeeextoooo_prooo").
+- **`wireLetterDedicatedHoverImages`** : image fixe dédiée par lettre (ex: `F` → image du `F`), posée par-dessus le caractère sans bouger la mise en page.
+- **`wireDigitHoverImages`** : variante chiffre → pool dédié avec rotation aléatoire à chaque tirage.
+
+#### `useTilt3D.ts`
+Hook React qui applique un effet 3D tilt (`rotateX`/`rotateY`) au survol des éléments `[data-tilt]`. Utilise la délégation d'événements (couvre les éléments ajoutés dynamiquement). Gère le `scale` de base via `data-base-scale` pour préserver les styles CSS existants.
+
+#### `useGsapLenis.ts`
+Orchestrateur central de toute l'animation scroll de la home :
+- Initialisation **Lenis** (smooth scroll) avec paramètres adaptés desktop/mobile.
+- Reveal générique `.reveal-text` (fade + translateY au scroll).
+- Parallax images `.project-item img`.
+- Thème dynamique 2 couleurs (`maroon`/`rust`) via `data-theme` sur les sections.
+- Titres "élastiques" `.elastic-title` (GSAP SplitText + `elastic.out`).
+- Wiring des effets de survol image (`wireHoverImageChars`, `wireDigitHoverImages`).
+- Recalcul des ScrollTrigger après chargement des polices.
+
+#### `viewportMetrics.ts`
+Calcule et met en cache les métriques viewport (`vw`, `vh`, `dvh`, `isMobile`). Expose les variables CSS `--nav-vw`, `--nav-vh`, `--nav-dvh` sur `:root`.
+
+
 # 🎬 Animations & Effets Marquants
 
 Le site repose sur une expérience cinématique scroll-driven et interactive. Voici les effets clés, implémentés avec **GSAP** (ScrollTrigger, SplitText), **Framer Motion** et **OGL/WebGL**.
@@ -423,6 +467,28 @@ Séquence d'introduction en 3 phases, jouée une fois par session :
 - Clic 2 : validation et envoi de la réservation
 - Re-mesure automatique de la hauteur cible si le contenu change (ex. message "Stock max atteint")
 
+
+
+## 19. ArrowButton
+
+Bouton flèche réutilisable, port du style `.cf-card-link-arrow` / `.cf-mobile-item-arrow`. Supporte les liens internes (`<Link>`) et externes (`<a>`). Variantes `solid`, `block`. Intègre `<HoverFadeText />` pour l'effet de fondu au survol.
+
+## 20. LetterHoverTitle
+
+Titre où chaque lettre a sa propre image dédiée au survol (port de `reveal_hover_image_par_lettre.html`). La boîte s'élargit et la lettre laisse place à l'image. Supporte le retour à la ligne forcé par mot (`words` prop). Géré en CSS pur + survol souris/tactile.
+
+## 21. BunnyFountain
+Fontaine de lapins animés (port de `footer_animated_bunnies.html`). Particules d'images de lapins projetées depuis le bas du footer en arc parabolique, avec rotation et fade. 16 particules par défaut, respecte `prefers-reduced-motion`. Couche de fond décorative (`pointer-events: none`).
+
+## 22. KineticMarqueeGallery
+Galerie cinématique "Nos Lapins" avec :
+- **Marquee horizontal** en arrière-plan (texte du nom du lapin en stroke transparent).
+- **Parallaxe verticale** sur le bloc infos + image (2 couches indépendantes pour la profondeur).
+- **Image** au centre avec hover zoom + bouton "Commander" en bas à droite.
+- **Overlay "Épuisé"** en grayscale si `unavailable === true`.
+- Layout responsive : desktop (infos gauche / image centre) → mobile (colonne empilée).
+
+Props : `items: KineticItem[]` (`image`, `slug`, `name`, `price`, `breed?`, `weight?`, `stock`, `unavailable`).
 ---
 
 # 🎨 Design system
