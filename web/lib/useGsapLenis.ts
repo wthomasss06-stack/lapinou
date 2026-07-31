@@ -4,8 +4,9 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
 import Lenis from 'lenis'
-import { wireHoverImageChars } from './hoverImageChars'
+import { wireHoverImageChars, wireDigitHoverImages } from './hoverImageChars'
 import { CHEZ_FLORENCE_IMAGE_POOL } from './chezFlorenceLetters'
+import { NUMBER_IMAGE_POOLS } from './numberHoverImages'
 
 gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText)
 ScrollTrigger.config({ ignoreMobileResize: true })
@@ -103,10 +104,12 @@ export default function useGsapLenis() {
         if (theme === 'rust') {
           homeRoot.style.setProperty('--current-bg', 'var(--rust)')
           homeRoot.style.setProperty('--current-text', 'var(--ink)')
+          homeRoot.style.setProperty('--current-text-rgb', 'var(--ink-rgb)')
           homeRoot.style.setProperty('--current-accent', 'var(--maroon)')
         } else {
           homeRoot.style.setProperty('--current-bg', 'var(--maroon)')
           homeRoot.style.setProperty('--current-text', 'var(--paper)')
+          homeRoot.style.setProperty('--current-text-rgb', 'var(--paper-rgb)')
           homeRoot.style.setProperty('--current-accent', 'var(--rust)')
         }
       }
@@ -156,8 +159,15 @@ export default function useGsapLenis() {
           })
           // Image au survol du titre (caractère le plus proche du curseur) —
           // demande "teeeextoooo_prooo.html" appliquée à chaque titre de
-          // section, pool d'images tiré au hasard à chaque survol.
-          cleanupFns.push(wireHoverImageChars(heading, '.hero-char', CHEZ_FLORENCE_IMAGE_POOL))
+          // section, pool d'images tiré au hasard à chaque survol. Les
+          // numéros de section (SectionHead, "07"...) sont aussi des
+          // .elastic-title mais veulent leur PROPRE pool par chiffre
+          // (IMAGES/num) plutôt que le pool générique Chez Florence.
+          if (heading.classList.contains('editorial-head__num')) {
+            cleanupFns.push(wireDigitHoverImages(heading, '.hero-char', NUMBER_IMAGE_POOLS))
+          } else {
+            cleanupFns.push(wireHoverImageChars(heading, '.hero-char', CHEZ_FLORENCE_IMAGE_POOL))
+          }
         })
 
         // Lenis a lui aussi mis en cache la hauteur totale scrollable

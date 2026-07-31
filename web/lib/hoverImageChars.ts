@@ -138,3 +138,60 @@ export function wireLetterDedicatedHoverImages(
   return () => cleanups.forEach((fn) => fn())
 }
 
+// Variante "chiffre → pool d'images dédié" pour les numéros de section
+// (SectionHead, ex. "07"), déjà découpés en .hero-char par le même
+// SplitText que les titres (voir la boucle .elastic-title de
+// useGsapLenis.ts). Contrairement à wireLetterDedicatedHoverImages (une
+// seule image fixe par lettre), chaque chiffre a ICI plusieurs variantes
+// (public/IMAGES/num, voir lib/numberHoverImages.ts) et on en tire une au
+// hasard à chaque survol — même logique de tirage que wireHoverImageChars,
+// mais ancrée sur le caractère exact plutôt que le plus proche du curseur.
+export function wireDigitHoverImages(
+  container: HTMLElement,
+  charSelector: string,
+  pools: Record<string, string[]>
+): () => void {
+  const chars = Array.from(container.querySelectorAll<HTMLElement>(charSelector))
+  if (!chars.length) return () => {}
+
+  const cleanups: Array<() => void> = []
+
+  chars.forEach((el) => {
+    const digit = (el.textContent || '').trim()
+    const pool = pools[digit]
+    if (!pool || !pool.length) return
+
+    if (!el.style.position) el.style.position = 'relative'
+
+    const img = document.createElement('img')
+    img.className = 'num-hover-image'
+    img.alt = ''
+    img.setAttribute('aria-hidden', 'true')
+    el.appendChild(img)
+
+    const roll = () => {
+      img.src = pool[Math.floor(Math.random() * pool.length)]
+      // Légère rotation aléatoire à chaque tirage — même image répétée
+      // plusieurs fois au survol n'a alors jamais l'air parfaitement figée.
+      img.style.setProperty('--num-rot', `${(Math.random() * 16 - 8).toFixed(1)}deg`)
+    }
+
+    const onEnter = () => { roll(); img.classList.add('is-active') }
+    const onLeave = () => img.classList.remove('is-active')
+    const onTouch = () => { onEnter(); window.setTimeout(onLeave, 900) }
+
+    el.addEventListener('mouseenter', onEnter)
+    el.addEventListener('mouseleave', onLeave)
+    el.addEventListener('touchstart', onTouch, { passive: true })
+
+    cleanups.push(() => {
+      el.removeEventListener('mouseenter', onEnter)
+      el.removeEventListener('mouseleave', onLeave)
+      el.removeEventListener('touchstart', onTouch)
+      img.remove()
+    })
+  })
+
+  return () => cleanups.forEach((fn) => fn())
+}
+

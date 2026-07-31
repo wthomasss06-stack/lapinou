@@ -187,8 +187,8 @@
     font-weight: 700;
     line-height: 1.05;
     letter-spacing: -0.05em;
-    color: var(--current-text, var(--paper));
-    opacity: 0.92;
+    color: transparent;
+    -webkit-text-stroke: 2px rgba(var(--current-text-rgb, var(--paper-rgb)), 0.6);
     user-select: none;
   }
 
@@ -904,7 +904,7 @@
     }
     .home-cinema .editorial-head__num {
       font-size: clamp(3.5rem, 22vw, 5.5rem);
-      
+      -webkit-text-stroke-width: 1.4px;
     }
     .home-cinema .editorial-head__title .section-title,
     .home-cinema .editorial-head__title.section-title,

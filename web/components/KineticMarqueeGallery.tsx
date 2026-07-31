@@ -29,32 +29,62 @@ export default function KineticMarqueeGallery({ items }: Props) {
     if (!containerRef.current || items.length === 0) return
 
     const ctx = gsap.context(() => {
-      // Parallaxe verticale sur le bloc image + infos
+      // Parallaxe verticale sur le bloc image + infos — amplitude quasi
+      // doublée (350 → 620) et scrub numérique (au lieu de true) pour un
+      // léger temps de retard du tween sur le scroll : en plus du lissage
+      // Lenis déjà global (voir useGsapLenis.ts), ça donne cette sensation
+      // "huilée" typique des parallax haut de gamme plutôt qu'un suivi 1:1.
       containerRef.current!.querySelectorAll<HTMLElement>('[data-speed]').forEach((el) => {
         const speed = parseFloat(el.getAttribute('data-speed') || '0')
         gsap.to(el, {
-          y: () => speed * 350,
+          y: () => speed * 620,
           ease: 'none',
           scrollTrigger: {
             trigger: el.closest('.kinetic-item'),
             start: 'top bottom',
             end: 'bottom top',
-            scrub: true,
+            scrub: 1,
           }
         })
       })
 
-      // Marquee horizontal cinétique
+      // Couche de profondeur supplémentaire, indépendante, sur l'image
+      // seule : elle dérive (alternée selon la parité, comme le marquee) ET
+      // se recadre (zoom léger → taille réelle) à SA propre vitesse, en plus
+      // du mouvement du bloc entier ci-dessus. C'est ce différentiel entre
+      // les deux couches (bloc vs image) qui crée une vraie profondeur au
+      // lieu d'un simple bloc qui glisse. Sur .kinetic-image-wrap (pas
+      // .kinetic-img) pour ne pas entrer en conflit avec le scale:1.06 au
+      // hover, déclaré en CSS sur .kinetic-img lui-même.
+      containerRef.current!.querySelectorAll<HTMLElement>('.kinetic-image-wrap').forEach((wrap, index) => {
+        const dir = index % 2 === 0 ? 1 : -1
+        gsap.fromTo(wrap,
+          { y: dir * 90, scale: 1.12 },
+          {
+            y: dir * -90,
+            scale: 1,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: wrap.closest('.kinetic-item'),
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1,
+            }
+          }
+        )
+      })
+
+      // Marquee horizontal cinétique — amplitude renforcée (40 → 55)
       containerRef.current!.querySelectorAll<HTMLElement>('.kinetic-marquee-track').forEach((marquee) => {
         const dir = parseFloat(marquee.getAttribute('data-direction') || '-1')
         gsap.to(marquee, {
-          xPercent: dir * 40,
+          xPercent: dir * 55,
           ease: 'none',
           scrollTrigger: {
             trigger: marquee.closest('.kinetic-item'),
             start: 'top bottom',
             end: 'bottom top',
-            scrub: true
+            scrub: 1,
           }
         })
       })

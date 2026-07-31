@@ -109,12 +109,12 @@
 /* ── Image (centre, rectangle en largeur) ───────────── */
 .kinetic-image-wrap {
   position: relative;
-  width: min(640px, 88vw);
-  height: min(400px, 52vh);
+  width: min(760px, 90vw);
+  height: min(480px, 60vh);
   aspect-ratio: 16 / 10;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 34px 80px rgba(0, 0, 0, 0.55);
   display: block;
   text-decoration: none;
   will-change: transform;
@@ -201,8 +201,8 @@
     width: 100%;
   }
   .kinetic-image-wrap {
-    width: min(380px, 88vw);
-    height: min(520px, 60vh);
+    width: min(430px, 90vw);
+    height: min(580px, 64vh);
   }
   .kinetic-marquee-track span {
     font-size: clamp(3.5rem, 10vw, 6rem);

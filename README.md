@@ -478,11 +478,11 @@ Variables CSS principales (`web/app/globals.css`) :
 
 **catalogue — les lapins**
 
-![les lapins](screenshots/catalogue.mp4)
+![les lapins](screenshots/catalogue.gif)
 
 **Footer — Pied de page**
 
-![Pied de page](screenshots/footer.mp4)
+![Pied de page](screenshots/footer.gif)
 
 
 ```text
@@ -490,8 +490,8 @@ screenshots/
 ├── admin-dashboard.png   
 ├── admin-login.png       
 ├── PreLoader.png
-├── catalogue.png
-└── Footer.png
+├── catalogue.gif
+└── Footer.gif
 ```
 
 ---
