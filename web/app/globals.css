@@ -355,14 +355,20 @@ body {
 .cf-arrow-btn:hover .cf-arrow-btn-circle svg { transform: rotate(45deg); color: var(--paper); }
 
 .cf-arrow-btn.cf-arrow-btn--solid {
-  background-color: var(--rust);
-  color: var(--ink);
-  border-color: var(--rust);
+  background-color: var(--caramel, #B8834A);
+  color: #ffffff;
+  border-color: var(--caramel, #B8834A);
+  box-shadow: 0 4px 16px rgba(184, 131, 74, 0.4);
 }
-.cf-arrow-btn.cf-arrow-btn--solid .cf-arrow-btn-circle { border-color: rgba(42,16,11,0.3); }
-.cf-arrow-btn.cf-arrow-btn--solid:hover { background-color: var(--ink); color: var(--paper); border-color: var(--ink); }
-.cf-arrow-btn.cf-arrow-btn--solid:hover .cf-arrow-btn-circle { border-color: var(--paper); background-color: var(--paper); }
-.cf-arrow-btn.cf-arrow-btn--solid:hover .cf-arrow-btn-circle svg { color: var(--ink); }
+.cf-arrow-btn.cf-arrow-btn--solid .cf-arrow-btn-circle { border-color: rgba(255, 255, 255, 0.4); }
+.cf-arrow-btn.cf-arrow-btn--solid:hover {
+  background-color: #9A6A36;
+  color: #ffffff;
+  border-color: #9A6A36;
+  box-shadow: 0 8px 24px rgba(184, 131, 74, 0.6);
+}
+.cf-arrow-btn.cf-arrow-btn--solid:hover .cf-arrow-btn-circle { border-color: #ffffff; background-color: #ffffff; }
+.cf-arrow-btn.cf-arrow-btn--solid:hover .cf-arrow-btn-circle svg { color: var(--maroon); transform: rotate(45deg); }
 
 /* ═══════════════════════════════════════════════════════════════════
    Curseur custom — désormais global (plus scopé .home-cinema) : rendu

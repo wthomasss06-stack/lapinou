@@ -76,7 +76,7 @@ export default function LapinsFeaturedSection() {
   }, [rabbits])
 
   return (
-    <section id="lapins" data-theme="rust">
+    <section id="lapins" data-theme="dark">
       <div className="section-head section-head--carousel">
         <div>
           <div className="eyebrow">Nos Lapins</div>

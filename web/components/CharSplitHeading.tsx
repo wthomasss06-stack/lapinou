@@ -37,11 +37,10 @@ export default function CharSplitHeading({ lines, images, as: Tag = 'h2', classN
       {lines.map((line, li) => (
         <span className="hover-char-line" key={li}>
           {line.split(' ').map((word, wi, arr) => (
-            <span className="hover-char-word" key={wi}>
+            <span className="hover-char-word" key={wi} style={{ marginRight: wi < arr.length - 1 ? '0.45em' : 0 }}>
               {word.split('').map((ch, ci) => (
                 <span className="hover-char" key={ci}>{ch}</span>
               ))}
-              {wi < arr.length - 1 && ' '}
             </span>
           ))}
         </span>

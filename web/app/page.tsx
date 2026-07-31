@@ -142,9 +142,9 @@ export default async function HomePage() {
         <TestimonialsSection />
         <PosterSection />
         <FaqSection />
+        <CtaSection />
       </div>
 
-      <CtaSection />
       <Footer />
 
     </main>

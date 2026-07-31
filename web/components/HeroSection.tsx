@@ -7,8 +7,8 @@ import { SplitText } from 'gsap/SplitText'
 import RainbowText from './RainbowText'
 import HoverFadeText from './HoverFadeText'
 import { cld } from '@/lib/cloudinary'
-import { wireLetterDedicatedHoverImages } from '@/lib/hoverImageChars'
-import { CHEZ_FLORENCE_LETTER_IMAGES } from '@/lib/chezFlorenceLetters'
+import { wireHoverImageChars } from '@/lib/hoverImageChars'
+import { CHEZ_FLORENCE_IMAGE_POOL, CHEZ_FLORENCE_LETTER_IMAGES } from '@/lib/chezFlorenceLetters'
 import LetterHoverTitle from './LetterHoverTitle'
 
 gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText)
@@ -20,8 +20,7 @@ const GRID_COLS: string[][] = [
   [cld('/IMAGES/Snapchat-908462874.webp'), cld('/IMAGES/Snapchat-956074945.webp'), cld('/IMAGES/Snapchat-1244900246.webp')],
 ]
 
-/* ═══ MOBILE : slides webm plein écran (aucun souci de perf signalé ici,
-   contrairement à la grille desktop — inchangé) ═══ */
+/* ═══ MOBILE : slides webm plein écran ═══ */
 const SLIDES = [
   cld('/IMAGES/1.webm'),
   cld('/IMAGES/2.webm'),
@@ -34,7 +33,7 @@ export default function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null)
   const galleryRef = useRef<HTMLDivElement>(null)
 
-  /* ── Mobile carousel state (vidéo, inchangé) ── */
+  /* ── Mobile carousel state ── */
   const [cur, setCur] = useState(0)
   const vidRefs = useRef<(HTMLVideoElement | null)[]>([])
   const curRef = useRef(0)
@@ -53,7 +52,7 @@ export default function HeroSection() {
     busy.current = false
   }, [])
 
-  /* ── GSAP : vortex sur desktop, titre élastique sur mobile ── */
+  /* ── GSAP : vortex desktop + hover images pool sur FLORENCE ── */
   useGSAP(() => {
     const section = sectionRef.current
     const gallery = galleryRef.current
@@ -83,6 +82,7 @@ export default function HeroSection() {
         ease: 'power3.out',
       })
 
+      // Hover pool images sur FLORENCE desktop (même pool que le footer)
       let cleanupLetterHoverDesktop = () => {}
       document.fonts.ready.then(() => {
         try {
@@ -95,7 +95,10 @@ export default function HeroSection() {
             stagger: 0.015,
             ease: 'elastic.out(0.75, 0.3)',
           })
-          cleanupLetterHoverDesktop = wireLetterDedicatedHoverImages(split.chars, CHEZ_FLORENCE_LETTER_IMAGES)
+          const titleEl = document.getElementById('hero-title-desktop')
+          if (titleEl) {
+            cleanupLetterHoverDesktop = wireHoverImageChars(titleEl, '.hero-char', CHEZ_FLORENCE_IMAGE_POOL)
+          }
         } catch (e) {
           console.warn('SplitText non disponible', e)
         }
@@ -160,7 +163,7 @@ export default function HeroSection() {
     })
 
     /* ═══════════════════════════════════════════════
-       MOBILE — Slides webm (titre élastique uniquement)
+       MOBILE — Slides webm (titre élastique + hover pool)
        ═══════════════════════════════════════════════ */
     mm.add('(max-width: 768px)', () => {
       let cleanupLetterHoverMobile = () => {}
@@ -175,7 +178,10 @@ export default function HeroSection() {
             stagger: 0.015,
             ease: 'elastic.out(0.75, 0.3)',
           })
-          cleanupLetterHoverMobile = wireLetterDedicatedHoverImages(split.chars, CHEZ_FLORENCE_LETTER_IMAGES)
+          const titleEl = document.getElementById('hero-title-mobile')
+          if (titleEl) {
+            cleanupLetterHoverMobile = wireHoverImageChars(titleEl, '.hero-char', CHEZ_FLORENCE_IMAGE_POOL)
+          }
         } catch (e) {
           console.warn('SplitText non disponible', e)
         }

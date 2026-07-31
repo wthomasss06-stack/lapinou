@@ -46,18 +46,25 @@ export default function ContactMorphButton() {
   const btnAnim = useRef({ currentW: BTN_CLOSED_W, currentH: BTN_CLOSED_H, currentX: 0, currentY: 0, targetX: 0, targetY: 0, targetW: BTN_CLOSED_W, targetH: BTN_CLOSED_H, vxW: 0, vxH: 0, vxX: 0, vxY: 0 })
   const panelWRef = useRef(360)
 
-  const getPanelWidth = () => (typeof window === 'undefined' ? 360 : Math.min(360, window.innerWidth - 64))
+  const getPanelDimensions = () => {
+    if (typeof window === 'undefined') return { w: 360, h: 480 }
+    const isDesktop = window.innerWidth >= 900
+    if (isDesktop) {
+      return { w: Math.min(640, window.innerWidth - 64), h: 370 }
+    }
+    return { w: Math.min(360, window.innerWidth - 48), h: 480 }
+  }
 
   const openPanel = () => {
-    const w = getPanelWidth()
+    const { w, h } = getPanelDimensions()
     panelWRef.current = w
     panelAnim.current.targetW = w
-    panelAnim.current.targetH = PANEL_H
+    panelAnim.current.targetH = h
     panelAnim.current.targetOpacity = 1
     btnAnim.current.targetW = BTN_OPEN_SIZE
     btnAnim.current.targetH = BTN_OPEN_SIZE
     btnAnim.current.targetX = w - BTN_OPEN_SIZE - CORNER_GAP
-    btnAnim.current.targetY = PANEL_H - BTN_OPEN_SIZE - CORNER_GAP
+    btnAnim.current.targetY = h - BTN_OPEN_SIZE - CORNER_GAP
     setIsExpanded(true)
     isExpandedRef.current = true
   }
@@ -193,7 +200,7 @@ export default function ContactMorphButton() {
               </div>
               <div className="field-group">
                 <label className="field-label" htmlFor="cm-message">Message *</label>
-                <textarea id="cm-message" name="message" required rows={3} className="input-minimal" placeholder="Votre message..." value={form.message} onChange={onChange} />
+                <textarea id="cm-message" name="message" required rows={2} className="input-minimal" placeholder="Votre message..." value={form.message} onChange={onChange} />
               </div>
               {status === 'error' && <p className="footer-form-error">Un souci est survenu — réessayez ou écrivez-nous par email.</p>}
               <div className="cm-arrow-clearance" />

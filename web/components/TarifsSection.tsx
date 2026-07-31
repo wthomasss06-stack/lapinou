@@ -21,7 +21,7 @@ export default function TarifsSection() {
   useTilt3D(gridRef)
 
   return (
-    <section id="tarifs" data-theme="maroon">
+    <section id="tarifs" data-theme="rust">
       <div className="section-head">
         <div>
           <div className="eyebrow">Tarifs</div>

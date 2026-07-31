@@ -30,7 +30,7 @@ const contactLinks = [
 // Aide/Conditions/Confidentialité vivent maintenant dans le footer
 // (voir Footer.tsx) — plus dans la nav.
 
-const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP?.replace(/\D/g, '') || ''
+const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP?.replace(/\D/g, '') || '2250142507750'
 const WHATSAPP_URL = WHATSAPP
   ? `https://wa.me/${WHATSAPP}?text=${encodeURIComponent("Bonjour, j'aimerais commander un lapin.")}`
   : '#'
@@ -112,9 +112,10 @@ function DesktopCardNav() {
           <Logo size={52} className="cf-nav-logo" onClick={closeNav} />
 
           <div className="cf-nav-right">
-            <Link href="/#lapins" className="cf-nav-cta" onClick={closeNav}>
-              <HoverFadeText>Voir les lapins</HoverFadeText>
-            </Link>
+            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="cf-nav-cta" onClick={closeNav}>
+              <HoverFadeText>Commander</HoverFadeText>
+              <ArrowIcon className="cf-nav-cta-arrow" />
+            </a>
           </div>
         </div>
 

@@ -62,6 +62,12 @@ export default function Footer() {
                 </div>
               </div>
               <div className="contact-item">
+                <div className="contact-label">Téléphone</div>
+                <div className="contact-value">
+                  <a href="tel:+2250101314063" className="hover-target">+225 01 01 31 40 63</a>
+                </div>
+              </div>
+              <div className="contact-item">
                 <div className="contact-label">WhatsApp</div>
                 <div className="contact-value">
                   <a href={waHref} target="_blank" rel="noopener noreferrer" className="hover-target">+225 01 42 50 77 50</a>
