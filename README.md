@@ -268,7 +268,7 @@ Séquence d'introduction en 3 phases, jouée une fois par session :
 
 ## 2. Hero — Vortex 3×3 (Desktop)
 
-**Fichier :** `HeroSection.tsx`
+**Fichier :** `HeroSection.tsx` (+ `HeroParallax.tsx` pour le parallax souris du fond)
 
 - **Grille 3×3** de photos de lapins qui effectue un **vortex** au scroll :
   - `pin` sur toute la section, `scrub: 0.8`
@@ -276,6 +276,8 @@ Séquence d'introduction en 3 phases, jouée une fois par session :
   - Les images internes tournent en sens inverse (`rotation: -180°`) + zoom inverse (`scale: 1.25 → 1`)
 - **Titre élastique** : "FLORENCE" en `SplitText` (caractères) avec reveal `elastic.out(0.75, 0.3)`
 - **Contenu central** qui apparaît en fade-in une fois le vortex terminé
+- **Parallax souris** sur le fond (`.jellyfish-bg`) : décalage `x`/`y` proportionnel à la position du curseur, `gsap.to(..., { duration: 1, ease: 'power2.out' })`
+- **Indicateur de scroll** : `heroScrollCue` (`@keyframes`, `home-cinematic.css`)
 - **Mobile** : slides vidéo WebM plein écran avec crossfade automatique
 
 ---
@@ -296,9 +298,9 @@ Séquence d'introduction en 3 phases, jouée une fois par session :
 
 ---
 
-## 4. Galerie Circulaire WebGL
+## 4. Galerie Circulaire WebGL ⚠️ non utilisée actuellement
 
-**Fichier :** `CircularGallery.tsx`
+**Fichier :** `CircularGallery.tsx` — n'est plus importé nulle part ; remplacée sur "En Vedette" par la galerie actuelle (voir **22. KineticMarqueeGallery**). Conservé ci-dessous à titre de référence technique.
 
 - **Moteur WebGL** (OGL) avec rendu canvas transparent
 - **Courbe 3D** : les images suivent une trajectoire courbée configurable (`bend`) avec rotation Z automatique selon la position X
@@ -371,9 +373,9 @@ Séquence d'introduction en 3 phases, jouée une fois par session :
 
 ---
 
-## 10. Section "Pour Qui" — Blob Éclosion
+## 10. Section "Pour Qui" — Blob Éclosion ⚠️ non utilisée actuellement
 
-**Fichier :** `PourQuiSection.tsx`
+**Fichier :** `PourQuiSection.tsx` — non importé dans les routes actuelles (`/about` et `/contact` sont aujourd'hui de simples redirections). Conservé ci-dessous à titre de référence technique.
 
 - 3 cartes plein écran avec image de fond
 - **Effet d'éclosion** : l'image apparaît via `clip-path: circle(0% → 130%)` depuis le centre de la carte, avec délai stagger entre les 3 cartes
@@ -450,11 +452,10 @@ Séquence d'introduction en 3 phases, jouée une fois par session :
 
 ## 17. Animations Framer Motion
 
-**Fichiers :** `AboutSection.tsx`, `ContactSection.tsx`, `TopCollectionSection.tsx`, `Logo.tsx`
+**Fichier :** `Logo.tsx` — seul composant Framer Motion encore utilisé. `AboutSection.tsx`, `ContactSection.tsx`, `TopCollectionSection.tsx` existent dans `components/` avec le même genre de pattern (`whileInView`/`whileHover`) mais ne sont importés nulle part actuellement.
 
-- Entrées `whileInView` avec `initial={{ opacity: 0, y: 30 }}` → `animate` avec stagger
 - **Logo** : animation d'entrée spring (`stiffness: 200, damping: 15`) + hover (`rotate: 4°, scale: 1.06`)
-- **Cartes** : hover `whileHover={{ x: 4 }}` avec spring physique
+- Pattern des fichiers non utilisés, pour référence : entrées `whileInView` avec `initial={{ opacity: 0, y: 30 }}` → `animate` avec stagger, cartes en `whileHover={{ x: 4 }}` avec spring physique
 
 ---
 
@@ -480,15 +481,47 @@ Titre où chaque lettre a sa propre image dédiée au survol (port de `reveal_ho
 ## 21. BunnyFountain
 Fontaine de lapins animés (port de `footer_animated_bunnies.html`). Particules d'images de lapins projetées depuis le bas du footer en arc parabolique, avec rotation et fade. 16 particules par défaut, respecte `prefers-reduced-motion`. Couche de fond décorative (`pointer-events: none`).
 
-## 22. KineticMarqueeGallery
-Galerie cinématique "Nos Lapins" avec :
+## 22. KineticMarqueeGallery (desktop)
+Galerie cinématique "Nos Lapins" — **desktop uniquement** (`≥ 901px`). Sur mobile, `LapinsFeaturedSection` bascule vers un slider dédié (voir **23. Slider mobile "En Vedette"**). Avec :
 - **Marquee horizontal** en arrière-plan (texte du nom du lapin en stroke transparent).
-- **Parallaxe verticale** sur le bloc infos + image (2 couches indépendantes pour la profondeur).
+- **Parallaxe verticale** sur le bloc infos + image, scrub lissé (`scrub: 1`, léger temps de retard pour un rendu "huilé") — **2 couches indépendantes** pour la profondeur : le bloc entier (`data-speed`) + l'image qui dérive et se recadre (`scale: 1.12 → 1`) à sa propre vitesse.
 - **Image** au centre avec hover zoom + bouton "Commander" en bas à droite.
 - **Overlay "Épuisé"** en grayscale si `unavailable === true`.
-- Layout responsive : desktop (infos gauche / image centre) → mobile (colonne empilée).
 
 Props : `items: KineticItem[]` (`image`, `slug`, `name`, `price`, `breed?`, `weight?`, `stock`, `unavailable`).
+
+---
+
+## 23. Slider mobile "En Vedette" — Auto-slide
+
+**Fichier :** `LapinsFeaturedSection.tsx`
+
+Sur mobile (`< 901px`), la galerie "En Vedette" n'utilise pas `KineticMarqueeGallery` mais un slider horizontal natif dédié (`.lapins-mobile-track`, `scroll-snap-type: x mandatory`) :
+
+- **Auto-slide** : avance toutes les 3.5s, boucle au premier lapin une fois la fin atteinte (pas de simple `scrollBy` qui se contenterait de clamp en fin de liste) ; minuteur tenu dans une ref au niveau du composant (pas une variable locale à l'effet), pour ne jamais avoir deux intervalles actifs en parallèle même si l'effet se relance sans cleanup entre-temps
+- **Pause au toucher** : `touchstart`/`pointerdown` coupent l'auto-slide, reprise après 4s d'inactivité
+- **`prefers-reduced-motion`** : auto-slide désactivé d'office, navigation manuelle uniquement
+- **Flèches manuelles** : icônes `ChevronLeft`/`ChevronRight` (lucide-react), `scrollBy` en `behavior: 'smooth'` — en flux normal sous le slider, centrées (corrige un `position: absolute` hérité qui les affichait hors de la section)
+
+---
+
+## 24. Numéros de section — Ghost + survol par chiffre
+
+**Fichiers :** `SectionHead.tsx`, `home-cinematic.css`, `hover-effects.css`, `lib/numberHoverImages.ts`, `lib/hoverImageChars.ts` (`wireDigitHoverImages` — voir Librairies)
+
+- **Style "ghost"** : `.editorial-head__num` en `color: transparent` + `-webkit-text-stroke`, couleur du contour asservie à `--current-text-rgb` (suit le thème rust/ink ↔ maroon/paper de la section au scroll, comme `--current-text`)
+- **Survol par chiffre** : chaque caractère (`SplitText`) affiche une image flottante tirée au hasard dans son propre pool (`public/IMAGES/num`, ex. `7` → `7` / `77` / `777777` / `77777777`), avec une légère rotation aléatoire à chaque tirage pour qu'un même chiffre survolé plusieurs fois ne se répète jamais à l'identique
+- **Contour renforcé au survol** : `-webkit-text-stroke-color` s'intensifie sous le curseur pour accompagner l'image flottante
+
+---
+
+## 25. GarantiesSection — Scroll horizontal épinglé (mobile)
+
+**Fichier :** `GarantiesSection.tsx`
+
+- **Mobile uniquement** (`gsap.matchMedia('(max-width: 768px)')`) : la section se **pin** (`ScrollTrigger`, `pin: true`) et les garanties défilent **horizontalement** pendant que l'utilisateur scrolle verticalement (`scrub: 1`)
+- **Desktop** : pas de pin — simple reveal de chaque `.garantie-row` (`autoAlpha` + `y: 40 → 0`, `power3.out`) au passage
+
 ---
 
 # 🎨 Design system

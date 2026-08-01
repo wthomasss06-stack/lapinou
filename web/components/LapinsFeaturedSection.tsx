@@ -25,6 +25,8 @@ export default function LapinsFeaturedSection() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const mobileTrackRef = useRef<HTMLDivElement>(null)
+  const autoSlideTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const autoSlideResumeRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const scrollMobile = (dir: number) => {
     const track = mobileTrackRef.current
@@ -58,12 +60,16 @@ export default function LapinsFeaturedSection() {
   }, [])
 
   // Auto-slide mobile — pour signaler qu'il y a d'autres lapins à faire
-  // défiler (le swipe seul n'était pas assez visible). Pause dès que
-  // l'utilisateur touche le slider, reprend après 4s d'inactivité ; ne
-  // tourne que quand le slider est réellement visible à l'écran
-  // (IntersectionObserver, pas de setInterval qui tourne pour rien hors
-  // champ) ; désactivé pour prefers-reduced-motion — les flèches restent
-  // le seul contrôle dans ce cas.
+  // défiler (le swipe seul n'était pas assez visible). Minuteur tenu dans
+  // une ref au niveau du COMPOSANT (pas une variable locale à l'effet) :
+  // même si l'effet s'exécute deux fois sans cleanup entre les deux
+  // (StrictMode en dev, ou tout autre double déclenchement), stopAutoSlide
+  // efface TOUJOURS le même minuteur partagé avant d'en reposer un — donc
+  // jamais deux intervalles actifs en même temps. C'était le bug : deux
+  // minuteurs à 3.5s tournant en parallèle, décalés, donnaient une avance
+  // perçue toutes les ~1.75s au lieu de 3.5s. Pause au toucher, reprise
+  // après 4s d'inactivité, désactivé si prefers-reduced-motion (flèches
+  // manuelles seul contrôle dans ce cas).
   useEffect(() => {
     if (isDesktop || rabbits.length <= 1) return
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
@@ -71,41 +77,28 @@ export default function LapinsFeaturedSection() {
     const track = mobileTrackRef.current
     if (!track) return
 
-    let timer: ReturnType<typeof setInterval> | null = null
-    let resumeTimeout: ReturnType<typeof setTimeout> | null = null
-    let inView = false
-
-    const stop = () => {
-      if (timer) clearInterval(timer)
-      timer = null
+    const stopAutoSlide = () => {
+      if (autoSlideTimerRef.current) clearInterval(autoSlideTimerRef.current)
+      autoSlideTimerRef.current = null
     }
-    const start = () => {
-      stop()
-      timer = setInterval(advanceMobile, 3500)
+    const startAutoSlide = () => {
+      stopAutoSlide()
+      autoSlideTimerRef.current = setInterval(advanceMobile, 3500)
     }
     const pauseThenResume = () => {
-      stop()
-      if (resumeTimeout) clearTimeout(resumeTimeout)
-      resumeTimeout = setTimeout(() => { if (inView) start() }, 4000)
+      stopAutoSlide()
+      if (autoSlideResumeRef.current) clearTimeout(autoSlideResumeRef.current)
+      autoSlideResumeRef.current = setTimeout(startAutoSlide, 4000)
     }
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        inView = entry.isIntersecting
-        if (inView) start()
-        else stop()
-      },
-      { threshold: 0.4 }
-    )
-    observer.observe(track)
-
+    startAutoSlide()
     track.addEventListener('touchstart', pauseThenResume, { passive: true })
     track.addEventListener('pointerdown', pauseThenResume)
 
     return () => {
-      stop()
-      if (resumeTimeout) clearTimeout(resumeTimeout)
-      observer.disconnect()
+      stopAutoSlide()
+      if (autoSlideResumeRef.current) clearTimeout(autoSlideResumeRef.current)
+      autoSlideResumeRef.current = null
       track.removeEventListener('touchstart', pauseThenResume)
       track.removeEventListener('pointerdown', pauseThenResume)
     }
