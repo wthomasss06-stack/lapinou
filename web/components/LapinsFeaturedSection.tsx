@@ -34,6 +34,20 @@ export default function LapinsFeaturedSection() {
     track.scrollBy({ left: dir * step, behavior: 'smooth' })
   }
 
+  // Avance auto du slider mobile — boucle au début une fois la fin
+  // atteinte (scrollBy seul se contenterait de clamp sur place en fin de
+  // liste).
+  const advanceMobile = () => {
+    const track = mobileTrackRef.current
+    if (!track) return
+    const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 8
+    if (atEnd) {
+      track.scrollTo({ left: 0, behavior: 'smooth' })
+    } else {
+      scrollMobile(1)
+    }
+  }
+
   const [isDesktop, setIsDesktop] = useState(true)
   useEffect(() => {
     const mq = window.matchMedia('(min-width: 901px)')
@@ -42,6 +56,60 @@ export default function LapinsFeaturedSection() {
     mq.addEventListener('change', onChange)
     return () => mq.removeEventListener('change', onChange)
   }, [])
+
+  // Auto-slide mobile — pour signaler qu'il y a d'autres lapins à faire
+  // défiler (le swipe seul n'était pas assez visible). Pause dès que
+  // l'utilisateur touche le slider, reprend après 4s d'inactivité ; ne
+  // tourne que quand le slider est réellement visible à l'écran
+  // (IntersectionObserver, pas de setInterval qui tourne pour rien hors
+  // champ) ; désactivé pour prefers-reduced-motion — les flèches restent
+  // le seul contrôle dans ce cas.
+  useEffect(() => {
+    if (isDesktop || rabbits.length <= 1) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    const track = mobileTrackRef.current
+    if (!track) return
+
+    let timer: ReturnType<typeof setInterval> | null = null
+    let resumeTimeout: ReturnType<typeof setTimeout> | null = null
+    let inView = false
+
+    const stop = () => {
+      if (timer) clearInterval(timer)
+      timer = null
+    }
+    const start = () => {
+      stop()
+      timer = setInterval(advanceMobile, 3500)
+    }
+    const pauseThenResume = () => {
+      stop()
+      if (resumeTimeout) clearTimeout(resumeTimeout)
+      resumeTimeout = setTimeout(() => { if (inView) start() }, 4000)
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        inView = entry.isIntersecting
+        if (inView) start()
+        else stop()
+      },
+      { threshold: 0.4 }
+    )
+    observer.observe(track)
+
+    track.addEventListener('touchstart', pauseThenResume, { passive: true })
+    track.addEventListener('pointerdown', pauseThenResume)
+
+    return () => {
+      stop()
+      if (resumeTimeout) clearTimeout(resumeTimeout)
+      observer.disconnect()
+      track.removeEventListener('touchstart', pauseThenResume)
+      track.removeEventListener('pointerdown', pauseThenResume)
+    }
+  }, [isDesktop, rabbits.length, loading])
 
   useEffect(() => {
     rabbitsApi

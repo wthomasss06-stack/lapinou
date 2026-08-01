@@ -803,7 +803,11 @@
       max-width: 320px;
       scroll-snap-align: center;
     }
-    .home-cinema .lapins-mobile-nav { margin-top: 18px; }
+    .home-cinema .lapins-mobile-nav {
+      position: static;
+      margin-top: 18px;
+      justify-content: center;
+    }
   }
   @media (max-width: 400px) {
     .home-cinema .lapins-mobile-slide { flex-basis: 84vw; }
