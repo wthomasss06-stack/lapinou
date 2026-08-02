@@ -20,12 +20,12 @@ const FOLDER = 'lapinou/rabbits'
 // (le rendu final est déjà celui filigrané, pas besoin d'y repenser ailleurs).
 //
 // Pré-requis (une seule fois) : uploader le logo officiel Chez Florence
-// (idéalement une version simple, sans fond sombre) sur Cloudinary avec le
-// public_id exact "chez-florence/watermark/logo" — dashboard Cloudinary →
-// Media Library → Upload → dossier chez-florence/watermark → renommer en
-// "logo". Tant que ce n'est pas fait, l'overlay est silencieusement ignoré
-// par Cloudinary (pas d'erreur, juste pas de filigrane) — rien ne casse.
-const WATERMARK_PUBLIC_ID = 'lapinou/watermark/logo'
+// (idéalement une version simple, sans fond sombre) sur Cloudinary dans
+// le dossier `lapinou/watermark`. Le `public_id` attendu a été fourni par
+// l'utilisateur : `lapinou/watermark/logo_qin1h9`.
+// Tant que la ressource overlay existe, elle sera appliquée ; sinon le
+// code réessaiera sans filigrane (retry implémenté).
+const WATERMARK_PUBLIC_ID = 'lapinou/watermark/logo_qin1h9'
 const WATERMARK_OVERLAY = WATERMARK_PUBLIC_ID.replace(/\//g, ':')
 
 const WATERMARK_TRANSFORM = {
@@ -38,23 +38,35 @@ const WATERMARK_TRANSFORM = {
 
 // ─── Upload d'un buffer image (depuis multer memoryStorage) ──────────────────
 function uploadBuffer(buffer, originalname) {
-  return new Promise((resolve, reject) => {
-    const stream = cloudinary.uploader.upload_stream(
-      {
-        folder: FOLDER,
-        resource_type: 'image',
-        // Optimisation automatique — même esprit que les transformations Nexura
-        transformation: [
-          { quality: 'auto', fetch_format: 'auto' },
-          WATERMARK_TRANSFORM,
-        ],
-      },
-      (err, result) => {
-        if (err) return reject(err)
-        resolve(result)
-      }
-    )
-    stream.end(buffer)
+  // Try uploading with watermark; if the watermark resource is missing,
+  // retry without it to avoid failing the whole upload.
+  function doUpload(transformations) {
+    return new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        {
+          folder: FOLDER,
+          resource_type: 'image',
+          transformation: transformations,
+        },
+        (err, result) => {
+          if (err) return reject(err)
+          resolve(result)
+        }
+      )
+      stream.end(buffer)
+    })
+  }
+
+  const baseTransforms = [{ quality: 'auto', fetch_format: 'auto' }]
+  const withWatermark = baseTransforms.concat(WATERMARK_TRANSFORM)
+
+  return doUpload(withWatermark).catch(async err => {
+    const msg = err && err.message ? String(err.message) : ''
+    if (msg.includes('Resource not found') || msg.includes('Unknown or invalid referenced image')) {
+      console.warn('[cloudinary] Watermark resource missing, retrying without watermark')
+      return doUpload(baseTransforms)
+    }
+    throw err
   })
 }
 
