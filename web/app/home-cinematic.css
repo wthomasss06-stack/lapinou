@@ -784,7 +784,10 @@
      page normalement, comme demandé. */
   .home-cinema .lapins-mobile-slider { display: none; }
   @media (max-width: 900px) {
-    .home-cinema .lapins-mobile-slider { display: block; }
+    .home-cinema .lapins-mobile-slider {
+      display: block;
+      mix-blend-mode: difference;
+    }
     .home-cinema .lapins-mobile-track {
       display: flex;
       gap: 14px;

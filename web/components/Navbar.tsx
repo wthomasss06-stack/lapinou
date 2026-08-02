@@ -100,7 +100,7 @@ function DesktopCardNav() {
   }
 
   return (
-    <div className="cf-nav-container cf-card-nav-desktop">
+    <div className={'cf-nav-container cf-card-nav-desktop' + (open ? ' is-open' : '')}>
       <nav
         ref={navRef}
         className={'cf-card-nav' + (open ? ' is-open' : '')}
@@ -110,7 +110,7 @@ function DesktopCardNav() {
           '--nav-border': open ? '1px solid rgba(194,114,61,0.18)' : '1px solid transparent',
           '--nav-shadow': open ? '0 8px 32px rgba(0,0,0,0.35)' : 'none',
           '--nav-hline': '#F3E9DA',
-          background: open ? 'rgba(var(--maroon-rgb),0.92)' : 'transparent',
+          background: open ? 'rgba(var(--maroon-rgb),1)' : 'transparent',
           backdropFilter: open ? 'blur(16px)' : 'none',
         } as React.CSSProperties}
       >
