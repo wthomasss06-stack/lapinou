@@ -30,9 +30,13 @@ const WATERMARK_OVERLAY = WATERMARK_PUBLIC_ID.replace(/\//g, ':')
 
 const WATERMARK_TRANSFORM = {
   overlay: WATERMARK_OVERLAY,
-  width: 130,
-  opacity: 25,
-  gravity: 'center',
+  // Augmenter la largeur et l'opacité pour une meilleure lisibilité
+  width: 220,
+  opacity: 45,
+  // Positionner le filigrane dans le coin inférieur droit avec un offset
+  gravity: 'south_east',
+  x: 24,
+  y: 24,
   flags: 'layer_apply',
 }
 
