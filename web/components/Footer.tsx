@@ -1,4 +1,5 @@
 'use client'
+import Image from 'next/image'
 import Link from 'next/link'
 import RainbowText from './RainbowText'
 import MapView from './MapView'
@@ -186,7 +187,23 @@ export default function Footer() {
       <div className="footer-bottom">
         <p className="footer-copyright">
           © 2026 Chez Florence — Tous droits réservés · Créé par{' '}
-          <a href="https://akatech.vercel.app/" target="_blank" rel="noopener noreferrer" className="hover-target">AKATech Studio.</a>
+          <a
+              href="https://akatech.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover-target footer-credit-link"
+            >
+              <span>AKATech Studio.</span>
+              <span className="footer-credit-reveal" aria-hidden="true">
+                <Image
+                  src={cld('/IMAGES/AKATech/akatech-studio-logo.webp', { width: 320 })}
+                  alt=""
+                  width={160}
+                  height={160}
+                  sizes="160px"
+                />
+              </span>
+            </a>
         </p>
       </div>
     </footer>
