@@ -20,7 +20,7 @@ type GalleryItem = {
   unavailable: boolean
 }
 
-export default function LapinsFeaturedSection() {
+export default function LapinsFeaturedSection({ filters = {} }: { filters?: Record<string, string> }) {
   const [rabbits, setRabbits] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
@@ -106,7 +106,7 @@ export default function LapinsFeaturedSection() {
 
   useEffect(() => {
     rabbitsApi
-      .list({})
+      .list(filters)
       .then((r: any) => setRabbits((r.results || []).slice(0, 8)))
       .catch(() => setError(true))
       .finally(() => {
@@ -115,7 +115,7 @@ export default function LapinsFeaturedSection() {
           requestAnimationFrame(() => ScrollTrigger.refresh())
         })
       })
-  }, [])
+  }, [filters])
 
   const galleryItems = useMemo<GalleryItem[]>(() => {
     return rabbits

@@ -234,7 +234,7 @@ export default function HeroSection() {
         <div className="hero-center-content">
           <div className="hero-footer-text">
             <RainbowText
-              text="Des lapins de race élevés avec soin, disponibles pour particuliers, restaurateurs & éleveurs PME. Élevage artisanal · Abidjan, Côte d'Ivoire."
+              text="Des lapins de race élevés avec soin, disponibles pour particuliers, restaurateurs & éleveurs PME. Élevage artisanal · Azaguié Gare, Côte d'Ivoire."
               variant="white"
               className="hero-sub"
               immediate
@@ -276,7 +276,7 @@ export default function HeroSection() {
           <h1 id="hero-title-mobile" className="title-main">FLORENCE</h1>
         </div>
         <RainbowText
-          text="Des lapins de race élevés avec soin, disponibles pour particuliers, restaurateurs & éleveurs PME. Élevage artisanal · Abidjan, Côte d'Ivoire."
+          text="Des lapins de race élevés avec soin, disponibles pour particuliers, restaurateurs & éleveurs PME. Élevage artisanal · Azaguié Gare, Côte d'Ivoire."
           variant="white"
           className="hero-sub"
           immediate

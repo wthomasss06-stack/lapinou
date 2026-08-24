@@ -5,18 +5,20 @@ import { LegalSectionBlock, type LegalSection } from '@/components/LegalBlocks'
 import CharSplitHeading from '@/components/CharSplitHeading'
 import { CHEZ_FLORENCE_IMAGE_POOL } from '@/lib/chezFlorenceLetters'
 import '@/components/LegalPage.css'
+import { SITE_URL, jsonLdScript, getBreadcrumbJsonLd } from '@/lib/seo'
 
 export const metadata = {
   title: 'Politique de Confidentialité — Chez Florence',
-  description: "Politique de confidentialité de Chez Florence : données collectées, durée de conservation, cookies et vos droits.",
+  description: "Politique de confidentialité de CHEZ FLORENCE à Azaguié : données collectées, durée de conservation, cookies et vos droits.",
+  alternates: { canonical: '/confidentialite' },
 }
 
 const SECTIONS: LegalSection[] = [
   {
     title: '1. Qui Sommes-Nous ?',
     body: [
-      "Chez Florence est un élevage artisanal de lapins basé à Abidjan, Côte d'Ivoire. Nous vendons des lapins de race (Hollandais, Angora, Rex) à des particuliers, restaurateurs et éleveurs.",
-      'Responsable du traitement : Chez Florence, Abidjan, Côte d\u2019Ivoire.',
+      "Chez Florence est un élevage artisanal de lapins basé à Azaguié Gare, Côte d'Ivoire. Nous vendons des lapins de race (Hollandais, Angora, Rex) à des particuliers, restaurateurs et éleveurs.",
+      'Responsable du traitement : Chez Florence, Azaguié Gare, Côte d\u2019Ivoire.',
       'Contact DPO : wthomasss06@gmail.com ou WhatsApp +225 01 42 50 77 50.',
     ],
   },
@@ -118,10 +120,20 @@ const SECTIONS: LegalSection[] = [
 ]
 
 export default function ConfidentialitePage() {
+  const breadcrumb = getBreadcrumbJsonLd([
+    { name: 'Accueil', path: '/' },
+    { name: 'Confidentialité', path: '/confidentialite' },
+  ])
+
   return (
     <div className="legal-page">
       <CustomCursor />
       <main>
+        <script
+          type="application/ld+json"
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: jsonLdScript(breadcrumb) }}
+        />
         <div className="breadcrumb"><a href="/">Accueil</a> / <span>Confidentialité</span></div>
         <section className="page-hero">
           <div className="eyebrow">Protection de vos données</div>

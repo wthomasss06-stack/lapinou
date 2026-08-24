@@ -37,7 +37,7 @@ export default function ContactSection() {
   const contactInfo = [
     { icon: <Mail size={20} />, label: 'Email', value: 'wthomasss06@gmail.com' },
     { icon: <MessageCircle size={20} />, label: 'WhatsApp', value: WHATSAPP ? formatWhatsappDisplay(WHATSAPP) : 'Voir le bouton ci-contre' },
-    { icon: <MapPin size={20} />, label: 'Adresse', value: 'Abidjan, Côte d\'Ivoire' },
+    { icon: <MapPin size={20} />, label: 'Adresse', value: 'Azaguié Gare, Côte d\'Ivoire' },
   ]
 
   return (

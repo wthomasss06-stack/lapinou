@@ -85,13 +85,13 @@ const waHref = WHATSAPP ? `https://wa.me/${WHATSAPP}` : '#'
 
 const NAV_LINKS = [
   { label: 'Accueil', href: '/' },
-  { label: 'Nos Lapins', href: '/#lapins' },
-  { label: 'Tarifs', href: '/#tarifs' },
-  { label: 'Notre Histoire', href: '/#histoire' },
-  { label: 'FAQ', href: '/#faq' },
+  { label: 'Nos Lapins', href: '/rabbits' },
+  { label: 'Tarifs', href: '/tarifs' },
+  { label: 'À propos', href: '/a-propos' },
+  { label: 'Contact', href: '/contact' },
 ]
 const INFO_LINKS = [
-  { label: 'Aide', href: '/aide' },
+  { label: 'Centre d’aide', href: '/aide' },
   { label: 'Conditions Générales', href: '/conditions' },
   { label: 'Confidentialité', href: '/confidentialite' },
 ]

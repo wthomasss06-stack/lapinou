@@ -7,16 +7,16 @@
 import type { Metadata } from 'next'
 import AideContent from '@/components/AideContent'
 import { AIDE_FAQS } from '@/lib/aide-faq-data'
-import { SITE_URL, jsonLdScript } from '@/lib/seo'
+import { SITE_URL, jsonLdScript, getBreadcrumbJsonLd } from '@/lib/seo'
 
 export const metadata: Metadata = {
   title: "Centre d'Aide — Commande, Livraison, Paiement, Élevage | Chez Florence",
   description:
-    "Toutes les réponses sur l'achat de lapins à Abidjan : commande via WhatsApp, zones et délais de livraison, moyens de paiement, garantie et conseils d'élevage.",
+    "Toutes les réponses sur l'achat de lapins à Azaguié : commande via WhatsApp, zones et délais de livraison, moyens de paiement, garantie et conseils d'élevage.",
   alternates: { canonical: '/aide' },
   openGraph: {
     title: "Centre d'Aide — Chez Florence",
-    description: "Réponses sur la commande, la livraison, le paiement et l'élevage de lapins à Abidjan.",
+    description: "Réponses sur la commande, la livraison, le paiement et l'élevage de lapins à Azaguié.",
     url: `${SITE_URL}/aide`,
     type: 'website',
   },
@@ -36,12 +36,22 @@ function getFaqPageJsonLd() {
 }
 
 export default function AidePage() {
+  const breadcrumb = getBreadcrumbJsonLd([
+    { name: 'Accueil', path: '/' },
+    { name: 'Centre d’aide', path: '/aide' },
+  ])
+
   return (
     <>
       <script
         type="application/ld+json"
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: jsonLdScript(getFaqPageJsonLd()) }}
+      />
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(breadcrumb) }}
       />
       <AideContent />
     </>

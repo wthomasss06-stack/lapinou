@@ -52,7 +52,7 @@ export async function generateMetadata({ params }) {
   return {
     title,
     description,
-    keywords: [rabbit.name, rabbit.breed, 'lapin Abidjan', 'lapin Azaguié', 'acheter lapin'].filter(Boolean),
+    keywords: [rabbit.name, rabbit.breed, 'livraison lapin Abidjan', 'lapin Azaguié', 'acheter lapin'].filter(Boolean),
     alternates: { canonical: url },
     openGraph: {
       title,
@@ -123,7 +123,7 @@ export default async function RabbitDetailPage({ params }) {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Accueil', item: SITE_URL },
-      { '@type': 'ListItem', position: 2, name: 'Lapins', item: `${SITE_URL}/#lapins` },
+      { '@type': 'ListItem', position: 2, name: 'Nos Lapins', item: `${SITE_URL}/rabbits` },
       { '@type': 'ListItem', position: 3, name: rabbit.name, item: `${SITE_URL}/rabbits/${rabbit.slug}` },
     ],
   }
@@ -149,7 +149,7 @@ export default async function RabbitDetailPage({ params }) {
         <div className="flex items-center gap-1.5 text-[11px] text-white/35 mb-6 flex-wrap">
           <Link href="/" className="hover:text-white/60 transition-colors"><HoverFadeText>Accueil</HoverFadeText></Link>
           <ChevronRight size={12} className="text-white/20" />
-          <Link href="/#lapins" className="hover:text-white/60 transition-colors"><HoverFadeText>Lapins</HoverFadeText></Link>
+          <Link href="/rabbits" className="hover:text-white/60 transition-colors"><HoverFadeText>Nos Lapins</HoverFadeText></Link>
           <ChevronRight size={12} className="text-white/20" />
           <span className="text-white/65 font-semibold truncate max-w-[160px]">{rabbit.name}</span>
         </div>

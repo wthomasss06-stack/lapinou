@@ -1,26 +1,26 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import ContactSection from '@/components/ContactSection'
+import AboutSection from '@/components/AboutSection'
 import Footer from '@/components/Footer'
 import CustomCursor from '@/components/CustomCursor'
 import { SITE_URL, jsonLdScript, getBreadcrumbJsonLd } from '@/lib/seo'
 
 export const metadata: Metadata = {
-  title: 'Contact CHEZ FLORENCE — Commander à Azaguié',
-  description: 'Contactez CHEZ FLORENCE pour réserver un lapin de race, organiser un retrait à Azaguié Gare ou demander une livraison selon votre zone.',
-  alternates: { canonical: '/contact' },
+  title: 'À propos de CHEZ FLORENCE — Élevage à Azaguié',
+  description: "Découvrez l'histoire, les valeurs et le suivi de CHEZ FLORENCE, élevage artisanal de lapins de race à Azaguié Gare.",
+  alternates: { canonical: '/a-propos' },
   openGraph: {
-    title: 'Contact CHEZ FLORENCE — Azaguié Gare',
-    description: 'Réservez vos lapins de race par WhatsApp auprès de CHEZ FLORENCE à Azaguié Gare.',
-    url: `${SITE_URL}/contact`,
+    title: 'À propos de CHEZ FLORENCE — Azaguié',
+    description: "L'histoire et les valeurs de l'élevage CHEZ FLORENCE à Azaguié Gare.",
+    url: `${SITE_URL}/a-propos`,
     type: 'website',
   },
 }
 
-export default function ContactPage() {
+export default function AProposPage() {
   const breadcrumb = getBreadcrumbJsonLd([
     { name: 'Accueil', path: '/' },
-    { name: 'Contact', path: '/contact' },
+    { name: 'À propos', path: '/a-propos' },
   ])
 
   return (
@@ -31,17 +31,21 @@ export default function ContactPage() {
         dangerouslySetInnerHTML={{ __html: jsonLdScript(breadcrumb) }}
       />
       <div className="pt-20">
-        <ContactSection />
+        <AboutSection />
       </div>
-      <section className="px-6 pb-24" aria-label="Liens utiles">
-        <div className="max-w-4xl mx-auto grid sm:grid-cols-2 gap-4">
+      <section className="px-6 pb-24" aria-label="Découvrir CHEZ FLORENCE">
+        <div className="max-w-4xl mx-auto grid sm:grid-cols-3 gap-4">
           <Link href="/rabbits" className="glass rounded-2xl p-5 text-white hover:text-caramel transition-colors">
             <span className="block text-xs font-mono uppercase tracking-widest text-caramel mb-2">Catalogue</span>
-            Voir les lapins disponibles
+            Découvrir nos lapins
           </Link>
           <Link href="/tarifs" className="glass rounded-2xl p-5 text-white hover:text-caramel transition-colors">
             <span className="block text-xs font-mono uppercase tracking-widest text-caramel mb-2">Tarifs</span>
-            Consulter les formats
+            Choisir votre format
+          </Link>
+          <Link href="/contact" className="glass rounded-2xl p-5 text-white hover:text-caramel transition-colors">
+            <span className="block text-xs font-mono uppercase tracking-widest text-caramel mb-2">Contact</span>
+            Commander sur WhatsApp
           </Link>
         </div>
       </section>

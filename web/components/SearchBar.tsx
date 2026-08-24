@@ -13,7 +13,7 @@ export default function SearchBar() {
   function handleSearch(e: React.FormEvent) {
     e.preventDefault()
     const params = new URLSearchParams()
-    if (query.trim()) params.set('q', query.trim())
+    if (query.trim()) params.set('search', query.trim())
     if (breed !== BREEDS[0]) params.set('breed', breed)
     router.push(`/rabbits${params.toString() ? `?${params}` : ''}`)
   }

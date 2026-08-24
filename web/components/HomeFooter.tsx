@@ -38,7 +38,7 @@ export default function HomeFooter() {
           </div>
           <div className="contact-item">
             <div className="contact-label">Adresse</div>
-            <div className="contact-value">Abidjan, Côte d&apos;Ivoire</div>
+            <div className="contact-value">Azaguié Gare, Côte d&apos;Ivoire</div>
           </div>
           <div className="contact-item">
             <div className="contact-label">Horaires</div>

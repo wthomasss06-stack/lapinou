@@ -6,7 +6,7 @@ import { Toaster } from 'react-hot-toast'
 import CookieBanner from '@/components/CookieBanner'
 import ServiceWorkerRegister from '@/components/ServiceWorkerRegister'
 import SiteChrome from '@/components/SiteChrome'
-import { SITE_URL, SITE_NAME, SITE_DESCRIPTION, jsonLdScript, getOrganizationJsonLd, getWebsiteJsonLd } from '@/lib/seo'
+import { SITE_URL, SITE_NAME, SITE_DESCRIPTION, jsonLdScript, getOrganizationJsonLd, getWebsiteJsonLd, getSiteNavigationJsonLd } from '@/lib/seo'
 import { cld } from '@/lib/cloudinary'
 import { Analytics } from '@vercel/analytics/next'
 
@@ -38,7 +38,7 @@ const jetbrainsMono = JetBrains_Mono({
   weight: ['400', '500'],
 })
 
-const TITLE = 'CHEZ FLORENCE — Vente de Lapins de Race à Abidjan'
+const TITLE = 'CHEZ FLORENCE — Vente de Lapins de Race à Azaguié'
 const DESCRIPTION = SITE_DESCRIPTION
 
 export const metadata: Metadata = {
@@ -46,8 +46,8 @@ export const metadata: Metadata = {
   title: { default: TITLE, template: '%s | CHEZ FLORENCE' },
   description: DESCRIPTION,
   keywords: [
-    'lapin', 'vente lapin Abidjan', 'prix lapin Côte d\'Ivoire', 'élevage lapin',
-    'lapin Hollandais', 'lapin Rex', 'lapin Angora', 'Azaguié', 'Abidjan',
+    'lapin', 'vente lapin Azaguié', 'prix lapin Côte d\'Ivoire', 'élevage lapin Azaguié',
+    'lapin Hollandais', 'lapin Rex', 'lapin Angora', 'Azaguié', 'livraison lapin Abidjan',
     'Côte d\'Ivoire', 'chez florence', 'acheter lapin vivant',
   ],
   manifest: '/manifest.json',
@@ -114,6 +114,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{ __html: jsonLdScript(getWebsiteJsonLd()) }}
+        />
+        <script
+          type="application/ld+json"
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: jsonLdScript(getSiteNavigationJsonLd()) }}
         />
         <Toaster
           position="top-right"

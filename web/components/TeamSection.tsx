@@ -6,7 +6,7 @@ const FEATURES = [
   { num: '01', title: 'Suivi vétérinaire', desc: 'Chaque lapin est vacciné et contrôlé avant la vente.', icon: <Stethoscope size={18} /> },
   { num: '02', title: 'Élevage à taille humaine', desc: 'Nous connaissons chaque lapin par son nom, pas par un numéro.', icon: <HeartHandshake size={18} /> },
   { num: '03', title: 'Contact direct', desc: 'Vous échangez avec l\u2019éleveur sur WhatsApp, sans intermédiaire.', icon: <MessageCircle size={18} /> },
-  { num: '04', title: 'Remise en main propre', desc: 'Rendez-vous fixé ensemble à Abidjan, en toute confiance.', icon: <Truck size={18} /> },
+  { num: '04', title: 'Remise en main propre', desc: 'Rendez-vous fixé ensemble à Azaguié Gare, en toute confiance.', icon: <Truck size={18} /> },
 ]
 
 const GALLERY = [

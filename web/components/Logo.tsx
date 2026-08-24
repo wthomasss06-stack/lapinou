@@ -30,7 +30,7 @@ export default function Logo({ size = 56, showText = true, className = '', onCli
       >
         <Image
           src={src}
-          alt="CHEZ FLORENCE — Vente de lapins à Abidjan"
+          alt="CHEZ FLORENCE — Vente de lapins de race à Azaguié"
           fill
           sizes={`${size}px`}
           className="object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.35)]"

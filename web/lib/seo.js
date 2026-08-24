@@ -11,7 +11,7 @@ export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://chez-flore
 export const SITE_NAME = 'CHEZ FLORENCE'
 
 export const SITE_DESCRIPTION =
-  "Élevage et vente de lapins de race (Hollandais, Angora Français, Rex) à Azaguié Gare, à 30 minutes d'Abidjan. Commande par WhatsApp, retrait sur place ou livraison en Côte d'Ivoire."
+  "Élevage et vente de lapins de race (Hollandais, Angora Français, Rex) à Azaguié Gare, en Côte d'Ivoire. Commande par WhatsApp, retrait sur place ou livraison vers Abidjan, Agboville, Adzopé et le reste du pays."
 
 // ─── Identité de l'entreprise (NAP — Name / Address / Phone) ──────────────────
 // Cohérence NAP = signal de confiance majeur pour le SEO local. Ces valeurs
@@ -102,5 +102,50 @@ export function getWebsiteJsonLd() {
     url: SITE_URL,
     publisher: { '@id': `${SITE_URL}/#organization` },
     inLanguage: 'fr-CI',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${SITE_URL}/rabbits?search={search_term_string}`,
+      },
+      'query-input': 'required name=search_term_string',
+    },
+  }
+}
+
+export function getSiteNavigationJsonLd() {
+  const links = [
+    ['Accueil', '/'],
+    ['Nos Lapins', '/rabbits'],
+    ['Tarifs', '/tarifs'],
+    ['À propos', '/a-propos'],
+    ['Contact', '/contact'],
+    ['Centre d’aide', '/aide'],
+  ]
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    '@id': `${SITE_URL}/#site-navigation`,
+    name: 'Navigation principale — CHEZ FLORENCE',
+    itemListElement: links.map(([name, path], index) => ({
+      '@type': 'SiteNavigationElement',
+      position: index + 1,
+      name,
+      url: `${SITE_URL}${path}`,
+    })),
+  }
+}
+
+export function getBreadcrumbJsonLd(items) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      item: `${SITE_URL}${item.path}`,
+    })),
   }
 }

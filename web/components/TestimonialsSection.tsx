@@ -7,7 +7,7 @@ import { CHEZ_FLORENCE_IMAGE_POOL } from '@/lib/chezFlorenceLetters'
 // Port de <section id="temoignages"> (index.html) — converti en carousel
 // auto-défilant (toutes les 5s), en pause tant que la souris est dessus.
 const TESTIMONIALS = [
-  { initials: 'AK', name: 'Aminata K.', role: 'Cliente particulière · Abidjan', text: "J'ai commandé le format Duo pour un repas de famille. Les lapins étaient bien pesés, en excellente santé. La livraison a été rapide. Je recommande vivement !" },
+  { initials: 'AK', name: 'Aminata K.', role: 'Cliente particulière · Côte d’Ivoire', text: "J'ai commandé le format Duo pour un repas de famille. Les lapins étaient bien pesés, en excellente santé. La livraison a été rapide. Je recommande vivement !" },
   { initials: 'KB', name: 'Koffi B.', role: 'Chef restaurateur · Cocody', text: 'En tant que restaurateur, j\u2019apprécie la régularité et la qualité. Le lot de 6 est parfait pour mon restaurant. Les lapins sont toujours frais et bien préparés.' },
   { initials: 'TA', name: 'Thomas A.', role: 'Éleveur PME · Bingerville', text: 'Je revends les lapins dans ma boutique. Chez Florence me fournit en volume avec des prix intéressants. Le suivi est excellent, ils répondent toujours vite sur WhatsApp.' },
 ]

@@ -1,8 +1,7 @@
 // web/app/sitemap.ts
 // Convention Next.js App Router — auto-servi sur /sitemap.xml.
-// /about, /contact et /rabbits sont volontairement exclus : ce sont des
-// redirections vers des ancres de la home (voir leurs fichiers page.jsx),
-// pas des URLs canoniques à faire indexer séparément.
+// Les pages publiques stratégiques disposent de leurs propres URLs canoniques
+// afin d’être clairement découvertes par les utilisateurs et les moteurs.
 import type { MetadataRoute } from 'next'
 import { SITE_URL } from '@/lib/seo'
 
@@ -33,6 +32,10 @@ async function getRabbitRoutes(): Promise<MetadataRoute.Sitemap> {
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: `${SITE_URL}/`, lastModified: new Date(), changeFrequency: 'daily', priority: 1 },
+    { url: `${SITE_URL}/rabbits`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
+    { url: `${SITE_URL}/tarifs`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${SITE_URL}/a-propos`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${SITE_URL}/contact`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
     { url: `${SITE_URL}/aide`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.7 },
     { url: `${SITE_URL}/conditions`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.3 },
     { url: `${SITE_URL}/confidentialite`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.3 },

@@ -19,14 +19,14 @@ import './Navbar.css'
 
 const navLinks = [
   { label: 'Accueil', href: '/' },
-  { label: 'Nos Lapins', href: '/#lapins' },
-  { label: 'Notre Histoire', href: '/#histoire' },
+  { label: 'Nos Lapins', href: '/rabbits' },
+  { label: 'À propos', href: '/a-propos' },
 ]
 
 const contactLinks = [
-  { label: 'Contact', href: '/#contact' },
-  { label: 'FAQ', href: '/#faq' },
-  { label: 'Tarifs', href: '/#tarifs' },
+  { label: 'Contact', href: '/contact' },
+  { label: 'Tarifs', href: '/tarifs' },
+  { label: 'Centre d’aide', href: '/aide' },
 ]
 
 // Aide/Conditions/Confidentialité vivent maintenant dans le footer

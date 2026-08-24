@@ -24,7 +24,7 @@ export default function CtaSection() {
         )}
         desc={(
           <RainbowText
-            text="Choisissez votre race, indiquez votre quantité. Nous vous recontactons sous 24h pour confirmer le retrait ou la livraison sur Abidjan et ses environs."
+            text="Choisissez votre race, indiquez votre quantité. Nous vous recontactons sous 24h pour confirmer le retrait à Azaguié Gare ou la livraison vers votre zone."
             variant="white"
             className="section-desc"
           />

@@ -5,17 +5,18 @@ import { LegalToc, LegalSectionBlock, type LegalSection } from '@/components/Leg
 import CharSplitHeading from '@/components/CharSplitHeading'
 import { CHEZ_FLORENCE_IMAGE_POOL } from '@/lib/chezFlorenceLetters'
 import '@/components/LegalPage.css'
+import { SITE_URL, jsonLdScript, getBreadcrumbJsonLd } from '@/lib/seo'
 
 export const metadata = {
-  title: 'Conditions Générales de Vente — Chez Florence | CGV Achat Lapin Abidjan',
-  description: "Conditions générales de vente de Chez Florence. Paiement, livraison, garantie santé, retour et remboursement pour l'achat de lapins à Abidjan, Côte d'Ivoire.",
+  title: 'Conditions Générales de Vente — CHEZ FLORENCE à Azaguié',
+  description: "Conditions générales de vente de CHEZ FLORENCE à Azaguié Gare : paiement, livraison, garantie santé, retour et remboursement.",
 }
 
 const SECTIONS: LegalSection[] = [
   {
     num: 1, id: 'art1', title: "Champ d'Application",
     body: [
-      "Les présentes Conditions Générales de Vente (CGV) s'appliquent à toute commande de lapins vivants passée auprès de Chez Florence, élevage artisanal situé à Abidjan, Côte d'Ivoire.",
+      "Les présentes Conditions Générales de Vente (CGV) s'appliquent à toute commande de lapins vivants passée auprès de Chez Florence, élevage artisanal situé à Azaguié Gare, Côte d'Ivoire.",
       "Elles constituent le contrat unique entre Chez Florence et le client, et prévalent sur tout autre document. Toute commande implique l'acceptation pleine et entière des présentes CGV.",
     ],
     note: { icon: 'warning', text: "L'achat de lapins vivants est soumis à des réglementations spécifiques. Le client s'engage à respecter la législation ivoirienne relative à la protection animale et à l'élevage." },
@@ -146,10 +147,20 @@ const SECTIONS: LegalSection[] = [
 ]
 
 export default function ConditionsPage() {
+  const breadcrumb = getBreadcrumbJsonLd([
+    { name: 'Accueil', path: '/' },
+    { name: 'Conditions Générales', path: '/conditions' },
+  ])
+
   return (
     <div className="legal-page">
       <CustomCursor />
       <main>
+        <script
+          type="application/ld+json"
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: jsonLdScript(breadcrumb) }}
+        />
         <div className="breadcrumb"><a href="/">Accueil</a> / <span>Conditions Générales</span></div>
         <section className="page-hero">
           <div className="eyebrow">Cadre Juridique</div>

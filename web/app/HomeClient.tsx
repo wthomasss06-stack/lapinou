@@ -298,7 +298,7 @@ export default function HomeClient() {
             <div className="title-small">Chez</div>
             <h1 className="title-main" data-text="FLORENCE">FLORENCE</h1>
           </div>
-          <p className="hero-sub reveal-text">Des lapins de race élevés avec soin, disponibles pour particuliers, restaurateurs &amp; éleveurs PME. Élevage artisanal · Abidjan, Côte d&apos;Ivoire.</p>
+          <p className="hero-sub reveal-text">Des lapins de race élevés avec soin, disponibles pour particuliers, restaurateurs &amp; éleveurs PME. Élevage artisanal · Azaguié Gare, Côte d&apos;Ivoire.</p>
 
           <div className="social-proof-bar reveal-text">
             <div className="sp-item"><div className="sp-num">150+</div><div className="sp-label">Clients satisfaits</div></div>
@@ -440,7 +440,7 @@ export default function HomeClient() {
             <a href={waLink("Bonjour, le lapin Hollandais est-il toujours disponible ?")} target="_blank" rel="noopener noreferrer" className="project-item hover-view">
               <div className="project-img-box">
                 <div className="stock-pill">5 en stock</div>
-                <img src={cld('/IMAGES/hollandais.jpg')} alt="Lapin Hollandais noir et blanc, race pure, élevé avec soin à Abidjan" loading="lazy" />
+                <img src={cld('/IMAGES/hollandais.jpg')} alt="Lapin Hollandais noir et blanc, race pure, élevé avec soin à Azaguié Gare" loading="lazy" />
               </div>
               <div className="project-meta"><div>Hollandais</div><div className="p-price">8 500 FCFA</div></div>
               <div className="project-sub">Lot mixte · 1.5 kg · Noir et blanc — Prix net</div>
@@ -449,7 +449,7 @@ export default function HomeClient() {
             <a href={waLink("Bonjour, le lapin Angora français est-il toujours disponible ?")} target="_blank" rel="noopener noreferrer" className="project-item offset hover-view">
               <div className="project-img-box">
                 <div className="stock-pill low">4 en stock</div>
-                <img src={cld('/IMAGES/angora.jpg')} alt="Lapin Angora français blanc crème, pelage soyeux, disponible à Abidjan" loading="lazy" />
+                <img src={cld('/IMAGES/angora.jpg')} alt="Lapin Angora français blanc crème, pelage soyeux, disponible à Azaguié Gare" loading="lazy" />
               </div>
               <div className="project-meta"><div>Angora Français</div><div className="p-price">9 000 FCFA</div></div>
               <div className="project-sub">Femelle · 1.8 kg · Blanc crème — Kit toilettage offert</div>
@@ -458,7 +458,7 @@ export default function HomeClient() {
             <a href={waLink("Bonjour, le lapin Rex est-il toujours disponible ?")} target="_blank" rel="noopener noreferrer" className="project-item hover-view">
               <div className="project-img-box">
                 <div className="stock-pill low">3 en stock</div>
-                <img src={cld('/IMAGES/rex.jpg')} alt="Lapin Rex gris ardoise, race pure, poids 2.1 kg, élevage Abidjan" loading="lazy" />
+                <img src={cld('/IMAGES/rex.jpg')} alt="Lapin Rex gris ardoise, race pure, poids 2.1 kg, élevage à Azaguié Gare" loading="lazy" />
               </div>
               <div className="project-meta"><div>Rex</div><div className="p-price">10 000 FCFA</div></div>
               <div className="project-sub">Mâle · 2.1 kg · Gris ardoise — Prix net</div>
@@ -486,7 +486,7 @@ export default function HomeClient() {
                 <div className="testimonial-avatar">AK</div>
                 <div>
                   <div className="testimonial-name">Aminata K.</div>
-                  <div className="testimonial-role">Cliente particulière · Abidjan</div>
+                  <div className="testimonial-role">Cliente particulière · Côte d&apos;Ivoire</div>
                 </div>
               </div>
             </div>
@@ -525,7 +525,7 @@ export default function HomeClient() {
           </div>
           <div className="faq-grid">
             <div className="faq-item reveal-text">
-              <div className="faq-question hover-target">Quel est le prix d&apos;un lapin à Abidjan ?</div>
+              <div className="faq-question hover-target">Quel est le prix d&apos;un lapin à Azaguié ?</div>
               <div className="faq-answer">Chez Florence, les prix commencent à 8 500 FCFA pour un lapin Hollandais et atteignent 15 000 FCFA pour un lapin de 2 kg. Le format Duo (2 lapins) est à 25 000 FCFA. Les restaurateurs bénéficient d&apos;un tarif préférentiel à 80 000 FCFA le lot de 6.</div>
             </div>
             <div className="faq-item reveal-text">
@@ -571,7 +571,7 @@ export default function HomeClient() {
             </div>
             <div className="contact-item">
               <div className="contact-label">Adresse</div>
-              <div className="contact-value">Abidjan, Côte d&apos;Ivoire</div>
+              <div className="contact-value">Azaguié Gare, Côte d&apos;Ivoire</div>
             </div>
             <div className="contact-item">
               <div className="contact-label">Horaires</div>

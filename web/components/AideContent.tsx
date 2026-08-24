@@ -45,7 +45,7 @@ export default function AideContent() {
           <div className="eyebrow">Centre d&apos;Aide</div>
           <CharSplitHeading lines={['Comment Pouvons-Nous Vous Aider ?']} images={CHEZ_FLORENCE_IMAGE_POOL} as="h1" className="page-title" />
           <RainbowText
-            text="Trouvez rapidement les réponses à vos questions sur l'achat, la livraison et l'élevage de lapins à Abidjan."
+            text="Trouvez rapidement les réponses à vos questions sur l'achat, la livraison et l'élevage de lapins à Azaguié."
             variant="white"
             className="page-sub"
           />

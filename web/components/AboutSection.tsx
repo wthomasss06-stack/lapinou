@@ -26,7 +26,7 @@ export default function AboutSection() {
             À Propos de <span className="text-gradient">CHEZ FLORENCE</span>
           </h2>
           <p className="text-white/50 leading-relaxed max-w-2xl mx-auto">
-            CHEZ FLORENCE est né d'une passion pour l'élevage de lapins de race à Abidjan.
+            CHEZ FLORENCE est né d'une passion pour l'élevage de lapins de race à Azaguié.
             Notre objectif : rendre la commande simple, transparente, et accompagnée
             du début à la fin — du premier message WhatsApp jusqu'à l'arrivée de
             votre lapin chez vous.
