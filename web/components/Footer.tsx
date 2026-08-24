@@ -196,7 +196,7 @@ export default function Footer() {
               <span>AKATech Studio.</span>
               <span className="footer-credit-reveal" aria-hidden="true">
                 <Image
-                  src={cld('/IMAGES/AKATech/akatech-studio-logo.webp', { width: 320 })}
+                  src={cld('/IMAGES/AKATech/akatech-studio-logo.png', { width: 320 })}
                   alt=""
                   width={160}
                   height={160}
