@@ -675,7 +675,7 @@ export default function HomeClient() {
         .hero-section { display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .jellyfish-bg {
             position: absolute; width: 550px; height: 550px;
-            background: url('https://res.cloudinary.com/dwuybrjxh/image/upload/f_auto,q_auto/chez-florence/IMAGES/hero-bg.jpg') center/cover;
+            background: url('https://res.cloudinary.com/stlcsvko/image/upload/f_auto,q_auto/chez-florence/IMAGES/hero-bg.jpg') center/cover;
             mix-blend-mode: multiply; mask-image: radial-gradient(circle, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 70%); -webkit-mask-image: radial-gradient(circle, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 70%);
             opacity: 0.85; pointer-events: none; z-index: 1; transition: transform 0.1s linear;
         }

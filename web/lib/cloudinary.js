@@ -17,7 +17,7 @@
 // L'upload correspondant se fait via api/scripts/upload-images-to-cloudinary.js
 // (même arborescence, mêmes noms — donc rien à mapper à la main ici).
 
-const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'dwuybrjxh'
+const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'stlcsvko'
 
 // Racine Cloudinary — miroir exact du dossier local web/public/IMAGES.
 const BASE_FOLDER = 'chez-florence/IMAGES'
