@@ -74,7 +74,7 @@ export default function RabbitCard({ rabbit, index = 0, layout = 'grid' }) {
         transition={{ duration: 0.5, delay: index * 0.05 }}
       >
         <Link href={`/rabbits/${rabbit.slug}`} className={unavailable ? 'pointer-events-none' : ''} aria-disabled={unavailable}>
-          <div className="card-glow bg-brand-card rounded-2xl overflow-hidden group flex items-center gap-4 p-3 rabbit-card">
+          <div className="card-glow bg-brand-card rounded-2xl overflow-hidden group flex items-center gap-4 p-3">
             {/* Thumbnail */}
             <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden bg-brand-darker shrink-0">
               {src ? (
@@ -132,7 +132,7 @@ export default function RabbitCard({ rabbit, index = 0, layout = 'grid' }) {
 
   return (
     <motion.div
-      className="h-full rabbit-card"
+      className="h-full"
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
@@ -144,7 +144,7 @@ export default function RabbitCard({ rabbit, index = 0, layout = 'grid' }) {
         aria-disabled={unavailable}
       >
         <motion.div
-          className="card-glow bg-brand-card rounded-2xl overflow-hidden group cursor-pointer h-full flex flex-col rabbit-card"
+          className="card-glow bg-brand-card rounded-2xl overflow-hidden group cursor-pointer h-full flex flex-col"
           whileHover={unavailable ? {} : { y: -8 }}
           transition={{ type: 'spring', stiffness: 300, damping: 25 }}
         >

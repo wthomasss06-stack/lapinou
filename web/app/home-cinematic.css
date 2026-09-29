@@ -786,7 +786,25 @@
   @media (max-width: 900px) {
     .home-cinema .lapins-mobile-slider {
       display: block;
-      mix-blend-mode: difference;
+      /*
+       * IMPORTANT : les RabbitCard de la landing doivent avoir exactement
+       * le même rendu que les cartes de la page détail.
+       * Le mix-blend-mode: difference ici était appliqué au conteneur
+       * entier et contaminait les photos/cartes avec l'effet chromatique.
+       */
+      mix-blend-mode: normal;
+      isolation: isolate;
+      filter: none;
+    }
+
+    /* Même base visuelle que RabbitCard utilisé hors de la home.
+       On neutralise explicitement tout éventuel effet de composition
+       hérité du thème cinématique de la landing. */
+    .home-cinema .lapins-mobile-slider .lapins-mobile-slide,
+    .home-cinema .lapins-mobile-slider .lapins-mobile-slide .card-glow,
+    .home-cinema .lapins-mobile-slider .lapins-mobile-slide img {
+      mix-blend-mode: normal;
+      filter: none;
     }
     .home-cinema .lapins-mobile-track {
       display: flex;

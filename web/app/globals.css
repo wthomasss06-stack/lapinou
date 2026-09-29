@@ -415,22 +415,6 @@ body {
   background-color: var(--rust);
   mix-blend-mode: difference;
 }
-/* Sur les cartes de lapins : le curseur reste neutre, sans inversion chromatique. */
-#cursor.is-rabbit-card {
-  /* Sur une RabbitCard, on retire complètement le curseur custom :
-     aucune inversion / aberration chromatique ne doit toucher la carte,
-     y compris dans le slider mobile et sur la page détail. */
-  opacity: 0 !important;
-  visibility: hidden !important;
-  mix-blend-mode: normal !important;
-  background-color: transparent !important;
-}
-
-/* Les cartes Rabbit constituent leur propre contexte visuel. */
-.rabbit-card {
-  isolation: isolate;
-}
-
 #cursor.is-view {
   display: flex;
   align-items: center;
