@@ -417,15 +417,18 @@ body {
 }
 /* Sur les cartes de lapins : le curseur reste neutre, sans inversion chromatique. */
 #cursor.is-rabbit-card {
+  /* Sur une RabbitCard, on retire complètement le curseur custom :
+     aucune inversion / aberration chromatique ne doit toucher la carte,
+     y compris dans le slider mobile et sur la page détail. */
+  opacity: 0 !important;
+  visibility: hidden !important;
   mix-blend-mode: normal !important;
-  background-color: var(--paper);
+  background-color: transparent !important;
 }
 
-/* Toutes les RabbitCard, y compris celles de la page détail / recommandations,
-   gardent le curseur neutre sans inversion chromatique. */
-.rabbit-card:hover ~ #cursor,
-.rabbit-card #cursor {
-  mix-blend-mode: normal;
+/* Les cartes Rabbit constituent leur propre contexte visuel. */
+.rabbit-card {
+  isolation: isolate;
 }
 
 #cursor.is-view {
