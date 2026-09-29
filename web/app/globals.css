@@ -415,6 +415,19 @@ body {
   background-color: var(--rust);
   mix-blend-mode: difference;
 }
+/* Sur les cartes de lapins : le curseur reste neutre, sans inversion chromatique. */
+#cursor.is-rabbit-card {
+  mix-blend-mode: normal !important;
+  background-color: var(--paper);
+}
+
+/* Toutes les RabbitCard, y compris celles de la page détail / recommandations,
+   gardent le curseur neutre sans inversion chromatique. */
+.rabbit-card:hover ~ #cursor,
+.rabbit-card #cursor {
+  mix-blend-mode: normal;
+}
+
 #cursor.is-view {
   display: flex;
   align-items: center;
