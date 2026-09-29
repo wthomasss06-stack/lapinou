@@ -81,13 +81,13 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     type: 'website',
     locale: 'fr_FR',
-    images: [{ url: cld('/IMAGES/vente-lapins-affiche.jpg'), width: 1376, height: 768, alt: 'Chez Florence — Vente de lapins à Azaguié, Côte d\'Ivoire' }],
+    images: [{ url: cld('/IMAGES/affiche-chez-florence-azaguie-portrait.png'), width: 1376, height: 768, alt: 'Chez Florence — Vente de lapins à Azaguié, Côte d\'Ivoire' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: TITLE,
     description: DESCRIPTION,
-    images: [cld('/IMAGES/vente-lapins-affiche.jpg')],
+    images: [cld('/IMAGES/affiche-chez-florence-azaguie-portrait.png')],
   },
 }
 

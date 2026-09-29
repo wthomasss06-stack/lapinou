@@ -65,7 +65,7 @@ export function getOrganizationJsonLd() {
     '@id': `${SITE_URL}/#organization`,
     name: BUSINESS.name,
     url: SITE_URL,
-    image: cld('/IMAGES/vente-lapins-affiche.jpg'),
+    image: cld('/IMAGES/affiche-chez-florence-azaguie-portrait.png'),
     description: SITE_DESCRIPTION,
     telephone: BUSINESS.telephoneE164,
     email: BUSINESS.email,

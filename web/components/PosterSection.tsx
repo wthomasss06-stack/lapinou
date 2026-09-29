@@ -7,14 +7,23 @@ export default function PosterSection() {
   return (
     <section id="affiche" className="poster-section">
       <div className="poster-frame reveal-text">
-        <Image
-          src={cld('/IMAGES/vente-lapins-affiche.jpg')}
-          alt="Affiche Chez Florence — Vente de lapins, Azaguié, Côte d'Ivoire"
-          width={1376}
-          height={768}
-          sizes="(max-width: 900px) 100vw, 78rem"
-          style={{ width: '100%', height: 'auto', display: 'block' }}
-        />
+        <picture>
+          {/* Affiche carrée pour mobile */}
+          <source
+            media="(max-width: 900px)"
+            srcSet={cld('/IMAGES/vente-lapins-affiche-square.png')}
+          />
+
+          {/* Affiche rectangulaire pour PC */}
+          <Image
+            src={cld('/IMAGES/vente-lapins-affiche.png')}
+            alt="Affiche Chez Florence — Vente de lapins, Azaguié, Côte d'Ivoire"
+            width={1376}
+            height={768}
+            sizes="(max-width: 900px) 100vw, 78rem"
+            style={{ width: '100%', height: 'auto', display: 'block' }}
+          />
+        </picture>
       </div>
     </section>
   )
