@@ -1,0 +1,473 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Simulateur de prix — « la balance »
+   Autonome : fonctionne sur la home (.home-cinema) comme sur /tarifs.
+   Palette = charte Chez Florence (brun cacao, ivoire, terracotta, caramel).
+   Animations : transform / opacity / stroke-dashoffset uniquement.
+   ═══════════════════════════════════════════════════════════════════ */
+
+.ps-wrap {
+  --ps-ink: var(--ink, #3a2f22);
+  --ps-paper: var(--paper, #f3e9da);
+  --ps-paper-deep: var(--paper-deep, #e4d2b4);
+  --ps-rust: var(--rust, #c2723d);
+  --ps-caramel: var(--caramel, #b8834a);
+  --ps-ease-spring: cubic-bezier(0.34, 1.35, 0.5, 1);
+  --ps-ease-out: cubic-bezier(0.2, 0.85, 0.25, 1);
+
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  font-family: var(--font-body), system-ui, sans-serif;
+  color: var(--ps-paper);
+}
+
+/* ─── Panneau principal ───────────────────────────────────────────── */
+.ps {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 72px);
+  align-items: center;
+  padding: clamp(24px, 4.5vw, 64px);
+  background:
+    radial-gradient(60% 70% at 22% 30%, rgba(194, 114, 61, 0.3), transparent 70%),
+    var(--ps-ink);
+  border-radius: 36px;
+  border: 1px solid rgba(243, 233, 218, 0.14);
+  box-shadow: 0 40px 90px -30px rgba(25, 16, 8, 0.55);
+}
+
+/* ─── Cadran ──────────────────────────────────────────────────────── */
+.ps-dial {
+  position: relative;
+  width: min(100%, 460px);
+  aspect-ratio: 1;
+  margin-inline: auto;
+  container-type: inline-size;
+}
+.ps-dial-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 28px 36px rgba(0, 0, 0, 0.4));
+}
+
+.ps-tick {
+  stroke: rgba(58, 47, 34, 0.26);
+  stroke-width: 2;
+  stroke-linecap: round;
+  transition: stroke 0.3s ease;
+}
+.ps-tick.is-major { stroke-width: 3; }
+.ps-tick.is-on { stroke: var(--ps-ink); }
+
+.ps-tick-label {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 15px;
+  font-weight: 700;
+  fill: rgba(58, 47, 34, 0.45);
+  transition: fill 0.3s ease;
+}
+.ps-tick-label.is-on { fill: var(--ps-ink); }
+
+.ps-arc-track { stroke: rgba(58, 47, 34, 0.11); }
+.ps-arc-fill {
+  transition: stroke-dashoffset 0.85s var(--ps-ease-out);
+}
+
+/* L'aiguille tourne autour du centre du cadran (200,200 en unités du viewBox) */
+.ps-knob {
+  transform-origin: 200px 200px;
+  transition: transform 0.85s var(--ps-ease-spring);
+}
+.ps-knob-halo { fill: rgba(194, 114, 61, 0.22); transform-origin: 200px 80px; transition: transform 0.3s ease; }
+.ps-knob-body { fill: var(--ps-ink); stroke: #fbf6ec; stroke-width: 5; }
+.ps-knob-dot { fill: var(--ps-rust); }
+
+.ps[data-dragging] .ps-knob { transition: transform 0.08s linear; }
+.ps[data-dragging] .ps-arc-fill { transition: stroke-dashoffset 0.08s linear; }
+.ps[data-dragging] .ps-knob-halo { transform: scale(1.35); }
+
+/* Prix au centre du cadran. Tailles en cqw : tout suit la largeur du cadran */
+.ps-dial-readout {
+  position: absolute;
+  left: 50%;
+  top: 41%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: var(--ps-ink);
+}
+.ps-price {
+  font-family: var(--font-pixel), var(--font-display), monospace;
+  font-size: 11vw; /* repli sans container queries */
+  font-size: 11.2cqw;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+.ps-currency {
+  margin-top: 1.2cqw;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 4cqw;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  opacity: 0.6;
+}
+.ps-dial-weight {
+  position: absolute;
+  left: 50%;
+  top: 75%;
+  transform: translateX(-50%);
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 8cqw;
+  line-height: 1;
+  color: var(--ps-ink);
+  white-space: nowrap;
+}
+
+/* ─── Compteur à rouleaux ─────────────────────────────────────────── */
+.ps-odo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.ps-odo-slot { display: inline-flex; align-items: center; }
+.ps-odo-sep {
+  display: inline-block;
+  width: 0.34em;
+  transition: width 0.4s var(--ps-ease-out);
+}
+.ps-odo-sep.is-blank { width: 0; }
+
+.ps-digit {
+  --lh: 1.1em;
+  display: inline-block;
+  position: relative;
+  width: 0.8em;
+  height: var(--lh);
+  overflow: hidden;
+  text-align: center;
+  transition: width 0.45s var(--ps-ease-out), opacity 0.3s ease;
+}
+.ps-digit.is-blank { width: 0; opacity: 0; }
+.ps-digit-strip {
+  display: flex;
+  flex-direction: column;
+  transform: translateY(calc(var(--d, 0) * var(--lh) * -1));
+  transition: transform 0.95s var(--ps-ease-out) calc(var(--i, 0) * 45ms);
+  will-change: transform;
+}
+.ps-digit-strip > span {
+  display: block;
+  height: var(--lh);
+  line-height: var(--lh);
+}
+.ps[data-dragging] .ps-digit-strip { transition-duration: 0.35s; transition-delay: 0ms; }
+
+/* ─── Colonne de commandes ────────────────────────────────────────── */
+.ps-controls { min-width: 0; }
+.ps-title {
+  margin: 0;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.9rem, 3.4vw, 2.9rem);
+  line-height: 1.04;
+  color: var(--ps-paper);
+}
+.ps-lead {
+  margin: 12px 0 34px;
+  max-width: 34ch;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: rgba(243, 233, 218, 0.78);
+}
+
+/* Slider : un <input range> invisible gère souris, tactile et clavier ;
+   la règle et la poignée sont dessinées à part pour pouvoir glisser (transform). */
+.ps-slider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-inline: -4px;
+}
+.ps-step {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1.5px solid rgba(243, 233, 218, 0.3);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ps-paper);
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
+}
+.ps-step:hover:not(:disabled) { background: var(--ps-paper); color: var(--ps-ink); border-color: var(--ps-paper); }
+.ps-step:active:not(:disabled) { transform: scale(0.92); }
+.ps-step:disabled { opacity: 0.3; cursor: default; }
+
+.ps-rail {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 64px;
+  container-type: inline-size;
+}
+.ps-rail-track {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  top: 50%;
+  height: 12px;
+  margin-top: -6px;
+  border-radius: 999px;
+  background: rgba(243, 233, 218, 0.14);
+}
+.ps-rail-fill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #e0ae6c, var(--ps-rust));
+  transform-origin: left center;
+  transform: scaleX(var(--t, 0));
+  transition: transform 0.85s var(--ps-ease-out);
+}
+.ps-rail-ticks {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 22px;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+}
+.ps-rail-ticks i {
+  display: block;
+  width: 2px;
+  height: 6px;
+  border-radius: 1px;
+  background: rgba(243, 233, 218, 0.28);
+}
+.ps-rail-ticks i.is-major { height: 11px; background: rgba(243, 233, 218, 0.5); }
+
+.ps-rail-thumb {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 44px;
+  height: 44px;
+  margin-top: -22px;
+  pointer-events: none;
+  transform: translateX(calc(var(--t, 0) * (100cqw - 44px)));
+  transition: transform 0.85s var(--ps-ease-spring);
+}
+@supports not (width: 1cqw) {
+  .ps-rail-thumb { transform: none; left: calc(var(--t, 0) * (100% - 44px)); transition: left 0.85s var(--ps-ease-out); }
+}
+.ps-rail-thumb-dot {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, var(--ps-rust) 0 7px, transparent 8px),
+    #fbf6ec;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5), 0 0 0 5px rgba(194, 114, 61, 0.28);
+  transition: transform 0.25s ease;
+}
+.ps[data-dragging] .ps-rail-thumb,
+.ps[data-dragging] .ps-rail-fill { transition-duration: 0.08s; transition-timing-function: linear; }
+.ps[data-dragging] .ps-rail-thumb-dot { transform: scale(1.14); }
+
+/* L'input couvre toute la règle ; sa poignée native (invisible) fait 44 px
+   pour que la course corresponde exactement à la poignée dessinée. */
+.ps-range {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background: transparent;
+  opacity: 0;
+  cursor: grab;
+  -webkit-appearance: none;
+  appearance: none;
+  touch-action: pan-y;
+}
+.ps-range:active { cursor: grabbing; }
+.ps-range::-webkit-slider-runnable-track { height: 64px; background: transparent; }
+.ps-range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 44px; height: 64px; border: 0; background: transparent; }
+.ps-range::-moz-range-track { height: 64px; background: transparent; }
+.ps-range::-moz-range-thumb { width: 44px; height: 64px; border: 0; background: transparent; }
+.ps-rail:has(.ps-range:focus-visible) .ps-rail-thumb { outline: 3px solid var(--ps-paper); outline-offset: 4px; border-radius: 50%; }
+
+/* Poids courants */
+.ps-picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+.ps-pick {
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1.5px solid rgba(243, 233, 218, 0.28);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ps-paper);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+.ps-pick:hover { border-color: var(--ps-paper); }
+.ps-pick:active { transform: scale(0.95); }
+.ps-pick[aria-pressed='true'] { background: var(--ps-paper); border-color: var(--ps-paper); color: var(--ps-ink); }
+
+/* Ticket de caisse */
+.ps-ticket {
+  margin: 30px 0 0;
+  padding: 18px 20px 6px;
+  border-radius: 14px;
+  background: rgba(243, 233, 218, 0.07);
+  font-family: var(--font-mono), ui-monospace, monospace;
+}
+.ps-ticket > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 0 12px;
+  font-size: 0.9rem;
+}
+.ps-ticket dt { color: rgba(243, 233, 218, 0.7); }
+.ps-ticket dd { margin: 0; font-weight: 700; text-align: right; white-space: nowrap; }
+.ps-ticket-total {
+  margin-top: 4px;
+  padding-top: 14px !important;
+  border-top: 1.5px dashed rgba(243, 233, 218, 0.3);
+  font-size: 1.05rem !important;
+}
+.ps-ticket-total dt { color: var(--ps-paper); }
+.ps-ticket-total dd { color: #e8b57b; font-size: 1.15rem; }
+.ps-note {
+  margin: 10px 2px 22px;
+  font-size: 0.82rem;
+  color: rgba(243, 233, 218, 0.62);
+}
+.ps .ps-cta { margin-top: 0; }
+
+.ps-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ─── Formats : même prix du kilo, remise sur le total ─────────────── */
+.ps-formats { margin-top: clamp(28px, 4vw, 44px); }
+.ps-formats-hint {
+  display: inline-block;
+  margin: 0 0 18px;
+  padding: 10px 18px;
+  max-width: 64ch;
+  border-radius: 16px;
+  background: var(--ps-paper);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--ps-ink);
+}
+.ps-formats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.ps-format {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 24px 26px 22px;
+  border-radius: 22px;
+  background: var(--ps-paper);
+  color: var(--ps-ink);
+}
+.ps-format-head { display: flex; align-items: center; gap: 14px; }
+.ps-format-icon { flex: none; font-size: 1.9rem; line-height: 1; }
+.ps-format-label {
+  margin: 0;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  line-height: 1.1;
+}
+.ps-format-detail { margin: 4px 0 0; font-size: 0.92rem; line-height: 1.3; opacity: 0.72; }
+.ps-format-formula {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(58, 47, 34, 0.08);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+.ps-format-discount {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.9rem;
+}
+.ps-format-discount dt { opacity: 0.7; }
+.ps-format-discount dd {
+  margin: 0;
+  font-family: var(--font-pixel), var(--font-display), monospace;
+  font-size: 1.35rem;
+  line-height: 1;
+  white-space: nowrap;
+  opacity: 0.5;
+}
+.ps-format-discount dd.is-on { opacity: 1; color: #8f4a1f; }
+.ps-format-foot {
+  margin: auto 0 0;
+  padding-top: 12px;
+  border-top: 1.5px dashed rgba(58, 47, 34, 0.25);
+  font-size: 0.88rem;
+  opacity: 0.72;
+}
+
+/* Focus clavier lisible partout */
+.ps-step:focus-visible,
+.ps-pick:focus-visible { outline: 3px solid var(--ps-paper); outline-offset: 3px; }
+
+/* ─── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 1000px) {
+  .ps { grid-template-columns: 1fr; border-radius: 28px; }
+  .ps-dial { width: min(100%, 400px); }
+  .ps-lead { max-width: none; }
+  .ps-formats-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .ps { padding: 22px 18px 26px; border-radius: 24px; }
+  .ps-pick { padding: 0 14px; }
+  .ps-format { padding: 20px 20px 18px; }
+}
+
+/* ─── Mouvement réduit : tout se pose instantanément ─────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .ps *,
+  .ps-formats * { transition: none !important; animation: none !important; }
+}

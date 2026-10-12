@@ -1,26 +1,19 @@
 'use client'
-import { useRef } from 'react'
-import { useTilt3D } from '@/lib/useTilt3D'
 import RainbowText from './RainbowText'
-import ArrowButton from './ArrowButton'
 import CharSplitHeading from './CharSplitHeading'
 import SectionHead from './SectionHead'
+import PriceSimulator from './PriceSimulator'
 import { CHEZ_FLORENCE_IMAGE_POOL } from '@/lib/chezFlorenceLetters'
+import { PRICE_PER_KG, SIM_MIN_KG, SIM_MAX_KG, formatFcfa, formatKg } from '@/lib/pricing'
 
-// Section Tarifs restaurée en grille (en plus de la Ligne 2 du
-// TrustMarquee, qui garde le résumé en ticker).
-// Les boutons "Commander" pointent vers le formulaire de contact du
-// footer (#contact) — pas WhatsApp direct.
-const PLANS = [
-  { id: 'unite', badge: null, label: "À l'Unité", amount: '15 000', desc: '1 lapin, environ 2 kg', features: ['Environ 2 kg', 'Lapin sélectionné et pesé', 'Disponible toute la semaine', 'Retrait ou livraison'] },
-  { id: 'duo', badge: 'Le plus demandé', label: 'Le Duo', amount: '25 000', desc: '2 lapins, environ 1,6 kg chacun', features: ['Environ 1,6 kg par lapin', 'Le format le plus demandé', 'Idéal pour un repas en famille', 'Retrait ou livraison'] },
-  { id: 'resto', badge: null, label: 'Format Restaurateur', amount: '80 000', desc: 'Lot de 6 lapins — restaurants & mini-restos', features: ['Lot de 6 lapins', 'Tarif préférentiel volume', 'Pour restaurateurs & mini-restos', 'Livraison possible selon zone'] },
-]
-
+// Section Tarifs — un tarif unique au kilo (lib/pricing.ts), présenté sous
+// forme de simulateur : on choisit un poids, le prix se calcule. La grille
+// de trois cartes a laissé place à la « balance » (PriceSimulator), qui
+// affiche aussi les formats courants (unité, duo, lot) toujours déduits du
+// même tarif. Le résumé en ticker du TrustMarquee reste en place.
+// Le bouton « Commander » pointe vers le formulaire de contact du footer
+// (#contact) — pas WhatsApp direct.
 export default function TarifsSection() {
-  const gridRef = useRef<HTMLDivElement>(null)
-  useTilt3D(gridRef)
-
   return (
     <section id="tarifs" data-theme="rust">
       <SectionHead
@@ -28,7 +21,7 @@ export default function TarifsSection() {
         eyebrow="Tarifs"
         title={(
           <CharSplitHeading
-            lines={['Un Tarif Pour', 'Chaque Besoin']}
+            lines={['Un Seul Prix,', 'Au Kilo']}
             images={CHEZ_FLORENCE_IMAGE_POOL}
             as="h2"
             className="section-title reveal-text"
@@ -36,31 +29,14 @@ export default function TarifsSection() {
         )}
         desc={(
           <RainbowText
-            text="Le prix dépend du poids et de la quantité — à l'unité, en duo, ou en gros pour les professionnels."
+            text={`Un tarif unique : ${formatFcfa(PRICE_PER_KG)} le kilo. Choisissez un poids de ${formatKg(SIM_MIN_KG)} à ${formatKg(SIM_MAX_KG)}, le prix se calcule tout seul.`}
             variant="white"
             className="section-desc"
           />
         )}
       />
 
-      <div className="pricing-grid" ref={gridRef}>
-        {PLANS.map((plan) => (
-          <div key={plan.id} className={`price-card reveal-text${plan.badge ? ' featured' : ''}`} data-tilt data-base-scale={plan.badge ? '1.03' : '1'}>
-            {plan.badge && <div className="price-badge">{plan.badge}</div>}
-            <div className="price-tag">{plan.label}</div>
-            <div className="price-amount">
-              {plan.amount}<span>FCFA</span>
-            </div>
-            <div className="price-sub">{plan.desc}</div>
-            <ArrowButton href="#contact" solid block className="price-cta">
-              Commander
-            </ArrowButton>
-            <ul className="price-features">
-              {plan.features.map((f) => <li key={f}>{f}</li>)}
-            </ul>
-          </div>
-        ))}
-      </div>
+      <PriceSimulator />
     </section>
   )
 }

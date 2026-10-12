@@ -9,6 +9,7 @@ const reservationsRoutes = require('./routes/reservations.routes')
 const adminRoutes        = require('./routes/admin.routes')
 const contactRoutes      = require('./routes/contact.routes')
 const analyticsRoutes    = require('./routes/analytics.routes')
+const pricingRoutes      = require('./routes/pricing.routes')
 const errorHandler       = require('./middlewares/error.middleware')
 
 const app = express()
@@ -51,6 +52,7 @@ app.use('/api/admin/reservations', reservationsRoutes)
 app.use('/api/admin',              adminRoutes)
 app.use('/api/contact',            contactRoutes)
 app.use('/api/analytics',          analyticsRoutes)
+app.use('/api/pricing',            pricingRoutes)
 
 // Health check
 app.get('/health', (_req, res) => res.json({ ok: true, ts: new Date().toISOString() }))

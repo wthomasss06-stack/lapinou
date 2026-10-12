@@ -6,6 +6,7 @@
 
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
+const { priceForWeight } = require('../src/lib/pricing')
 
 // URLs publiques Unsplash pour les photos (fonctionnent en prod sans upload local)
 const rabbits = [
@@ -91,6 +92,8 @@ async function main() {
     await prisma.rabbit.create({
       data: {
         ...rabbit,
+        // Tarif unique au kilo : le prix de chaque fiche se déduit du poids
+        price: rabbit.weight ? priceForWeight(rabbit.weight) : rabbit.price,
         status: rabbit.stock > 0 ? 'available' : 'sold',
         photos: {
           create: photos,

@@ -628,3 +628,13 @@ Développé par **AKATech Studio.**
 [![WhatsApp](https://img.shields.io/badge/WhatsApp-%2B225_01_42_50_77_50-25D366?style=flat-square&logo=whatsapp)](https://wa.me/2250142507750)
 
 </div>
+
+
+## Tarification
+
+- **Prix du kilo fixe : 6 000 FCFA.** Source de vérité serveur : `api/src/lib/pricing.js` ; miroir d'affichage : `web/lib/pricing.ts`.
+- **Admin :** saisir un poids (kg) sur une fiche → le prix est calculé par l'API (poids × tarif/kg), le prix envoyé par le navigateur est ignoré. Sans poids, le prix reste manuel.
+- **Formats** (prix selon le poids, remise sur le total) : À l'unité (remise 0 FCFA), Duo (−1 000 FCFA), Lot restaurateur (−3 500 FCFA).
+- **Changer le tarif sans toucher au code :** `PRICE_PER_KG` (Render) et `NEXT_PUBLIC_PRICE_PER_KG` (Vercel), avec la même valeur.
+- **Recalculer les fiches existantes :** `cd api && npm run prices:sync` (simulation), puis `npm run prices:sync -- --apply`.
+- **Tests :** `cd api && npm test`.

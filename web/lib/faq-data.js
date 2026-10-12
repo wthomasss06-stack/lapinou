@@ -2,8 +2,13 @@
 // FAQ courte de la home (6 questions) — extraite de components/FaqSection.tsx
 // pour être partagée avec le schema JSON-LD FAQPage (app/page.tsx) sans
 // dupliquer le texte à deux endroits.
+import { PRICE_PER_KG, formatFcfa, getFormat } from './pricing'
+
+const DUO_DISCOUNT = formatFcfa(getFormat('duo').discount)
+const LOT_DISCOUNT = formatFcfa(getFormat('resto').discount)
+
 export const HOME_FAQS = [
-  { q: "Quel est le prix d'un lapin à Azaguié ?", a: "Chez Florence, les prix commencent à 8 500 FCFA pour un lapin Hollandais et atteignent 15 000 FCFA pour un lapin de 2 kg. Le format Duo (2 lapins) est à 25 000 FCFA. Les restaurateurs bénéficient d'un tarif préférentiel à 80 000 FCFA le lot de 6." },
+  { q: "Quel est le prix d'un lapin à Azaguié ?", a: `Chez Florence, le prix se calcule au poids : ${formatFcfa(PRICE_PER_KG)} le kilo. Un lapin de 1,5 kg revient donc à ${formatFcfa(PRICE_PER_KG * 1.5)}. Le format Duo (2 lapins) bénéficie d'une remise de ${DUO_DISCOUNT} sur le total, et le lot restaurateur (6 lapins) d'une remise de ${LOT_DISCOUNT}.` },
   { q: 'Comment commander un lapin ?', a: 'La commande se fait exclusivement via WhatsApp au +225 01 42 50 77 50. Envoyez-nous un message avec la race et le format souhaité. Nous confirmons la disponibilité et organisons le retrait ou la livraison.' },
   { q: 'Les lapins sont-ils sains ?', a: 'Oui. Chaque lapin est examiné avant la vente : poids vérifié, pelage contrôlé, comportement observé. Nous ne vendons aucun animal malade. Un suivi après-vente est également proposé.' },
   { q: 'Où puis-je retirer ma commande ?', a: 'Le retrait se fait sur place à Azaguié Gare. La livraison est également possible selon votre zone à Abidjan. Contactez-nous sur WhatsApp pour organiser la livraison.' },

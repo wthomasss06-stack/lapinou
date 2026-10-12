@@ -18,6 +18,12 @@ export const metadata: Metadata = {
   },
 }
 
+// L'affiche /affiche-grille-tarifaire-chez-florence.png contient encore
+// l'ancienne grille (15 000 / 25 000 / 80 000 FCFA). Elle est masquée tant
+// qu'elle n'a pas été refaite avec le prix du kilo à 6 000 FCFA et les
+// nouvelles remises — repasser à true une fois la nouvelle affiche en place.
+const SHOW_PRICE_POSTER = false
+
 export default function TarifsPage() {
   const breadcrumb = getBreadcrumbJsonLd([
     { name: 'Accueil', path: '/' },
@@ -34,6 +40,7 @@ export default function TarifsPage() {
       <div className="pt-20">
         <TarifsSection />
       </div>
+      {SHOW_PRICE_POSTER && (
       <section className="px-6 py-16" aria-label="Affiche de la grille tarifaire">
         <div className="max-w-3xl mx-auto">
           <p className="text-caramel font-mono text-xs tracking-widest uppercase mb-3">À partager</p>
@@ -48,6 +55,7 @@ export default function TarifsPage() {
           />
         </div>
       </section>
+      )}
       <section className="px-6 pb-24" aria-label="Liens de commande">
         <div className="max-w-4xl mx-auto grid sm:grid-cols-2 gap-4">
           <Link href="/rabbits" className="glass rounded-2xl p-5 text-white hover:text-caramel transition-colors">

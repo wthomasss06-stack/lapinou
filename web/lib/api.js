@@ -86,6 +86,13 @@ export const rabbitsApi = {
   stockSummary: () => apiFetch('/rabbits/admin/stock-summary'),
 }
 
+// ─── Tarification ─────────────────────────────────────────────────────────────
+// Tarif au kilo en vigueur côté serveur (public, lecture seule) — l'admin s'en
+// sert pour l'aperçu en direct ; le prix enregistré est calculé par l'API.
+export const pricingApi = {
+  get: () => apiFetch('/pricing'),
+}
+
 // ─── Admin ────────────────────────────────────────────────────────────────────
 export const adminApi = {
   login: (password) => apiFetch('/admin/login', {

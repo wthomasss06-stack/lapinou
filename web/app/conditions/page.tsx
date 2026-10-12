@@ -6,6 +6,7 @@ import CharSplitHeading from '@/components/CharSplitHeading'
 import { CHEZ_FLORENCE_IMAGE_POOL } from '@/lib/chezFlorenceLetters'
 import '@/components/LegalPage.css'
 import { SITE_URL, jsonLdScript, getBreadcrumbJsonLd } from '@/lib/seo'
+import { PRICE_FORMATS, formatFcfa, formatRabbits } from '@/lib/pricing'
 
 export const metadata = {
   title: 'Conditions Générales de Vente — CHEZ FLORENCE à Azaguié',
@@ -35,9 +36,10 @@ const SECTIONS: LegalSection[] = [
     body: ['Les prix sont exprimés en Francs CFA (FCFA) et sont fermes au moment de la commande. Ils ne comprennent pas les frais de livraison, qui sont facturés en supplément selon la zone.'],
     subs: [
       { title: '3.1 Tarifs en vigueur', table: { headers: ['Format', 'Prix TTC'], rows: [
-        ["À l'unité (environ 2 kg)", '15 000 FCFA'],
-        ['Le Duo (2 lapins, 1,6 kg chacun)', '25 000 FCFA'],
-        ['Format Restaurateur (lot de 6)', '80 000 FCFA'],
+        ...PRICE_FORMATS.map((f): [string, string] => [
+          `${f.label} (${formatRabbits(f.rabbits)})`,
+          f.discount > 0 ? `${f.formula} − ${formatFcfa(f.discount)}` : f.formula,
+        ]),
       ] } },
       { title: '3.2 Modes de paiement acceptés', items: ['Espèces — au retrait à Azaguié Gare', 'Orange Money', 'MTN Mobile Money', 'Wave (sur demande)'] },
       { title: '3.3 Conditions de paiement', body: [

@@ -1,6 +1,7 @@
 'use client'
 import { CheckCircle2 } from 'lucide-react'
 import './TrustMarquee.css'
+import { PRICE_PER_KG, PRICE_FORMATS, formatNumber, formatDiscount } from '@/lib/pricing'
 
 // Adapté de TrustStacksMarquee (fourni par Aka) — 3 bandes "sticker"
 // en flux normal (pas de position absolute, donc plus de chevauchement
@@ -10,13 +11,16 @@ import './TrustMarquee.css'
 
 const AVAILABILITY = [
   'Disponible', 'Retrait Rapide', 'Qualité Contrôlée', 'Prêt à la Vente',
-  'En Stock', 'Environ 2 kg', 'Lapin Frais', 'Sélectionné', 'Pesé avec Soin',
+  'En Stock', 'Prix au kilo', 'Lapin Frais', 'Sélectionné', 'Pesé avec Soin',
 ]
 
+// Ticker tarifs : le prix du kilo, puis la remise de chaque format (déduits de lib/pricing.ts)
 const PRICES = [
-  { label: "À l'unité", amount: '15 000' },
-  { label: 'Le Duo', amount: '25 000' },
-  { label: 'Restaurateur (lot de 6)', amount: '80 000' },
+  { label: 'Le kilo', amount: formatNumber(PRICE_PER_KG) },
+  ...PRICE_FORMATS.filter((f) => f.discount > 0).map((f) => ({
+    label: `${f.label} (${f.rabbits} lapins), remise`,
+    amount: `\u2212${formatNumber(f.discount)}`,
+  })),
 ]
 
 const DELIVERY = [

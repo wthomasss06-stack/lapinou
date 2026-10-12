@@ -2,6 +2,7 @@
 // Logique métier lapins — pattern Nexura annonces.service
 
 const prisma = require('../config/prisma')
+const { applyWeightPricing } = require('../lib/pricing')
 
 // Include standard pour toutes les requêtes publiques
 const RABBIT_INCLUDE = {
@@ -62,9 +63,24 @@ async function findById(id) {
 }
 
 // ─── Création (admin) ─────────────────────────────────────────────────────────
+// Tarif unique au kilo : si un poids est saisi, le prix est déduit ICI, côté
+// serveur (cf. lib/pricing.js) — le prix envoyé par le navigateur est ignoré.
+// Sans poids, un prix manuel reste obligatoire.
+function assertPriceUsable(payload) {
+  const price = Number(payload.price)
+  if (payload.price === undefined || payload.price === null || payload.price === '' || !Number.isFinite(price) || price < 0) {
+    const err = new Error('Prix manquant : renseignez un poids en kg (le prix se calcule tout seul) ou saisissez un prix.')
+    err.status = 400
+    throw err
+  }
+  payload.price = price
+}
+
 async function create(data) {
-  const stock = Math.max(0, parseInt(data.stock, 10) || 0)
-  const payload = { ...data, stock, status: stock > 0 ? 'available' : 'sold' }
+  const priced = applyWeightPricing(data)
+  assertPriceUsable(priced)
+  const stock = Math.max(0, parseInt(priced.stock, 10) || 0)
+  const payload = { ...priced, stock, status: stock > 0 ? 'available' : 'sold' }
   return prisma.rabbit.create({ data: payload, include: RABBIT_INCLUDE })
 }
 
@@ -72,7 +88,10 @@ async function create(data) {
 // Si le stock est modifié manuellement depuis l'admin, on resynchronise le
 // statut automatiquement (sauf si l'admin a explicitement fourni un statut).
 async function update(id, data) {
-  const payload = { ...data }
+  // Poids présent dans la requête → prix recalculé côté serveur.
+  // Poids absent (PATCH partiel) → le prix existant n'est pas touché.
+  const payload = applyWeightPricing({ ...data })
+  if (payload.price !== undefined) assertPriceUsable(payload)
   if (payload.stock !== undefined) {
     payload.stock = Math.max(0, parseInt(payload.stock, 10) || 0)
     if (payload.status === undefined) {

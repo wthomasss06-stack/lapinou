@@ -5,6 +5,7 @@
 // tarifs changent, tout se met à jour depuis ce seul fichier.
 
 import { cld } from './cloudinary'
+import { PRICE_PER_KG, PRICE_FORMATS, formatFcfa } from './pricing'
 
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://chez-florence.vercel.app').replace(/\/$/, '')
 
@@ -21,7 +22,7 @@ export const BUSINESS = {
   telephoneE164: '+2250142507750',   // format schema.org / tel: — pas d'espaces
   telephoneDisplay: '+225 01 42 50 77 50',
   email: 'wthomasss06@gmail.com',
-  priceRange: '8 500 FCFA – 80 000 FCFA',
+  priceRange: `${formatFcfa(PRICE_PER_KG)} le kilo`,
   currenciesAccepted: 'XOF',
   paymentAccepted: 'Cash, Orange Money, MTN Mobile Money, Wave',
   address: {
@@ -41,11 +42,11 @@ export const BUSINESS = {
   ],
 }
 
-// ─── Tarifs (miroir de TarifsSection.tsx / FaqSection.tsx / CGV) ──────────────
+// ─── Tarifs (dérivés de lib/pricing.ts — plus rien n'est saisi à la main) ─────
+// Prix du kilo fixe ; chaque format = poids × tarif/kg − remise.
 export const PRICING = {
-  unite: { label: "À l'Unité", amount: 15000, desc: '1 lapin, environ 2 kg' },
-  duo: { label: 'Le Duo', amount: 25000, desc: '2 lapins, environ 1,6 kg chacun' },
-  resto: { label: 'Format Restaurateur', amount: 80000, desc: 'Lot de 6 lapins — restaurants & mini-restos' },
+  perKg: PRICE_PER_KG,
+  formats: PRICE_FORMATS.map((f) => ({ id: f.id, label: f.label, rabbits: f.rabbits, discount: f.discount })),
 }
 
 // ─── Helper JSON-LD ────────────────────────────────────────────────────────────

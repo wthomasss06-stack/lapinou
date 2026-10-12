@@ -1,8 +1,9 @@
 'use client'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Upload, Trash2, ImagePlus, CheckCircle2 } from 'lucide-react'
-import { rabbitsApi } from '@/lib/api'
+import { rabbitsApi, pricingApi } from '@/lib/api'
+import { PRICE_PER_KG, formatFcfa, formatKg } from '@/lib/pricing'
 import { resolvePhotoUrl } from '@/lib/status'
 import toast from 'react-hot-toast'
 
@@ -174,6 +175,22 @@ export default function RabbitForm({ rabbit, onSaved, onCancel }) {
   const [savedRabbit, setSavedRabbit] = useState(isEdit ? rabbit : null)
   const [step, setStep] = useState('form') // 'form' | 'photos'
 
+  // Tarif au kilo : lu sur l'API (même valeur que celle utilisée à
+  // l'enregistrement) ; repli sur la constante du site si l'API ne répond pas.
+  const [pricePerKg, setPricePerKg] = useState(PRICE_PER_KG)
+  useEffect(() => {
+    let cancelled = false
+    pricingApi.get()
+      .then(data => { if (!cancelled && data?.pricePerKg > 0) setPricePerKg(data.pricePerKg) })
+      .catch(() => {})
+    return () => { cancelled = true }
+  }, [])
+
+  // Poids saisi ⇒ prix déduit (aperçu). La vraie valeur est calculée côté serveur.
+  const weightKg = parseFloat(String(form.weight).replace(',', '.'))
+  const hasWeight = Number.isFinite(weightKg) && weightKg > 0
+  const autoPrice = hasWeight ? Math.round(weightKg * pricePerKg) : null
+
   function update(field, value) {
     setForm(prev => ({ ...prev, [field]: value }))
   }
@@ -184,19 +201,22 @@ export default function RabbitForm({ rabbit, onSaved, onCancel }) {
     try {
       const payload = {
         ...form,
-        weight: form.weight ? parseFloat(form.weight) : null,
-        price:  parseFloat(form.price),
+        weight: hasWeight ? weightKg : null,
         stock:  form.stock === '' ? 0 : parseInt(form.stock, 10),
       }
+      // Avec un poids, on n'envoie PAS de prix : le serveur le calcule (poids × tarif/kg).
+      // Sans poids, le prix saisi à la main est utilisé.
+      if (hasWeight) delete payload.price
+      else payload.price = parseFloat(form.price)
 
       let result
       if (isEdit) {
         result = await rabbitsApi.update(rabbit.id, payload)
-        toast.success('Race mise à jour')
+        toast.success(`Race mise à jour — ${formatFcfa(result.price)}`)
       } else {
         payload.slug = slugify(`${form.name}-${form.breed}-${Date.now().toString(36)}`)
         result = await rabbitsApi.create(payload)
-        toast.success('Race ajoutée')
+        toast.success(`Race ajoutée — ${formatFcfa(result.price)}`)
       }
       setSavedRabbit(result)
       setStep('photos')
@@ -289,32 +309,7 @@ export default function RabbitForm({ rabbit, onSaved, onCancel }) {
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-white/40 uppercase tracking-widest font-mono mb-1.5 block">Poids (kg)</label>
-                  <input
-                    type="number"
-                    step="0.1"
-                    value={form.weight}
-                    onChange={e => update('weight', e.target.value)}
-                    className="input-dark w-full px-3 py-2.5 rounded-lg text-sm"
-                    placeholder="1.5"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-xs text-white/40 uppercase tracking-widest font-mono mb-1.5 block">Prix (FCFA) *</label>
-                  <input
-                    required
-                    type="number"
-                    value={form.price}
-                    onChange={e => update('price', e.target.value)}
-                    className="input-dark w-full px-3 py-2.5 rounded-lg text-sm"
-                    placeholder="35000"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs text-white/40 uppercase tracking-widest font-mono mb-1.5 block">Stock disponible *</label>
+                  <label className="text-xs text-white/40 uppercase tracking-widest font-mono mb-1.5 block">Stock *</label>
                   <input
                     required
                     type="number"
@@ -325,6 +320,48 @@ export default function RabbitForm({ rabbit, onSaved, onCancel }) {
                     placeholder="12"
                   />
                 </div>
+              </div>
+
+              {/* Poids ⇒ prix : le serveur calcule poids × tarif au kilo à l'enregistrement.
+                  L'aperçu ci-dessous utilise le même tarif (GET /api/pricing). */}
+              <div className="rounded-xl border border-brand-border/40 bg-white/[0.03] p-4 space-y-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs text-white/40 uppercase tracking-widest font-mono mb-1.5 block">Poids (kg)</label>
+                    <input
+                      type="number"
+                      inputMode="decimal"
+                      step="0.1"
+                      min="0.1"
+                      max="15"
+                      value={form.weight}
+                      onChange={e => update('weight', e.target.value)}
+                      className="input-dark w-full px-3 py-2.5 rounded-lg text-sm"
+                      placeholder="1.5"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs text-white/40 uppercase tracking-widest font-mono mb-1.5 block">
+                      {hasWeight ? 'Prix (FCFA) · calculé' : 'Prix (FCFA) *'}
+                    </label>
+                    <input
+                      required={!hasWeight}
+                      readOnly={hasWeight}
+                      type="number"
+                      min="0"
+                      value={hasWeight ? autoPrice : form.price}
+                      onChange={e => update('price', e.target.value)}
+                      className={`input-dark w-full px-3 py-2.5 rounded-lg text-sm ${hasWeight ? 'opacity-70 cursor-not-allowed font-bold text-caramel' : ''}`}
+                      placeholder="35000"
+                      aria-describedby="price-help"
+                    />
+                  </div>
+                </div>
+                <p id="price-help" className="text-xs text-white/50 leading-relaxed">
+                  {hasWeight
+                    ? `${formatKg(weightKg)} × ${formatFcfa(pricePerKg)}/kg = ${formatFcfa(autoPrice)} — calculé par le serveur à l'enregistrement.`
+                    : `Saisissez un poids : le prix se déduit tout seul (${formatFcfa(pricePerKg)} le kilo). Sans poids, entrez le prix à la main.`}
+                </p>
               </div>
 
               <div>
