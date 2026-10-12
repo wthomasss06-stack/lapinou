@@ -5,7 +5,6 @@ import type { CSSProperties } from 'react'
 import ArrowButton from './ArrowButton'
 import {
   PRICE_PER_KG,
-  PRICE_FORMATS,
   SIM_MIN_KG,
   SIM_MAX_KG,
   SIM_STEP_KG,
@@ -15,8 +14,6 @@ import {
   snapKg,
   formatKg,
   formatFcfa,
-  formatRabbits,
-  formatDiscount,
 } from '@/lib/pricing'
 import './PriceSimulator.css'
 
@@ -324,32 +321,6 @@ export default function PriceSimulator() {
         </div>
 
         <p className="ps-sr" role="status" aria-live="polite">{valueText}</p>
-      </div>
-
-      {/* ── Les formats : même prix du kilo, remise sur le total ─── */}
-      <div className="ps-formats">
-        <p className="ps-formats-hint">
-          Les formats suivent le même tarif au kilo. Le prix dépend du poids, avec une remise sur le total pour le duo et le lot.
-        </p>
-        <div className="ps-formats-grid">
-          {PRICE_FORMATS.map((f) => (
-            <article key={f.id} className="ps-format">
-              <header className="ps-format-head">
-                <span className="ps-format-icon" aria-hidden="true">{f.icon}</span>
-                <div>
-                  <h3 className="ps-format-label">{f.label}</h3>
-                  <p className="ps-format-detail">{formatRabbits(f.rabbits)}</p>
-                </div>
-              </header>
-              <p className="ps-format-formula">{f.formula}</p>
-              <dl className="ps-format-discount">
-                <dt>Remise</dt>
-                <dd className={f.discount > 0 ? 'is-on' : undefined}>{formatDiscount(f.discount)}</dd>
-              </dl>
-              <p className="ps-format-foot">Selon le poids</p>
-            </article>
-          ))}
-        </div>
       </div>
     </div>
   )
