@@ -638,3 +638,4 @@ Développé par **AKATech Studio.**
 - **Changer le tarif sans toucher au code :** `PRICE_PER_KG` (Render) et `NEXT_PUBLIC_PRICE_PER_KG` (Vercel), avec la même valeur.
 - **Recalculer les fiches existantes :** `cd api && npm run prices:sync` (simulation), puis `npm run prices:sync -- --apply`.
 - **Tests :** `cd api && npm test`.
+- **Balance 3D :** `web/lib/scale3d.ts` (three.js, version figée 0.170.0). Chargée à la demande quand le simulateur approche de l'écran ; sans WebGL (ou si le chargement échoue), le cadran SVG reste affiché. Le lapin est tiré au hasard dans `RABBIT_PROJECTILE_FILES` (`web/lib/rabbitProjectiles.ts`) et sa taille suit la racine cubique du poids.

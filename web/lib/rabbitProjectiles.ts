@@ -87,6 +87,11 @@ export const RABBIT_PROJECTILE_POOL: string[] = RABBIT_PROJECTILE_FILES.map((nam
   cld(FOLDER + name, { width: 360 })
 )
 
+/** Même pool, à une autre largeur (ex. 640 px pour le lapin de la balance 3D). */
+export function rabbitPool(width: number): string[] {
+  return RABBIT_PROJECTILE_FILES.map((name) => cld(FOLDER + name, { width }))
+}
+
 // ─── Réglages ────────────────────────────────────────────────────────────────
 const COOLDOWN_MS = 1700 // délai mini entre deux salves sur une même carte
 const MAX_LIVE = 24 // plafond de projectiles à l'écran (toutes cartes confondues)

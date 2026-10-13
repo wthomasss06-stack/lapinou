@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
 import ArrowButton from './ArrowButton'
+import { rabbitPool } from '@/lib/rabbitProjectiles'
+import type { ScaleScene } from '@/lib/scale3d'
 import {
   PRICE_PER_KG,
   SIM_MIN_KG,
@@ -87,11 +89,27 @@ function Odometer({ value }: { value: number }) {
   )
 }
 
+// ─── Balance 3D : disponible seulement si WebGL fonctionne ───────────────────
+function hasWebGL(): boolean {
+  try {
+    const probe = document.createElement('canvas')
+    return !!(probe.getContext('webgl2') || probe.getContext('webgl'))
+  } catch {
+    return false
+  }
+}
+
 // ─── Composant principal ─────────────────────────────────────────────────────
 export default function PriceSimulator() {
   const [kg, setKg] = useState<number>(SIM_DEFAULT_KG)
   const [dragging, setDragging] = useState(false)
   const dialRef = useRef<HTMLDivElement>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const sceneRef = useRef<ScaleScene | null>(null)
+  const kgRef = useRef(kg)
+  kgRef.current = kg
+  // 'idle' : cadran 2D (rendu serveur, sans WebGL ou avant chargement) — 'ready' : balance 3D affichée
+  const [scene3d, setScene3d] = useState<'idle' | 'ready'>('idle')
   const interactedRef = useRef(false)
   const timersRef = useRef<number[]>([])
 
@@ -106,6 +124,73 @@ export default function PriceSimulator() {
     timersRef.current = []
     setKg(Math.min(SIM_MAX_KG, Math.max(SIM_MIN_KG, snapKg(next))))
   }, [])
+
+  // Balance 3D (three.js) : chargée à la demande quand le cadran approche de l'écran.
+  // Si WebGL est absent ou échoue, le cadran 2D reste affiché.
+  useEffect(() => {
+    const dial = dialRef.current
+    const canvas = canvasRef.current
+    if (!dial || !canvas || typeof IntersectionObserver === 'undefined' || !hasWebGL()) return
+
+    let cancelled = false
+    let loading = false
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    const observer = new IntersectionObserver(
+      async (entries) => {
+        const inView = !!entries[0]?.isIntersecting
+        if (sceneRef.current) {
+          sceneRef.current.setVisible(inView)
+          return
+        }
+        if (!inView || loading) return
+        loading = true
+        try {
+          const { createScaleScene } = await import('@/lib/scale3d')
+          if (cancelled) return
+          const scene = await createScaleScene({
+            canvas,
+            rabbitUrls: rabbitPool(640),
+            minKg: SIM_MIN_KG,
+            maxKg: SIM_MAX_KG,
+            initialKg: kgRef.current,
+            reducedMotion: reduced,
+            fontFamily: getComputedStyle(canvas).getPropertyValue('--font-mono').trim() || undefined,
+            onContextLost: () => setScene3d('idle'), // retour au cadran 2D
+          })
+          if (cancelled) {
+            scene.dispose()
+            return
+          }
+          sceneRef.current = scene
+          scene.setWeight(kgRef.current)
+          setScene3d('ready')
+        } catch (err) {
+          // WebGL ou images indisponibles : on garde le cadran 2D
+          if (process.env.NODE_ENV !== 'production') console.warn('[balance 3D] repli sur le cadran 2D :', err)
+        } finally {
+          loading = false
+        }
+      },
+      { rootMargin: '300px' }
+    )
+    observer.observe(dial)
+
+    return () => {
+      cancelled = true
+      observer.disconnect()
+      sceneRef.current?.dispose()
+      sceneRef.current = null
+    }
+  }, [])
+
+  // Le poids (et le glissement) pilotent la scène 3D
+  useEffect(() => {
+    sceneRef.current?.setWeight(kg)
+  }, [kg, scene3d])
+  useEffect(() => {
+    sceneRef.current?.setDragging(dragging)
+  }, [dragging, scene3d])
 
   // Intro : une seule fois, quand la balance entre à l'écran, l'aiguille
   // parcourt toute la plage (1 → 3 kg) puis se pose sur le poids par défaut.
@@ -159,7 +244,7 @@ export default function PriceSimulator() {
     <div className="ps-wrap">
       <div className="ps" data-dragging={dragging ? '1' : undefined}>
         {/* ── La balance ─────────────────────────────────────────── */}
-        <div className="ps-dial" ref={dialRef}>
+        <div className="ps-dial" ref={dialRef} data-3d={scene3d}>
           <svg className="ps-dial-svg" viewBox="0 0 400 400" aria-hidden="true" focusable="false">
             <defs>
               <radialGradient id="ps-face" cx="50%" cy="38%" r="70%">
@@ -228,6 +313,28 @@ export default function PriceSimulator() {
             <div className="ps-currency" aria-hidden="true">FCFA</div>
           </div>
           <div className="ps-dial-weight" aria-hidden="true">{formatKg(kg)}</div>
+
+          {/* Balance 3D (three.js) : remplace le cadran 2D quand elle est prête */}
+          <canvas className="ps-3d" ref={canvasRef} aria-hidden="true" />
+          <div className="ps-hud" aria-hidden="true">
+            <span className="ps-hud-kg">{formatKg(kg)}</span>
+            <span className="ps-hud-price"><Odometer value={price} /></span>
+            <span className="ps-hud-cur">FCFA</span>
+          </div>
+          <button
+            type="button"
+            className="ps-reroll hover-target"
+            aria-label="Changer de lapin"
+            onClick={() => sceneRef.current?.swapRabbit()}
+          >
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M3 7h3.2a5 5 0 0 1 4 2l3.6 5a5 5 0 0 0 4 2H21" />
+              <path d="M3 17h3.2a5 5 0 0 0 4-2" />
+              <path d="M13.8 9a5 5 0 0 1 4-2H21" />
+              <path d="m18 4 3 3-3 3" />
+              <path d="m18 14 3 3-3 3" />
+            </svg>
+          </button>
         </div>
 
         {/* ── Les commandes ──────────────────────────────────────── */}
